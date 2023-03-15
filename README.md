@@ -89,7 +89,7 @@ To check if the app has been used for at least 15 days and opened at least 10 ti
 ##### First Imported Package:
 
 ```dart
-import 'package:flutter_crisp_chat/crisp_chat.dart';
+import 'package:flutter_crisp_chat/flutter_crisp_chat.dart';
 ```
 
 ##### Then:
