@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_crisp_chat/flutter_crisp_chat.dart';
-import 'package:flutter_crisp_chat/src/flutter_crisp_chat_platform_interface.dart';
-import 'package:flutter_crisp_chat/src/flutter_crisp_chat_method_channel.dart';
+import 'package:crisp_chat/crisp_chat.dart';
+import 'package:crisp_chat/src/flutter_crisp_chat_platform_interface.dart';
+import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockFlutterCrispChatPlatform

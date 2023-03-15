@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_crisp_chat/src/flutter_crisp_chat_method_channel.dart';
+import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 
 void main() {
   MethodChannelFlutterCrispChat platform = MethodChannelFlutterCrispChat();

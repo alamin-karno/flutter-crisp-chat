@@ -1,13 +1,13 @@
-# Flutter Crisp Chat
+# Crisp Chat
 
 A flutter plugin package for using crisp chat natively on Android & iOS.
 
-The `Flutter Crisp Chat` is a package that provides a simple way to open chat window using native channel.
+The `Crisp Chat` is a package that provides a simple way to open chat window using native channel.
 
 Note: This plugin is still under development, anyone want to contribute on this project is most welcome. If you have any idea or suggestion, please feel free to contact me.
 
 <p align="center">
-  <a href="https://pub.dev/packages/flutter_crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/flutter_crisp_chat?color=%2300b0ff&label=flutter_crisp_chat&style=flat-square"></a>
+  <a href="https://pub.dev/packages/crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=flutter_crisp_chat&style=flat-square"></a>
   <img alt="last commit" src="https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square"/>
   <img alt="license" src="https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square"/>
   <img alt="stars" src="https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social"/>
@@ -22,14 +22,14 @@ Note: This plugin is still under development, anyone want to contribute on this 
 
 ## Installation
 
-First, add `flutter_crisp_chat` as a [dependency in your pubspec.yaml file](https://flutter.dev/using-packages/).
+First, add `crisp_chat` as a [dependency in your pubspec.yaml file](https://flutter.dev/using-packages/).
 
-To use the Flutter Crisp Chat, simply import the `flutter_crisp_chat` package:
+To use the Flutter Crisp Chat, simply import the `crisp_chat` package:
 
 Run this on your project terminal:
 
 ```yaml
-flutter pub add flutter_crisp_chat
+flutter pub add crisp_chat
 ```
 
 or manually configure pubspec.yml fi
@@ -89,7 +89,7 @@ To check if the app has been used for at least 15 days and opened at least 10 ti
 ##### First Imported Package:
 
 ```dart
-import 'package:flutter_crisp_chat/flutter_crisp_chat.dart';
+import 'package:crisp_chat/crisp_chat.dart';
 ```
 
 ##### Then:
@@ -143,7 +143,7 @@ To use this code, you will need to provide your own Crisp website ID. You can do
 
 ## Additional information
 
-- [Flutter Crisp Chat (pub.dev)](https://pub.dev/packages/flutter_crisp_chat)
+- [Flutter Crisp Chat (pub.dev)](https://pub.dev/packages/crisp_chat)
 - [Flutter Crisp Chat (GitHub)](https://github.com/alamin-karno/flutter-crisp-chat)
 
 <h3 align=center> Project Maintainer ❤️ </h3>

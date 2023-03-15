@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_crisp_chat/flutter_crisp_chat.dart';
+import 'package:flutter_crisp_chat/crisp_chat.dart';
 import 'package:flutter_crisp_chat_example/utils/app_const.dart';
 
 void main() {
