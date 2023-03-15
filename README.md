@@ -6,6 +6,13 @@ The `Flutter Crisp Chat` is a package that provides a simple way to open chat wi
 
 Note: This plugin is still under development, anyone want to contribute on this project is most welcome. If you have any idea or suggestion, please feel free to contact me.
 
+<p align="center">
+  <a href="https://pub.dev/packages/flutter_crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/flutter_crisp_chat?color=%2300b0ff&label=flutter_crisp_chat&style=flat-square"></a>
+  <img alt="last commit" src="https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square"/>
+  <img alt="license" src="https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square"/>
+  <img alt="stars" src="https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social"/>
+</p>
+
 ## Features
 
 - [x] Null-safety enable
@@ -128,9 +135,11 @@ To use this code, you will need to provide your own Crisp website ID. You can do
 
 ## Screenshot (GIF)
 
-|             Android              |              iOS              |
+|             Android  (GIF)            |              iOS    (GIF)          |
 |:---------------------------------------------------:|:---------------------------------------------------:|
-| <img src="https://github.com/alamin-karno/app_usage_tracker/blob/main/example/screenshots/app_usage_tracker_false.png"> | <img src="https://github.com/alamin-karno/app_usage_tracker/blob/main/example/screenshots/app_usage_tracker_true.png"> |
+| <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.gif?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.gif?raw=true" width = "250"> |
+|             Android  (Image)            |              iOS    (Image)          |
+| <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.png?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.png?raw=true" width = "250"> |
 
 ## Additional information
 

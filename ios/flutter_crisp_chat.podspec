@@ -5,13 +5,13 @@
 Pod::Spec.new do |s|
   s.name             = 'flutter_crisp_chat'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.summary          = 'A flutter plugin package for using crisp chat natively on Android & iOS.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+  A flutter plugin package for using crisp chat natively on Android & iOS.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/alamin-karno/flutter-crisp-chat'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Md. Al-Amin' => 'amin15-1951@diu.edu.bd' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'

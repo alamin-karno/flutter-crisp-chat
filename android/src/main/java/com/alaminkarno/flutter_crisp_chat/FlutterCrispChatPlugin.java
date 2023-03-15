@@ -18,6 +18,8 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
+/// [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
+/// to handaling Method Channel Callback from Flutter and Open new Activity.
 /** FlutterCrispChatPlugin */
 public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
 
@@ -55,6 +57,7 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
         this.activity = null;
     }
 
+    /// [onMethodCall] if for handling method call from flutter end.
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("openCrispChat")) {
@@ -66,6 +69,7 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
         }
     }
 
+    ///[openActivity] is opening ChatView Activity of CrispChat SDK.
     private void openActivity() {
         Intent intent = new Intent(context, ChatActivity.class);
         if(activity != null) {
