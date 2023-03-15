@@ -38,7 +38,7 @@ or manually configure pubspec.yml fi
 dependencies:
   flutter:
     sdk: flutter
-  flutter_crisp_chat: ^0.0.1
+  crisp_chat: ^0.0.3
 ```
 
 ### iOS
@@ -84,7 +84,7 @@ minSdkVersion 21
 
 
 ## Usage
-To check if the app has been used for at least 15 days and opened at least 10 times, use the `openCrispChat` method of the `FlutterCrispChat` class. The method returns a boolean value indicating whether the app has been used enough:
+To open ChatView for crisp, use the `openCrispChat` method of the `FlutterCrispChat` class:
 
 ##### First Imported Package:
 
