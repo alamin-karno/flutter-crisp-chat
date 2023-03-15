@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_crisp_chat/crisp_chat.dart';
+import 'package:crisp_chat/crisp_chat.dart';
 import 'package:flutter_crisp_chat_example/utils/app_const.dart';
 
 void main() {
@@ -16,8 +16,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final String websiteID = YOUR_WEBSITE_KEY;
 
-  final _flutterCrispChatPlugin = FlutterCrispChat();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +27,7 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
-              await _flutterCrispChatPlugin.openCrispChat(
+              await FlutterCrispChat.openCrispChat(
                 websiteID: websiteID,
               );
             },

@@ -1,10 +1,10 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint flutter_crisp_chat.podspec` to validate before publishing.
+# Run `pod lib lint crisp_chat.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'flutter_crisp_chat'
-  s.version          = '0.0.1'
+  s.name             = 'crisp_chat'
+  s.version          = '0.0.2'
   s.summary          = 'A flutter plugin package for using crisp chat natively on Android & iOS.'
   s.description      = <<-DESC
   A flutter plugin package for using crisp chat natively on Android & iOS.

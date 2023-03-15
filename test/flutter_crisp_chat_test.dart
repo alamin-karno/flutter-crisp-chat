@@ -20,10 +20,9 @@ void main() {
   });
 
   test('openCrispChat', () async {
-    FlutterCrispChat flutterCrispChatPlugin = FlutterCrispChat();
     MockFlutterCrispChatPlatform fakePlatform = MockFlutterCrispChatPlatform();
     FlutterCrispChatPlatform.instance = fakePlatform;
 
-    await flutterCrispChatPlugin.openCrispChat(websiteID: '');
+    await FlutterCrispChat.openCrispChat(websiteID: '');
   });
 }

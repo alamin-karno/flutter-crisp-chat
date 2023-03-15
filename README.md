@@ -7,7 +7,7 @@ The `Crisp Chat` is a package that provides a simple way to open chat window usi
 Note: This plugin is still under development, anyone want to contribute on this project is most welcome. If you have any idea or suggestion, please feel free to contact me.
 
 <p align="center">
-  <a href="https://pub.dev/packages/crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=flutter_crisp_chat&style=flat-square"></a>
+  <a href="https://pub.dev/packages/crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=crisp_chat&style=flat-square"></a>
   <img alt="last commit" src="https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square"/>
   <img alt="license" src="https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square"/>
   <img alt="stars" src="https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social"/>
@@ -96,8 +96,6 @@ import 'package:crisp_chat/crisp_chat.dart';
 
 ```dart
  final String websiteID = 'YOUR_WEBSITE_KEY';
-
- final _flutterCrispChatPlugin = FlutterCrispChat();
 ```
 
 
@@ -113,7 +111,7 @@ import 'package:crisp_chat/crisp_chat.dart';
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
-              await _flutterCrispChatPlugin.openCrispChat(
+              await FlutterCrispChat.openCrispChat(
                 websiteID: websiteID,
               );
             },
