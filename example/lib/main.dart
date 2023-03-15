@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crisp_chat/crisp_chat.dart';
+import 'package:flutter_crisp_chat_example/utils/app_const.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +14,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = 'b3f3d31f-f27c-4f54-a9b2-b9db89a86316';
+  final String websiteID = YOUR_WEBSITE_KEY;
 
   final _flutterCrispChatPlugin = FlutterCrispChat();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
