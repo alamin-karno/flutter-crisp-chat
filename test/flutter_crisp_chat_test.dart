@@ -4,6 +4,7 @@ import 'package:crisp_chat/src/flutter_crisp_chat_platform_interface.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+/// [MockFlutterCrispChatPlatform] is for testing method channel call.
 class MockFlutterCrispChatPlatform
     with MockPlatformInterfaceMixin
     implements FlutterCrispChatPlatform {
