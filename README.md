@@ -96,6 +96,15 @@ import 'package:crisp_chat/crisp_chat.dart';
 
 ```dart
  final String websiteID = 'YOUR_WEBSITE_KEY';
+ late CrispConfig config;
+
+   @override
+  void initState() {
+    super.initState();
+    config = CrispConfig(
+      websiteID: websiteID,
+    );
+  }
 ```
 
 
@@ -112,7 +121,7 @@ import 'package:crisp_chat/crisp_chat.dart';
           child: ElevatedButton(
             onPressed: () async {
               await FlutterCrispChat.openCrispChat(
-                websiteID: websiteID,
+                config: config,
               );
             },
             child: const Text('Open Crisp Chat'),
