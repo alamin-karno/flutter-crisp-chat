@@ -6,10 +6,13 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
+import com.alaminkarno.flutter_crisp_chat.config.CrispConfig;
+
+import java.util.HashMap;
+
 import im.crisp.client.ChatActivity;
 import im.crisp.client.Crisp;
 
-import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -61,12 +64,42 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("openCrispChat")) {
-            String websiteID = call.argument("websiteID");
-            Crisp.configure(context, websiteID);
-            openActivity();
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if(args != null){
+                CrispConfig config = CrispConfig.fromJson(args);
+                setCrispData(config);
+                Crisp.configure(context, config.websiteId);
+                openActivity();
+            }else{
+                result.notImplemented();
+            }
         } else {
             result.notImplemented();
         }
+    }
+
+    private void setCrispData(CrispConfig config) {
+        if(config.tokenId != null){
+            Crisp.setTokenID(config.tokenId);
+        }
+        if(config.user != null){
+            if(config.user.nickName != null){
+                Crisp.setUserNickname(config.user.nickName);
+            }
+            if(config.user.email != null){
+                Crisp.setUserEmail(config.user.email);
+            }
+            if(config.user.avatar != null){
+                Crisp.setUserAvatar(config.user.avatar);
+            }
+            if(config.user.phone != null){
+                Crisp.setUserPhone(config.user.phone);
+            }
+            if(config.user.company != null){
+                Crisp.setUserCompany(config.user.company.toCrispCompany());
+            }
+        }
+
     }
 
     ///[openActivity] is opening ChatView Activity of CrispChat SDK.

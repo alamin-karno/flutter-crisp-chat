@@ -21,8 +21,17 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if call.method == "openCrispChat" {
             guard let args = call.arguments as? [String : Any] else {return}
-            let websiteID = args["websiteID"] as! String
-            CrispSDK.configure(websiteID: websiteID)
+            let crispConfig = CrispConfig.fromJson(args)
+            CrispSDK.configure(websiteID: crispConfig.websiteID)
+            if(crispConfig.tokenId != nil){
+                CrispSDK.setTokenID(tokenID: crispConfig.tokenId!)
+            }
+            CrispSDK.user.email = crispConfig.user?.email
+            CrispSDK.user.nickname = crispConfig.user?.nickName
+            CrispSDK.user.phone = crispConfig.user?.phone
+            CrispSDK.user.avatar = crispConfig.user?.avatar == nil ? nil : URL(string: crispConfig.user!.avatar!)
+            CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany();
+            
             if let viewController = UIApplication.shared.keyWindow?.rootViewController {
                 viewController.present(ChatViewController(), animated: true)
             }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:crisp_chat/crisp_chat.dart';
-import 'package:flutter_crisp_chat_example/utils/app_const.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +13,36 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = YOUR_WEBSITE_KEY;
+  final String websiteID = "YOUR_WEBSITE_KEY";
+  late CrispConfig config;
+
+  @override
+  void initState() {
+    super.initState();
+    config = CrispConfig(
+      websiteID: websiteID,
+      tokenId: "Token Id",
+      user: User(
+        avatar: "https://storage.googleapis.com/cms-storage-bucket/6a07d8a62f4308d2b854.svg",
+        email: "user@user.com",
+        nickName: "User Nick Name",
+        phone: "5555555555",
+        company: Company(
+          companyDescription: "Company Description",
+          name: "Company Name",
+          url: "https://flutter.dev12",
+          employment: Employment(
+            role: "Role",
+            title: "Tile",
+          ),
+          geolocation: Geolocation(
+            city: "City",
+            country: "Country",
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +55,7 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
-              await FlutterCrispChat.openCrispChat(
-                websiteID: websiteID,
-              );
+              await FlutterCrispChat.openCrispChat(config: config);
             },
             child: const Text('Open Crisp Chat'),
           ),

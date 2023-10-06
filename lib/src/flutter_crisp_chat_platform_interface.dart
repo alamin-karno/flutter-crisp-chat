@@ -1,5 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'config.dart';
 import 'flutter_crisp_chat_method_channel.dart';
 
 abstract class FlutterCrispChatPlatform extends PlatformInterface {
@@ -25,7 +26,7 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
 
   /// [openCrispChat] is to call native platfrom and if no implemention
   /// found throug error.
-  Future<void> openCrispChat({required String websiteID}) {
+  Future<void> openCrispChat({required CrispConfig config}) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 }
