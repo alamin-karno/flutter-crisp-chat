@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = "YOUR_WEBSITE_KEY";
+  final String websiteID = "YOUR_WEBSITE_ID";
   late CrispConfig config;
 
   @override
@@ -23,9 +23,10 @@ class _MyAppState extends State<MyApp> {
       websiteID: websiteID,
       tokenId: "Token Id",
       user: User(
-        avatar: "https://storage.googleapis.com/cms-storage-bucket/6a07d8a62f4308d2b854.svg",
+        avatar:
+            "https://storage.googleapis.com/cms-storage-bucket/6a07d8a62f4308d2b854.svg",
         email: "user@user.com",
-        nickName: "User Nick Name",
+        nickName: "Nick Name",
         phone: "5555555555",
         company: Company(
           companyDescription: "Company Description",

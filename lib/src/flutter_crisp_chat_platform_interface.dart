@@ -24,8 +24,8 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  /// [openCrispChat] is to call native platfrom and if no implemention
-  /// found throug error.
+  /// [openCrispChat] is to call native platform and if no implementation
+  /// found through error.
   Future<void> openCrispChat({required CrispConfig config}) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }

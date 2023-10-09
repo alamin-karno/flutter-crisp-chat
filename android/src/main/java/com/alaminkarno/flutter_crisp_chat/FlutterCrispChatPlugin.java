@@ -67,7 +67,7 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if(args != null){
                 CrispConfig config = CrispConfig.fromJson(args);
-                setCrispData(config);
+                setCrispData(context,config);
                 Crisp.configure(context, config.websiteId);
                 openActivity();
             }else{
@@ -78,9 +78,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
         }
     }
 
-    private void setCrispData(CrispConfig config) {
+    private void setCrispData(Context context,CrispConfig config) {
         if(config.tokenId != null){
-            Crisp.setTokenID(config.tokenId);
+            Crisp.setTokenID(context,config.tokenId);
         }
         if(config.user != null){
             if(config.user.nickName != null){

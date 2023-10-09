@@ -1,16 +1,21 @@
+## 0.0.4
+
+* added user configuration option in crisp configuration
+* updated android crisp version `1.0.14` to `1.0.16`
+
 ## 0.0.3
 
-* Chnage Readme File
+* change readme file
 
 ## 0.0.2
 
-* Crisp Chat add for native platform
-* Fixed iOS dependency not found
-* Fixed calling method 
+* crisp chat add for native platform
+* fixed iOS dependency not found
+* fixed calling method 
 
 
 ## 0.0.1
 
-* Crisp Chat add for native platform
+* crisp Chat add for native platform
 
 
