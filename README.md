@@ -39,7 +39,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^0.0.4
+  crisp_chat: ^1.0.18
 ```
 
 ### iOS
@@ -70,10 +70,10 @@ Add Internet permission on `AndroidManifest.xml` in your `android/app/src/main/A
 ```
 
 
-Change the minimum Compile SDK version to 33 (or higher) in your `android/app/build.gradle` file.
+Change the minimum Compile SDK version to 34 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
-compileSdkVersion 33
+compileSdkVersion 34
 ```
 
 Change the minimum Android SDK version to 21 (or higher) in your `android/app/build.gradle` file.

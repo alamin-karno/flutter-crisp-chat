@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'crisp_chat'
-  s.version          = '0.0.3'
+  s.version          = '1.0.18'
   s.summary          = 'A flutter plugin package for using crisp chat natively on Android & iOS.'
   s.description      = <<-DESC
   A flutter plugin package for using crisp chat natively on Android & iOS.

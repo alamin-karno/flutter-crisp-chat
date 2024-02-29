@@ -22,9 +22,10 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 31
-
-
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.alaminkarno.flutter_crisp_chat'
+    }
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -38,6 +39,6 @@ android {
 }
 
 dependencies {
-    implementation 'im.crisp:crisp-sdk:1.0.16'
+    implementation 'im.crisp:crisp-sdk:1.0.18'
     implementation 'androidx.multidex:multidex:2.0.1'
 }
