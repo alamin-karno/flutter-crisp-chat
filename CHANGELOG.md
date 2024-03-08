@@ -23,7 +23,7 @@
 * fixed possibility to send empty messages/field value & trim sent ones,
 * fixed `read` status message duplicates,
 * fixed various not yet reported bugs & crashes.
-* #4: Build fail due to crisp_chat dependency fixed.
+* [#4](https://github.com/alamin-karno/flutter-crisp-chat/issues/4): Build fail due to crisp_chat dependency fixed.
 
 ## 1.0.0
 
