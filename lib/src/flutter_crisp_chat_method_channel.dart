@@ -14,6 +14,7 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   /// code with argruments `websiteID`.
   @override
   Future<void> openCrispChat({required CrispConfig config}) async {
-    await methodChannel.invokeMethod<CrispConfig>('openCrispChat', config.toJson());
+    await methodChannel.invokeMethod<CrispConfig>(
+        'openCrispChat', config.toJson());
   }
 }

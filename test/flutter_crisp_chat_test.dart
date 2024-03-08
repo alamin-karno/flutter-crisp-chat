@@ -9,16 +9,15 @@ class MockFlutterCrispChatPlatform
     with MockPlatformInterfaceMixin
     implements FlutterCrispChatPlatform {
   @override
-  Future<String?> openCrispChat({required CrispConfig config}) => Future.value();
+  Future<String?> openCrispChat({required CrispConfig config}) =>
+      Future.value();
 }
 
 void main() {
   final FlutterCrispChatPlatform initialPlatform =
       FlutterCrispChatPlatform.instance;
 
-  CrispConfig config = CrispConfig(
-    websiteID: "YOUR_WEBSITE_KEY"
-  );
+  CrispConfig config = CrispConfig(websiteID: "YOUR_WEBSITE_KEY");
 
   test('$MethodChannelFlutterCrispChat is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelFlutterCrispChat>());

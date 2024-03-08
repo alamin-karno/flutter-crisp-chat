@@ -6,9 +6,7 @@ import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 void main() {
   MethodChannelFlutterCrispChat platform = MethodChannelFlutterCrispChat();
   const MethodChannel channel = MethodChannel('flutter_crisp_chat');
-  CrispConfig config = CrispConfig(
-    websiteID: "YOUR_WEBSITE_KEY"
-  );
+  CrispConfig config = CrispConfig(websiteID: "YOUR_WEBSITE_KEY");
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -23,6 +21,6 @@ void main() {
   });
 
   test('openCrispChat', () async {
-    await platform.openCrispChat(config:config );
+    await platform.openCrispChat(config: config);
   });
 }

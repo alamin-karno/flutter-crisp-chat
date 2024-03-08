@@ -39,6 +39,6 @@ android {
 }
 
 dependencies {
-    implementation 'im.crisp:crisp-sdk:1.0.18'
+    implementation 'im.crisp:crisp-sdk:2.0.0beta1'
     implementation 'androidx.multidex:multidex:2.0.1'
 }

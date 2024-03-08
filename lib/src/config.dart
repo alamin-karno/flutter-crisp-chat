@@ -1,4 +1,8 @@
 /// This class is used to convert Crisp data to JSON format.
+///
+/// - websiteID: Replace it with your WEBSITE_ID
+/// - tokenId:  Assigns the next session with a tokenID
+/// - user: Use for getting user information
 class CrispConfig {
   String websiteID;
   String? tokenId;
@@ -13,7 +17,7 @@ class CrispConfig {
   /// Used to convert to JSON format.
   Map<String, dynamic> toJson() {
     return {
-      "websiteId": websiteID,  // It will appear as "websiteId" in the JSON.
+      "websiteId": websiteID, // It will appear as "websiteId" in the JSON.
       "tokenId": tokenId,
       "user": user?.toJson(),
     };
@@ -52,12 +56,13 @@ class User {
 /// This class is used to convert Company data to JSON format.
 class Company {
   String? name;
+
   /// It is important that it is in url format
   String? url;
   String? companyDescription;
   Employment? employment;
   Geolocation? geolocation;
-  
+
   Company({
     this.name,
     this.url,
