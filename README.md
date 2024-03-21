@@ -2,7 +2,7 @@
 
 A flutter plugin package for using crisp chat natively on Android & iOS.
 
-![Crisp Chat](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/image-1.png)
+![Crisp Chat](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/image-1.png?raw=true)
 
 Chat with website visitors, integrate your favorite tools, and deliver a great customer experience. - Crisp. The `Crisp Chat` is a package that provides a simple way to open chat window using native channel. Connect with Crisp Chat, register a user to chat (or not) and render a chat widget. Tested on Android and iOS. 
 
@@ -41,7 +41,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.0.0
+  crisp_chat: ^2.0.1
 ```
 
 ### iOS
@@ -135,18 +135,12 @@ import 'package:crisp_chat/crisp_chat.dart';
   } 
   ```
 
-This is a simple Flutter app that demonstrates how to use the `FlutterCrispChat` plugin to open a chat window using the Crisp chat service. The app has a single button that, when pressed, will launch the chat window.
-
-The main function runs the app, which consists of a single MyApp widget. This widget is stateful and creates an instance of the `FlutterCrispChat` plugin.
-
-The build function creates a MaterialApp with a Scaffold that contains an AppBar and an `ElevatedButton`. The button's onPressed method calls the `openCrispChat` method of the `FlutterCrispChat` plugin with the website ID passed as a parameter.
-
-To use this code, you will need to provide your own Crisp website ID. You can do this by replacing `YOUR_WEBSITE_KEY` with your own website ID. Once you have done this, you can run the app and press the `"Open Crisp Chat"` button to launch the chat window.
+To use this code, you will need to provide your own Crisp website ID. You can do this by replacing `YOUR_WEBSITE_KEY` with your own website ID. Once you have done this, you can run the app and press the `"Open Crisp Chat"` button to launch the chat window. You can add more information using `CrispConfig`.
 
 ### Get your Website ID:
 Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
-![Crisp Dashboard](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/image.png)
+![Crisp Dashboard](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/image.png?raw=true)
 
 ## Screenshot (GIF)
 
@@ -182,10 +176,9 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 <h3 align="center"> Happy Coding 👨‍💻 </h3>
 
 ## Credits
-* Crisp Android SDK is owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
-* Crisp iOS SDK is owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
+* Crisp Android and iOS SDK is owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
 
- You can chat with them on [crisp](https://crisp.chat/) or follow them on Twitter at [Crisp_im](http://twitter.com/crisp_im).
+ You can chat with them on [crisp](https://crisp.chat/) or follow them on Twitter at [Crisp_im](https://twitter.com/crisp_im).
 
 ## License
 

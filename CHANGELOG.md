@@ -1,3 +1,6 @@
+## 2.0.1
+* Added session segment support
+
 ## 2.0.0
 
 * updated UI to match Web & iOS chat boxes
