@@ -69,7 +69,7 @@ struct Company {
             url: json["url"] as? String,
             companyDescription: json["companyDescription"] as? String,
             employment: Employment.fromJson(json["employment"] as? [String: Any] ?? [:]),
-            geolocation: Geolocation.fromJson(json["geolocation"] as? [String: Any] ?? [:])
+            geolocation: Geolocation.fromJson(json["geoLocation"] as? [String: Any] ?? [:])
         )
     }
     

@@ -38,8 +38,8 @@ public class Company {
                 company.employment = Employment.fromJson((Map<String, Object>) employmentObj);
             }
         }
-        if (json.containsKey("geolocation")) {
-            Object geolocationObj = json.get("geolocation");
+        if (json.containsKey("geoLocation")) {
+            Object geolocationObj = json.get("geoLocation");
             if (geolocationObj != null) {
                 company.geolocation = Geolocation.fromJson((Map<String, Object>) geolocationObj);
             }

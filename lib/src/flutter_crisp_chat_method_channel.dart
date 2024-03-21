@@ -11,7 +11,7 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   final methodChannel = const MethodChannel('flutter_crisp_chat');
 
   /// [openCrispChat] is use to invoke the Method Channel and call native
-  /// code with argruments `websiteID`.
+  /// code with arguments `websiteID`.
   @override
   Future<void> openCrispChat({required CrispConfig config}) async {
     await methodChannel.invokeMethod<CrispConfig>(

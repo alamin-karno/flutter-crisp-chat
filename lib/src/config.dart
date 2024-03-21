@@ -1,8 +1,11 @@
-/// This class is used to convert Crisp data to JSON format.
+/// This class represents the configuration for the Crisp chat system.
 ///
-/// - websiteID: Replace it with your WEBSITE_ID
-/// - tokenId:  Assigns the next session with a tokenID
-/// - user: Use for getting user information
+/// Use this class to convert Crisp configuration data to JSON format for integration with the Crisp SDK.
+///
+/// - [websiteID]: The ID of your website. Replace it with your WEBSITE_ID.
+/// - [tokenId]: Assigns the next session with a tokenID.
+/// - [sessionSegment]: Assigns a session segment name for more information.
+/// - [user]: Represents user information.
 class CrispConfig {
   String websiteID;
   String? tokenId;
@@ -16,10 +19,12 @@ class CrispConfig {
     this.user,
   });
 
-  /// Used to convert to JSON format.
+  /// Converts the configuration to a JSON format.
+  ///
+  /// Returns a JSON representation of the Crisp configuration.
   Map<String, dynamic> toJson() {
     return {
-      "websiteId": websiteID, // It will appear as "websiteId" in the JSON.
+      "websiteId": websiteID, // Appears as "websiteId" in the JSON.
       "tokenId": tokenId,
       "sessionSegment": sessionSegment,
       "user": user?.toJson(),
@@ -27,13 +32,23 @@ class CrispConfig {
   }
 }
 
-/// This class is used to convert User data to JSON format.
+/// This class represents user information for Crisp chat.
+///
+/// Use this class to convert user data to JSON format for integration with the Crisp SDK.
 class User {
-  /// It is important that it is in email format
+  /// The user's email address.
   final String? email;
+
+  /// The user's nickname.
   final String? nickName;
+
+  /// The user's phone number.
   final String? phone;
+
+  /// The URL of the user's avatar image.
   final String? avatar;
+
+  /// The user's company information.
   final Company? company;
 
   User({
@@ -44,7 +59,9 @@ class User {
     this.company,
   });
 
-  /// Used to convert to JSON format.
+  /// Converts user information to JSON format.
+  ///
+  /// Returns a JSON representation of the user information.
   Map<String, dynamic> toJson() {
     return {
       "email": email,
@@ -56,39 +73,54 @@ class User {
   }
 }
 
-/// This class is used to convert Company data to JSON format.
+/// This class represents company information for Crisp chat.
+///
+/// Use this class to convert company data to JSON format for integration with the Crisp SDK.
 class Company {
   String? name;
 
-  /// It is important that it is in url format
+  /// The URL of the company's website.
   String? url;
+
+  /// A description of the company.
   String? companyDescription;
-  Employment? employment;
-  Geolocation? geolocation;
+
+  /// The employment details of the company.
+  final Employment? employment;
+
+  /// The geolocation of the company.
+  final GeoLocation? geoLocation;
 
   Company({
     this.name,
     this.url,
     this.companyDescription,
     this.employment,
-    this.geolocation,
+    this.geoLocation,
   });
 
-  /// Used to convert to JSON format.
+  /// Converts company information to JSON format.
+  ///
+  /// Returns a JSON representation of the company information.
   Map<String, dynamic> toJson() {
     return {
       "name": name,
       "url": url,
       "companyDescription": companyDescription,
       "employment": employment?.toJson(),
-      "geolocation": geolocation?.toJson(),
+      "geoLocation": geoLocation?.toJson(),
     };
   }
 }
 
-/// This class is used to convert Employment data to JSON format.
+/// This class represents employment details for Crisp chat.
+///
+/// Use this class to convert employment data to JSON format for integration with the Crisp SDK.
 class Employment {
+  /// The job title of the employee.
   String? title;
+
+  /// The role of the employee.
   String? role;
 
   Employment({
@@ -96,7 +128,9 @@ class Employment {
     this.role,
   });
 
-  // Used to convert to JSON format.
+  /// Converts employment details to JSON format.
+  ///
+  /// Returns a JSON representation of the employment details.
   Map<String, dynamic> toJson() {
     return {
       "title": title,
@@ -105,17 +139,21 @@ class Employment {
   }
 }
 
-/// This class is used to convert Geolocation data to JSON format.
-class Geolocation {
+/// This class represents geoLocation information for Crisp chat.
+///
+/// Use this class to convert geoLocation data to JSON format for integration with the Crisp SDK.
+class GeoLocation {
+  /// The city where the user is located.
   String? city;
+
+  /// The country where the user is located.
   String? country;
 
-  Geolocation({
-    this.city,
-    this.country,
-  });
+  GeoLocation({this.city, this.country});
 
-  /// Used to convert to JSON format.
+  /// Converts geoLocation information to JSON format.
+  ///
+  /// Returns a JSON representation of the geoLocation information.
   Map<String, dynamic> toJson() {
     return {
       "city": city,

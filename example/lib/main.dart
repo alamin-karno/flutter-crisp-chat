@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
             role: "Role",
             title: "Tile",
           ),
-          geolocation: Geolocation(
+          geoLocation: GeoLocation(
             city: "City",
             country: "Country",
           ),
