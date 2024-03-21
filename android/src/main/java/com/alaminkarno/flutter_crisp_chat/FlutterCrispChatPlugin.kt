@@ -54,8 +54,8 @@ override fun onMethodCall(call: MethodCall, result: Result) {
             val args = call.arguments as HashMap<String?, Any?>
             if(args != null){
                 val config = CrispConfig.fromJson(args)
+                Crisp.configure(context, config.websiteId
                 setCrispData(config);
-                Crisp.configure(context, config.websiteId)
                 openActivity()
             } else {
                 result.notImplemented()
@@ -69,6 +69,9 @@ override fun onMethodCall(call: MethodCall, result: Result) {
     private fun setCrispData(config: CrispConfig) {
         if (config.tokenId != null) {
             Crisp.setTokenID(config.tokenId)
+        }
+        if(config.sessionSegment != null){
+            Crisp.setSessionSegment(config.sessionSegment)
         }
         if (config.user != null) {
             if (config.user.nickName != null) {

@@ -6,11 +6,13 @@
 class CrispConfig {
   String websiteID;
   String? tokenId;
+  String? sessionSegment;
   User? user;
 
   CrispConfig({
     required this.websiteID,
     this.tokenId,
+    this.sessionSegment,
     this.user,
   });
 
@@ -19,6 +21,7 @@ class CrispConfig {
     return {
       "websiteId": websiteID, // It will appear as "websiteId" in the JSON.
       "tokenId": tokenId,
+      "sessionSegment": sessionSegment,
       "user": user?.toJson(),
     };
   }

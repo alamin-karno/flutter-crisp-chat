@@ -65,12 +65,12 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("openCrispChat")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
-            if(args != null){
+            if (args != null) {
                 CrispConfig config = CrispConfig.fromJson(args);
-                setCrispData(context,config);
                 Crisp.configure(context, config.websiteId);
+                setCrispData(context, config);
                 openActivity();
-            }else{
+            } else {
                 result.notImplemented();
             }
         } else {
@@ -78,24 +78,27 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
         }
     }
 
-    private void setCrispData(Context context,CrispConfig config) {
-        if(config.tokenId != null){
-            Crisp.setTokenID(context,config.tokenId);
+    private void setCrispData(Context context, CrispConfig config) {
+        if (config.tokenId != null) {
+            Crisp.setTokenID(context, config.tokenId);
         }
-        if(config.user != null){
-            if(config.user.nickName != null){
+        if (config.sessionSegment != null) {
+            Crisp.setSessionSegment(config.sessionSegment);
+        }
+        if (config.user != null) {
+            if (config.user.nickName != null) {
                 Crisp.setUserNickname(config.user.nickName);
             }
-            if(config.user.email != null){
+            if (config.user.email != null) {
                 Crisp.setUserEmail(config.user.email);
             }
-            if(config.user.avatar != null){
+            if (config.user.avatar != null) {
                 Crisp.setUserAvatar(config.user.avatar);
             }
-            if(config.user.phone != null){
+            if (config.user.phone != null) {
                 Crisp.setUserPhone(config.user.phone);
             }
-            if(config.user.company != null){
+            if (config.user.company != null) {
                 Crisp.setUserCompany(config.user.company.toCrispCompany());
             }
         }
@@ -105,7 +108,7 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
     ///[openActivity] is opening ChatView Activity of CrispChat SDK.
     private void openActivity() {
         Intent intent = new Intent(context, ChatActivity.class);
-        if(activity != null) {
+        if (activity != null) {
             activity.startActivity(intent);
         } else {
             context.startActivity(intent);
@@ -117,4 +120,5 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
         channel.setMethodCallHandler(null);
         context = null;
     }
+
 }

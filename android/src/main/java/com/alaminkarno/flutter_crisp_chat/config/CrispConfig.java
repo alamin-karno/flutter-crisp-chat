@@ -7,6 +7,7 @@ import java.util.Map;
 public class CrispConfig {
     public String websiteId;
     public String tokenId = null;
+    public String sessionSegment = null;
     public User user = null;
 
 
@@ -20,9 +21,16 @@ public class CrispConfig {
                     crispConfig.tokenId = tokenIdObj.toString();
                 }
             }
-        }catch (Exception e){
+            if (json.containsKey("sessionSegment")) {
+                Object sessionSegmentObj = json.get("sessionSegment");
+                if (sessionSegmentObj != null) {
+                    crispConfig.sessionSegment = sessionSegmentObj.toString();
+                }
+            }
+        } catch (Exception e) {
             Log.d("exception", e.toString());
         }
+
         if (json.containsKey("user")) {
             Object userObj = json.get("user");
             if (userObj != null) {
@@ -31,4 +39,5 @@ public class CrispConfig {
         }
         return crispConfig;
     }
+
 }
