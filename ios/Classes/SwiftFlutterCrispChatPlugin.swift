@@ -25,6 +25,8 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             CrispSDK.configure(websiteID: crispConfig.websiteID)
             if(crispConfig.tokenId != nil){
                 CrispSDK.setTokenID(tokenID: crispConfig.tokenId!)
+            }if(crispConfig.sessionSegment != nil){
+                CrispSDK.setTokenID(tokenID: crispConfig.sessionSegment!)
             }
             CrispSDK.user.email = crispConfig.user?.email
             CrispSDK.user.nickname = crispConfig.user?.nickName

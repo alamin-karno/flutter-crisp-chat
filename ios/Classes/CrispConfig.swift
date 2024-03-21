@@ -114,11 +114,13 @@ struct User {
 struct CrispConfig {
     let websiteID: String
     let tokenId: String?
+    let sessionSegment: String?
     let user: User?
     
-    init(websiteID: String, tokenId: String?, user: User?) {
+    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?) {
         self.websiteID = websiteID
         self.tokenId = tokenId
+        self.sessionSegment = sessionSegment
         self.user = user
     }
     
@@ -126,6 +128,7 @@ struct CrispConfig {
         return CrispConfig(
             websiteID: json["websiteId"] as! String,
             tokenId: json["tokenId"] as? String,
+            sessionSegment: json["sessionSegment"] as? String,
             user: User.fromJson(json["user"] as? [String: Any] ?? [:])
         )
     }
