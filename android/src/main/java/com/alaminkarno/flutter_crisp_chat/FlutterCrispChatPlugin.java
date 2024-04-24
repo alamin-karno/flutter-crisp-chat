@@ -23,7 +23,10 @@ import io.flutter.plugin.common.MethodChannel.Result;
 
 /// [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
 /// to handaling Method Channel Callback from Flutter and Open new Activity.
-/** FlutterCrispChatPlugin */
+
+/**
+ * FlutterCrispChatPlugin
+ */
 public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private static final String CHANNEL_NAME = "flutter_crisp_chat";
@@ -73,6 +76,8 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.notImplemented();
             }
+        } else if (call.method.equals("resetCrispChatSession")) {
+            Crisp.resetChatSession(context);
         } else {
             result.notImplemented();
         }

@@ -38,7 +38,11 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             if let viewController = UIApplication.shared.keyWindow?.rootViewController {
                 viewController.present(ChatViewController(), animated: true)
             }
-        } else {
+        }
+        else if call.method == "resetChatSession" {
+            CrispSDK.session.reset()
+        }
+        else {
             result(FlutterMethodNotImplemented)
         }
     }
