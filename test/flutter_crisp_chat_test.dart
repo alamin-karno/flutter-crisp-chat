@@ -11,6 +11,12 @@ class MockFlutterCrispChatPlatform
   @override
   Future<String?> openCrispChat({required CrispConfig config}) =>
       Future.value();
+
+  @override
+  Future<void> resetCrispChatSession() {
+    //
+    throw UnimplementedError();
+  }
 }
 
 void main() {

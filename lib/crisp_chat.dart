@@ -5,6 +5,7 @@ export 'src/config.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
+
   static Future<void> openCrispChat({required CrispConfig config}) {
     if (config.user?.email?.isEmail == false) {
       throw Exception("User email is incorrect!");
@@ -13,5 +14,9 @@ class FlutterCrispChat {
       throw Exception("Company url is incorrect!");
     }
     return FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+  }
+
+  static Future<void> resetCrispChatSession() {
+    return FlutterCrispChatPlatform.instance.resetCrispChatSession();
   }
 }

@@ -18,59 +18,64 @@ import io.flutter.plugin.common.MethodChannel.Result
 class FlutterCrispChatPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     companion object {
-    private const val CHANNEL_NAME = "flutter_crisp_chat"
-}
+        private const val CHANNEL_NAME = "flutter_crisp_chat"
+    }
 
-private lateinit var channel: MethodChannel
-private lateinit var context: Context
-private var activity: Activity? = null
+    private lateinit var channel: MethodChannel
+    private lateinit var context: Context
+    private var activity: Activity? = null
 
-override fun onAttachedToEngine(flutterPluginBinding: FlutterPluginBinding) {
-    context = flutterPluginBinding.applicationContext
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPluginBinding) {
+        context = flutterPluginBinding.applicationContext
 
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, CHANNEL_NAME)
-    channel.setMethodCallHandler(this)
-}
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, CHANNEL_NAME)
+        channel.setMethodCallHandler(this)
+    }
 
-override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    activity = binding.activity
-}
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
 
-override fun onDetachedFromActivityForConfigChanges() {
-    activity = null
-}
+    override fun onDetachedFromActivityForConfigChanges() {
+        activity = null
+    }
 
-override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    activity = binding.activity
-}
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
 
-override fun onDetachedFromActivity() {
-    activity = null
-}
+    override fun onDetachedFromActivity() {
+        activity = null
+    }
 
-override fun onMethodCall(call: MethodCall, result: Result) {
-    when (call.method) {
-        "openCrispChat" -> {
-            val args = call.arguments as HashMap<String?, Any?>
-            if(args != null){
-                val config = CrispConfig.fromJson(args)
-                Crisp.configure(context, config.websiteId
-                setCrispData(config);
-                openActivity()
-            } else {
-                result.notImplemented()
+    override fun onMethodCall(call: MethodCall, result: Result) {
+        when (call.method) {
+            "openCrispChat" -> {
+                val args = call.arguments as HashMap<String?, Any?>
+                if (args != null) {
+                    val config = CrispConfig.fromJson(args)
+                    Crisp.configure(context, config.websiteId)
+                    setCrispData(config);
+                    openActivity()
+                } else {
+                    result.notImplemented()
+                }
+
             }
 
+            "resetCrispChatSession" -> {
+                Crisp.resetChatSession(context)
+            }
+
+            else -> result.notImplemented()
         }
-        else -> result.notImplemented()
     }
-}
 
     private fun setCrispData(config: CrispConfig) {
         if (config.tokenId != null) {
             Crisp.setTokenID(config.tokenId)
         }
-        if(config.sessionSegment != null){
+        if (config.sessionSegment != null) {
             Crisp.setSessionSegment(config.sessionSegment)
         }
         if (config.user != null) {
@@ -92,13 +97,13 @@ override fun onMethodCall(call: MethodCall, result: Result) {
         }
     }
 
-private fun openActivity() {
-    val intent = Intent(context, ChatActivity::class.java)
-    activity?.startActivity(intent) : context.startActivity(intent)
-}
+    private fun openActivity() {
+        val intent = Intent(context, ChatActivity::class.java)
+        activity?.startActivity(intent) : context.startActivity(intent)
+    }
 
-override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
-    context = null
-}
+    override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
+        channel.setMethodCallHandler(null)
+        context = null
+    }
 }

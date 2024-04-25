@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = "YOUR_WEBSITE_ID";
+  final String websiteID = "Your WebSite Id";
   late CrispConfig config;
 
   @override
@@ -55,11 +55,24 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Crisp Chat'),
         ),
         body: Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              await FlutterCrispChat.openCrispChat(config: config);
-            },
-            child: const Text('Open Crisp Chat'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await FlutterCrispChat.openCrispChat(config: config);
+                },
+                child: const Text('Open Crisp Chat'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  await FlutterCrispChat.resetCrispChatSession();
+                },
+                child: const Text('Reset Crisp Chat Session'),
+              ),
+            ],
           ),
         ),
       ),
