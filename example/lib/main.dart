@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = "Your WebSite Id";
+  final String websiteID = "YOUR_WEBSITE_ID";
   late CrispConfig config;
 
   @override
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () async {
                   await FlutterCrispChat.resetCrispChatSession();
                 },
-                child: const Text('Reset Crisp Chat Session'),
+                child: const Text('Reset Chat Session'),
               ),
             ],
           ),

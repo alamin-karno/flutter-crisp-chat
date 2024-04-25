@@ -39,7 +39,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 viewController.present(ChatViewController(), animated: true)
             }
         }
-        else if call.method == "resetChatSession" {
+        else if call.method == "resetCrispChatSession" {
             CrispSDK.session.reset()
         }
         else {

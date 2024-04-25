@@ -1,3 +1,6 @@
+# 2.0.2
+* Added option to reset chat session
+
 ## 2.0.1
 * Added session segment support
 

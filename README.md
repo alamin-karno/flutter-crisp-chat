@@ -41,7 +41,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.0.1
+  crisp_chat: ^2.0.2
 ```
 
 ### iOS
@@ -112,7 +112,7 @@ import 'package:crisp_chat/crisp_chat.dart';
 
 
  ```dart 
- @override
+   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -121,18 +121,29 @@ import 'package:crisp_chat/crisp_chat.dart';
           title: const Text('Crisp Chat'),
         ),
         body: Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              await FlutterCrispChat.openCrispChat(
-                config: config,
-              );
-            },
-            child: const Text('Open Crisp Chat'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await FlutterCrispChat.openCrispChat(config: config);
+                },
+                child: const Text('Open Crisp Chat'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  await FlutterCrispChat.resetCrispChatSession();
+                },
+                child: const Text('Reset Chat Session'),
+              ),
+            ],
           ),
         ),
       ),
     );
-  } 
+  }
   ```
 
 To use this code, you will need to provide your own Crisp website ID. You can do this by replacing `YOUR_WEBSITE_KEY` with your own website ID. Once you have done this, you can run the app and press the `"Open Crisp Chat"` button to launch the chat window. You can add more information using `CrispConfig`.
