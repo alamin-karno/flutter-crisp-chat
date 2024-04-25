@@ -1,10 +1,10 @@
 # 2.0.2
 * Added option to reset chat session
 
-## 2.0.1
+# 2.0.1
 * Added session segment support
 
-## 2.0.0
+# 2.0.0
 
 * updated UI to match Web & iOS chat boxes
 * added Take photo support
@@ -31,7 +31,7 @@
 * fixed various not yet reported bugs & crashes.
 * [#4](https://github.com/alamin-karno/flutter-crisp-chat/issues/4): Build fail due to crisp_chat dependency fixed.
 
-## 1.0.0
+# 1.0.0
 
 * Added Markdown support
 * updated android crisp version `1.0.16` to `1.0.18`
@@ -41,23 +41,23 @@
 * Update Android SDK from API `33` to `34`.
 
 
-## 0.0.4
+# 0.0.4
 
 * added user configuration option in crisp configuration
 * updated android crisp version `1.0.14` to `1.0.16`
 
-## 0.0.3
+# 0.0.3
 
 * change readme file
 
-## 0.0.2
+# 0.0.2
 
 * crisp chat add for native platform
 * fixed iOS dependency not found
 * fixed calling method 
 
 
-## 0.0.1
+# 0.0.1
 
 * crisp Chat add for native platform
 
