@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = "b3f3d31f-f27c-4f54-a9b2-b9db89a86316";
+  final String websiteID = "Your WebSite Id";
   late CrispConfig config;
 
   @override
@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     config = CrispConfig(
       websiteID: websiteID,
-      tokenId: "Token Id3",
+      tokenId: "Token Id",
       sessionSegment: 'test_segment',
       user: User(
         avatar:
