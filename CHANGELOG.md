@@ -25,8 +25,9 @@ Installation update
 ---
 If your app declares a `FileProvider` in its `AndroidManifest.xml`, please add Crisp authority and path to it as follows as it is required for the file upload feature.
 
+`AndroidManifest.xml`
+
 ```html
-AndroidManifest.xml
 <provider android:name="androidx.core.content.FileProvider"
 android:authorities="${applicationId}.fileprovider;${applicationId}.im.crisp.client.uploadfileprovider"
 android:exported="false"
@@ -38,7 +39,7 @@ tools:replace="android:resource" />
 </provider>
 ```
 
-res/xml/file_paths.xml
+`res/xml/file_paths.xml`
 
 ```html
 <files-path name="crisp_sdk_attachments" path="im.crisp.client/attachments/" />
