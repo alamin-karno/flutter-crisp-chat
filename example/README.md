@@ -8,10 +8,10 @@ Note: This plugin is still under development, anyone want to contribute on this 
 
 ## Screenshot (GIF)
 
-|             Android  (GIF)            |              iOS    (GIF)          |
-|:---------------------------------------------------:|:---------------------------------------------------:|
+|                                                            Android  (GIF)                                                             |                                                           iOS    (GIF)                                                            |
+|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.gif?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.gif?raw=true" width = "250"> |
-|             Android  (Image)            |              iOS    (Image)          |
+|                                                           Android  (Image)                                                            |                                                          iOS    (Image)                                                           |
 | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.png?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.png?raw=true" width = "250"> |
 
 ## Additional information
@@ -28,13 +28,13 @@ Note: This plugin is still under development, anyone want to contribute on this 
      <img alt="Md. Al-Amin" src="https://avatars.githubusercontent.com/alamin-karno" width="125px;"> <br>
      <sub><b> Md. Al-Amin </b></sub>
      </a><br></td></tr>
-     </tbody> </table> </p>
+     </tbody> </table> 
 
 
 <h3 align="center"> ✨VALUABLE CONTRIBUTORS✨ </h3>
 <p align="center">
 <a href="https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat" />
+  <img src="https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat"  alt="Contributions"/>
 </a>
 </p>
 <h3 align="center"> Happy Coding 👨‍💻 </h3>
