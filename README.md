@@ -93,7 +93,7 @@ Change the minimum Android SDK version to 21 (or higher) in your `android/app/bu
 minSdkVersion 21
 ```
 
-Add Crisp authority and path to your FileProvider in `AndroidManifest.xml` (if any)
+Add Crisp authority and path to your FileProvider in `AndroidManifest.xml` (If your app declares a FileProvider in its AndroidManifest.xml)
 
 ```html
 <provider android:name="androidx.core.content.FileProvider"
