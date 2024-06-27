@@ -34,4 +34,17 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <!--Crisp authority and path to it as follows as it is required for the file upload feature (if any)-->
+
+    <!--<provider android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.fileprovider;${applicationId}.im.crisp.client.uploadfileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true"
+        tools:replace="android:authorities">
+        <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths"
+            tools:replace="android:resource" />
+    </provider>-->
+
 </manifest>

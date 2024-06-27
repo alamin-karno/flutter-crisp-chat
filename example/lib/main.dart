@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:crisp_chat/crisp_chat.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());

@@ -3,6 +3,7 @@ package com.alaminkarno.flutter_crisp_chat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -95,13 +96,22 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 Crisp.setUserNickname(config.user.nickName);
             }
             if (config.user.email != null) {
-                Crisp.setUserEmail(config.user.email);
+                boolean result =  Crisp.setUserEmail(config.user.email);
+                if(!result){
+                    Log.d("CRSIP_CHAT","Email not set");
+                }
             }
             if (config.user.avatar != null) {
-                Crisp.setUserAvatar(config.user.avatar);
+               boolean result = Crisp.setUserAvatar(config.user.avatar);
+               if(!result){
+                   Log.d("CRSIP_CHAT","Avatar not set");
+               }
             }
             if (config.user.phone != null) {
-                Crisp.setUserPhone(config.user.phone);
+                boolean result =  Crisp.setUserPhone(config.user.phone);
+                if(!result){
+                    Log.d("CRSIP_CHAT","Phone not set");
+                }
             }
             if (config.user.company != null) {
                 Crisp.setUserCompany(config.user.company.toCrispCompany());

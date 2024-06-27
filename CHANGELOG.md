@@ -1,3 +1,50 @@
+# 2.0.3
+
+Features
+---
+* added video game suggestion,
+* added new messages alerts,
+* sync compose, text area, operator, scroll and wait for reply and new messages alerts.
+---
+Fixes
+---
+* added missing markwon proguard rules,
+* fixed [#173](https://github.com/crisp-im/crisp-sdk-android/issues/173) crash by asking permission on photo taking when embedding app declares using `CAMERA` permission. If user denied it, next taps on this feature will show a dialog redirecting him to the app permission setting,
+* fixed attachment & loading dialogs color in Dark mode,
+* fixed `SecurityException` crashes on link touch due to `file://` schemes or 3rd-party installed app set to open any link but not exporting their Activity... So added a `Unable to open link. Check if an app, except you browser, is configured to open any link.` toast when touched link cannot be opened,
+* fixed a markdown parsing crash when it is too complex (huge regex or obfuscated code) by simply not applying markdown on this case,
+* fixed smileys horizontal alignment and ripple color on touch,
+* fixed picker choice icon alpha when disabled,
+* fixed a random audio player crash when released.
+---
+Dependencies
+---
+* updated AGP from `8.2.2` to `8.3.2`.
+---
+Installation update
+---
+If your app declares a `FileProvider` in its `AndroidManifest.xml`, please add Crisp authority and path to it as follows as it is required for the file upload feature.
+
+```html
+AndroidManifest.xml
+<provider android:name="androidx.core.content.FileProvider"
+android:authorities="${applicationId}.fileprovider;${applicationId}.im.crisp.client.uploadfileprovider"
+android:exported="false"
+android:grantUriPermissions="true"
+tools:replace="android:authorities">
+<meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+android:resource="@xml/file_paths"
+tools:replace="android:resource" />
+</provider>
+```
+
+res/xml/file_paths.xml
+
+```html
+<files-path name="crisp_sdk_attachments" path="im.crisp.client/attachments/" />
+```
+
+
 # 2.0.2
 * Added option to reset chat session
 

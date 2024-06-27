@@ -11,8 +11,8 @@ A flutter plugin package for using crisp chat natively on Android & iOS.
   <a href="https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors"><img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/alamin-karno/flutter-crisp-chat"></a>
   <a href="https://pub.dev/packages/crisp_chat"><img alt="Stars" src="https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social"/></a>
   <a href="https://github.com/alamin-karno/flutter-crisp-chat/issues?q=is%3Aissue+is%3Aclosed"><img alt="GitHub Closed Issues" src="https://img.shields.io/github/issues-closed-raw/alamin-karno/flutter-crisp-chat"></a>
-  <a href="patreon.com/alamin_karno"><img alt="Sponsors" src="https://img.shields.io/github/sponsors/alamin-karno"></a>
-  <span class="badge-buymeacoffee">
+  <a href="https://patreon.com/alamin_karno"><img alt="Sponsors" src="https://img.shields.io/github/sponsors/alamin-karno"></a>
+  <span class="badge-buy-me-a-coffee">
      <a href="https://buymeacoffee.com/alaminkarno" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee Donate Button" /></a>
   </span>
 </p>
@@ -62,7 +62,7 @@ Add two rows to the `ios/Runner/Info.plist`:
 
 If editing `Info.plist` as text, add:
 
-```xml
+```html
 <key>NSCameraUsageDescription</key>
 <string>your usage description here</string>
 <key>NSPhotoLibraryAddUsageDescription</key>
@@ -75,7 +75,7 @@ If editing `Info.plist` as text, add:
 
 Add Internet permission on `AndroidManifest.xml` in your `android/app/src/main/AndroidManifest.xml` file.
 
-```groovy
+```html
 <uses-permission android:name="android.permission.INTERNET"/>
 ```
 
@@ -91,6 +91,26 @@ Change the minimum Android SDK version to 21 (or higher) in your `android/app/bu
 
 ```groovy
 minSdkVersion 21
+```
+
+Add Crisp authority and path to your FileProvider in `AndroidManifest.xml` (if any)
+
+```html
+<provider android:name="androidx.core.content.FileProvider"
+  android:authorities="${applicationId}.fileprovider;${applicationId}.im.crisp.client.uploadfileprovider"
+  android:exported="false"
+  android:grantUriPermissions="true"
+  tools:replace="android:authorities">
+  <meta-data android:name="android.support.FILE_PROVIDER_PATHS" 
+    android:resource="@xml/file_paths"
+    tools:replace="android:resource" />
+</provider>
+```
+
+and `res/xml/file_paths.xml` add this 
+
+```html
+<files-path name="crisp_sdk_attachments" path="im.crisp.client/attachments/" />
 ```
 
 
@@ -163,11 +183,18 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
 ## Screenshot (GIF)
 
-|             Android  (GIF)            |              iOS    (GIF)          |
-|:---------------------------------------------------:|:---------------------------------------------------:|
+|                                                            Android  (GIF)                                                             |                                                           iOS    (GIF)                                                            |
+|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.gif?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.gif?raw=true" width = "250"> |
-|             Android  (Image)            |              iOS    (Image)          |
+|                                                           Android  (Image)                                                            |                                                          iOS    (Image)                                                           |
 | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.png?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.png?raw=true" width = "250"> |
+
+
+## Examples of companies using Crisp Chat
+
+- [Rokomari.com](https://rkmri.co/32ESMmTSAeIe/)
+- [L'Algo de Paulo](https://lalgodepaulo.com/)
+
 
 ## Additional information
 
@@ -183,13 +210,13 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
      <img alt="Md. Al-Amin" src="https://avatars.githubusercontent.com/alamin-karno" width="125px;"> <br>
      <sub><b> Md. Al-Amin </b></sub>
      </a><br></td></tr>
-     </tbody> </table> </p>
+     </tbody> </table> 
 
 
 <h3 align="center"> ✨VALUABLE CONTRIBUTORS✨ </h3>
 <p align="center">
 <a href="https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat" />
+  <img src="https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat"  alt="Contributors"/>
 </a>
 </p>
 <h3 align="center"> Happy Coding 👨‍💻 </h3>
