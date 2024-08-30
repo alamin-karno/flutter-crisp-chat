@@ -35,4 +35,17 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   Future<void> resetCrispChatSession() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  /// [setSessionString] is to call native platform and if no implementation
+  /// found through error.
+  void setSessionString({required String key, required String value}) {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  /// [setSessionInt] is to call native platform and if no implementation
+  /// found through error.
+  void setSessionInt({required String key, required int value}) {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+ 
 }
