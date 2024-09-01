@@ -24,4 +24,25 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   Future<void> resetCrispChatSession() async {
     await methodChannel.invokeMethod('resetCrispChatSession');
   }
+
+  /// [setSessionString] is used to invoke the Method Channel and call native
+  /// code with arguments `key` and `value`.
+  @override
+  void setSessionString({required String key, required String value}) {
+    methodChannel.invokeMethod('setSessionString', <String, String>{
+      'key': key,
+      'value': value,
+    });
+  }
+
+  /// [setSessionInt] is used to invoke the Method Channel and call native
+  /// code with arguments `key` and `value`.
+  @override
+  void setSessionInt({required String key, required int value}) {
+    methodChannel.invokeMethod('setSessionInt', <String, dynamic>{
+      'key': key,
+      'value': value,
+    });
+  }
+
 }

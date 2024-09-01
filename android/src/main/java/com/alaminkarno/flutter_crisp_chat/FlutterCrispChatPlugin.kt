@@ -66,6 +66,24 @@ class FlutterCrispChatPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "resetCrispChatSession" -> {
                 Crisp.resetChatSession(context)
             }
+            
+            "setSessionString" -> {
+                val args = call.arguments as HashMap<String?, Any?>
+                if (args != null) {
+                    val key = args["key"] as String
+                    val value = args["value"] as String
+                    Crisp.setSessionString(key, value)
+                }
+            }
+
+            "setSessionInt" -> {
+                val args = call.arguments as HashMap<String?, Any?>
+                if (args != null) {
+                    val key = args["key"] as String
+                    val value = args["value"] as Int
+                    Crisp.setSessionInt(key, value)
+                }
+            }
 
             else -> result.notImplemented()
         }

@@ -17,6 +17,18 @@ class MockFlutterCrispChatPlatform
     //
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> setSessionString({required String key, required String value}) {
+    //
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setSessionInt({required String key, required int value}) {
+    //
+    throw UnimplementedError();
+  }
 }
 
 void main() {

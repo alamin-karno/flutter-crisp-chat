@@ -79,7 +79,22 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             }
         } else if (call.method.equals("resetCrispChatSession")) {
             Crisp.resetChatSession(context);
-        } else {
+        } else if (call.method.equals("setSessionString")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String key = (String) args.get("key");
+                String value = (String) args.get("value");
+                Crisp.setSessionString(key, value);
+            }
+        } else if (call.method.equals("setSessionInt")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String key = (String) args.get("key");
+                int value = (int) args.get("value");
+                Crisp.setSessionInt(key, value);
+            }
+        }
+        else {
             result.notImplemented();
         }
     }

@@ -42,6 +42,28 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         else if call.method == "resetCrispChatSession" {
             CrispSDK.session.reset()
         }
+        else if call.method == "setSessionString" {
+            guard let args = call.arguments as? [String: Any],
+              let key = args["key"] as? String,
+              let value = args["value"] as? String else {
+                let errorMessage = "Expected key of type String and value of type String."
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: errorMessage, details: nil))
+                return
+            }
+            CrispSDK.session.setString(value, forKey: key)
+            result(nil)
+        }
+        else if call.method == "setSessionInt" {
+            guard let args = call.arguments as? [String: Any],
+              let key = args["key"] as? String,
+              let value = args["value"] as? Int else {
+                let errorMessage = "Expected key of type String and value of type Int."
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: errorMessage, details: nil))
+                return
+            }
+            CrispSDK.session.setInt(value, forKey: key)
+            result(nil)
+        }
         else {
             result(FlutterMethodNotImplemented)
         }

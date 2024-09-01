@@ -22,4 +22,15 @@ class FlutterCrispChat {
   static Future<void> resetCrispChatSession() {
     return FlutterCrispChatPlatform.instance.resetCrispChatSession();
   }
+
+  /// [setSessionString]  is to set session data string
+  static void setSessionString({required String key, required String value}) {
+    FlutterCrispChatPlatform.instance.setSessionString(key: key, value: value);
+  }
+
+  /// [setSessionInt]  is to set session data int
+  static void setSessionInt({required String key, required int value}) {
+    FlutterCrispChatPlatform.instance.setSessionInt(key: key, value: value);
+  }
+
 }
