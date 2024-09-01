@@ -1,3 +1,12 @@
+# 2.0.4
+* Added setSessionString method to set string session data.
+* Added setSessionInt method to set integer session data.
+
+Testing
+---
+* `FlutterCrispChat.setSessionString(key: "a_string", value: "string_value");`
+* `FlutterCrispChat.setSessionInt(key: "a_number", value: 12345);`
+
 # 2.0.3
 
 Features

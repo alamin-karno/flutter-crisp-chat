@@ -49,7 +49,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.0.3
+  crisp_chat: ^2.0.4
 ```
 
 ### iOS
@@ -156,6 +156,14 @@ import 'package:crisp_chat/crisp_chat.dart';
               ElevatedButton(
                 onPressed: () async {
                   await FlutterCrispChat.openCrispChat(config: config);
+                  FlutterCrispChat.setSessionString(
+                    key: "a_string",
+                    value: "Crisp Chat",
+                  );
+                  FlutterCrispChat.setSessionInt(
+                    key: "a_number",
+                    value: 12345,
+                  );
                 },
                 child: const Text('Open Crisp Chat'),
               ),

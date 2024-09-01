@@ -62,8 +62,14 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () async {
                   FlutterCrispChat.openCrispChat(config: config);
-                  FlutterCrispChat.setSessionString(key: "a_string", value: "string_value");
-                  FlutterCrispChat.setSessionInt(key: "a_number", value: 12345);
+                  FlutterCrispChat.setSessionString(
+                    key: "a_string",
+                    value: "Crisp Chat",
+                  );
+                  FlutterCrispChat.setSessionInt(
+                    key: "a_number",
+                    value: 12345,
+                  );
                 },
                 child: const Text('Open Crisp Chat'),
               ),

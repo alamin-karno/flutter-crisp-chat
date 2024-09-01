@@ -1,6 +1,7 @@
-import 'src/helper.dart';
 import 'src/config.dart';
 import 'src/flutter_crisp_chat_platform_interface.dart';
+import 'src/helper.dart';
+
 export 'src/config.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
@@ -23,14 +24,15 @@ class FlutterCrispChat {
     return FlutterCrispChatPlatform.instance.resetCrispChatSession();
   }
 
-  /// [setSessionString]  is to set session data string
+  /// [setSessionString]  is to set session data string.
+  /// [This data only send while [openCrispChat] is called.]
   static void setSessionString({required String key, required String value}) {
     FlutterCrispChatPlatform.instance.setSessionString(key: key, value: value);
   }
 
-  /// [setSessionInt]  is to set session data int
+  /// [setSessionInt]  is to set session data int.
+  /// [This data only send while [openCrispChat] is called.]
   static void setSessionInt({required String key, required int value}) {
     FlutterCrispChatPlatform.instance.setSessionInt(key: key, value: value);
   }
-
 }
