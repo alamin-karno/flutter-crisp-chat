@@ -1,3 +1,8 @@
+# 2.0.5
+* Updated iOS deprecated code
+* Change iOS code style
+* Updated AGP from `7.4.0` to `8.6.0`
+
 # 2.0.4
 * Added setSessionString method to set string session data.
 * Added setSessionInt method to set integer session data.
