@@ -1,3 +1,6 @@
+# 2.0.6
+* Update Crisp Android SDK `2.0.1beta2` to `2.0.3beta4`
+
 # 2.0.5
 * Updated iOS deprecated code
 * Change iOS code style
