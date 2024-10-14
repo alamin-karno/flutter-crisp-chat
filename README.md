@@ -13,20 +13,6 @@ A flutter plugin package for using crisp chat natively on Android & iOS.
 [![Sponsors](https://img.shields.io/github/sponsors/alamin-karno)](https://patreon.com/alamin_karno)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://buymeacoffee.com/alaminkarno)
 
-
-<p align="center">
-  <a href="https://pub.dev/packages/crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=crisp_chat&style=flat-square"></a>
-  <a href="https://github.com/alamin-karno/flutter-crisp-chat/commits/main/"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square"/></a>
-  <a href="https://github.com/alamin-karno/flutter-crisp-chat?tab=MIT-1-ov-file"><img alt="License" src="https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square"/></a>
-  <a href="https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors"><img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/alamin-karno/flutter-crisp-chat"></a>
-  <a href="https://pub.dev/packages/crisp_chat"><img alt="Stars" src="https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social"/></a>
-  <a href="https://github.com/alamin-karno/flutter-crisp-chat/issues?q=is%3Aissue+is%3Aclosed"><img alt="GitHub Closed Issues" src="https://img.shields.io/github/issues-closed-raw/alamin-karno/flutter-crisp-chat"></a>
-  <a href="https://patreon.com/alamin_karno"><img alt="Sponsors" src="https://img.shields.io/github/sponsors/alamin-karno"></a>
-  <span class="badge-buy-me-a-coffee">
-     <a href="https://buymeacoffee.com/alaminkarno" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee Donate Button" /></a>
-  </span>
-</p>
-
 Chat with website visitors, integrate your favorite tools, and deliver a great customer experience. - Crisp. The `Crisp Chat` is a package that provides a simple way to open chat window using native channel. Connect with Crisp Chat, register a user to chat (or not) and render a chat widget. Tested on Android and iOS. 
 
 `Note: If anyone want to contribute on this project is most welcome. If you have any idea or suggestion, please feel free to contact me.`
@@ -236,9 +222,9 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
 ### Project Maintainer ❤️
 
-| ![Md. Al-Amin](https://avatars.githubusercontent.com/alamin-karno) |
-|:------------------------------------------------------------------:|
-|         [**Md. Al-Amin**](https://github.com/alamin-karno)         |
+| <img src="https://avatars.githubusercontent.com/alamin-karno" width="100px"> |
+|:----------------------------------------------------------------------------:|
+|              [**Md. Al-Amin**](https://github.com/alamin-karno)              |
 
 ### ✨VALUABLE CONTRIBUTORS✨
 
