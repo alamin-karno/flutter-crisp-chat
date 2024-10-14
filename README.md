@@ -232,26 +232,6 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
 ### Happy Coding 👨‍💻
 
-<h3 align=center> Project Maintainer ❤️ </h3>
-<p align="center">
-<table align="center">
-  <tbody><tr>
-     <td align="center">
-     <a href="https://github.com/alamin-karno">
-     <img alt="Md. Al-Amin" src="https://avatars.githubusercontent.com/alamin-karno" width="125px;"> <br>
-     <sub><b> Md. Al-Amin </b></sub>
-     </a><br></td></tr>
-     </tbody> </table> 
-
-
-<h3 align="center"> ✨VALUABLE CONTRIBUTORS✨ </h3>
-<p align="center">
-<a href="https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat"  alt="Contributors"/>
-</a>
-</p>
-<h3 align="center"> Happy Coding 👨‍💻 </h3>
-
 ## Credits
 * Crisp Android and iOS SDK is owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
 
