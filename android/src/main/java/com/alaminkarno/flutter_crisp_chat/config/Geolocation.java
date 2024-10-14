@@ -24,8 +24,8 @@ public class Geolocation {
         return geolocation;
     }
 
-    public im.crisp.client.data.Geolocation toCrispGeolocation() {
-        return new im.crisp.client.data.Geolocation(
+    public im.crisp.client.external.data.Geolocation toCrispGeolocation() {
+        return new im.crisp.client.external.data.Geolocation(
                 city,
                 country
         );

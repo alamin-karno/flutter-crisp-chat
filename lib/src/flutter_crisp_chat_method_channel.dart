@@ -45,4 +45,16 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     });
   }
 
+  /// [getSessionIdentifier] retrieves the current session identifier from the native platform.
+  @override
+  Future<String?> getSessionIdentifier() async {
+    try {
+      final sessionId =
+          await methodChannel.invokeMethod<String>('getSessionIdentifier');
+      return sessionId;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get session identifier: '${e.message}'.");
+      return null;
+    }
+  }
 }

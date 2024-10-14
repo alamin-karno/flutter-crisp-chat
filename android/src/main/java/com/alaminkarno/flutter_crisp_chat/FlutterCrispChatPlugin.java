@@ -11,8 +11,8 @@ import com.alaminkarno.flutter_crisp_chat.config.CrispConfig;
 
 import java.util.HashMap;
 
-import im.crisp.client.ChatActivity;
-import im.crisp.client.Crisp;
+import im.crisp.client.external.ChatActivity;
+import im.crisp.client.external.Crisp;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -23,7 +23,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 /// [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
-/// to handaling Method Channel Callback from Flutter and Open new Activity.
+/// to handling Method Channel Callback from Flutter and Open new Activity.
 
 /**
  * FlutterCrispChatPlugin
@@ -71,7 +71,11 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {
                 CrispConfig config = CrispConfig.fromJson(args);
-                Crisp.configure(context, config.websiteId);
+                if (config.tokenId != null) {
+                    Crisp.configure(context, config.websiteId, config.tokenId);
+                } else {
+                    Crisp.configure(context, config.websiteId);
+                }
                 setCrispData(context, config);
                 openActivity();
             } else {
@@ -92,6 +96,14 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 String key = (String) args.get("key");
                 int value = (int) args.get("value");
                 Crisp.setSessionInt(key, value);
+            }
+        } else if (call.method.equals("getSessionIdentifier")) {
+
+            String sessionId = Crisp.getSessionIdentifier(context);
+            if (sessionId != null) {
+                result.success(sessionId);
+            } else {
+                result.error("NO_SESSION", "No active session found", null);
             }
         }
         else {

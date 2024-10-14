@@ -85,39 +85,43 @@ class FlutterCrispChatPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
             }
 
+            "getSessionIdentifier" -> {
+                val sessionId = Crisp.getSessionIdentifier(context)
+                if (sessionId != null) {
+                    result.success(sessionId)
+                } else {
+                    result.error("NO_SESSION", "No active session found", null)
+                }
+            }
+
             else -> result.notImplemented()
         }
     }
 
     private fun setCrispData(config: CrispConfig) {
-        if (config.tokenId != null) {
-            Crisp.setTokenID(config.tokenId)
+        config.tokenId?.let {
+            Crisp.setTokenID(it)
         }
-        if (config.sessionSegment != null) {
-            Crisp.setSessionSegment(config.sessionSegment)
+        config.sessionSegment?.let {
+            Crisp.setSessionSegment(it)
         }
-        if (config.user != null) {
-            if (config.user.nickName != null) {
-                Crisp.setUserNickname(config.user.nickName)
-            }
-            if (config.user.email != null) {
-                Crisp.setUserEmail(config.user.email)
-            }
-            if (config.user.avatar != null) {
-                Crisp.setUserAvatar(config.user.avatar)
-            }
-            if (config.user.phone != null) {
-                Crisp.setUserPhone(config.user.phone)
-            }
-            if (config.user.company != null) {
-                Crisp.setUserCompany(config.user.company.toCrispCompany())
-            }
+        config.user?.let { user ->
+            user.nickName?.let { Crisp.setUserNickname(it) }
+            user.email?.let { Crisp.setUserEmail(it) }
+            user.avatar?.let { Crisp.setUserAvatar(it) }
+            user.phone?.let { Crisp.setUserPhone(it) }
+            user.company?.let { Crisp.setUserCompany(it.toCrispCompany()) }
         }
     }
 
     private fun openActivity() {
         val intent = Intent(context, ChatActivity::class.java)
-        activity?.startActivity(intent) : context.startActivity(intent)
+        if (activity != null) {
+            activity?.startActivity(intent)
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
     }
 
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {

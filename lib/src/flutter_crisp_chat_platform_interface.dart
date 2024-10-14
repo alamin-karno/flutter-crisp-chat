@@ -47,5 +47,10 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   void setSessionInt({required String key, required int value}) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
- 
+
+  /// [getSessionIdentifier] retrieves the current session identifier from the native platform.
+  Future<String?> getSessionIdentifier() {
+    throw UnimplementedError(
+        'getSessionIdentifier() has not been implemented.');
+  }
 }

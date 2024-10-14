@@ -1,3 +1,8 @@
+# 2.0.7
+* Added `getSessionIdentifier` to get current session for Android only
+* Update Crisp Android SDK `2.0.3beta4` to `2.0.4`
+* Public APIs which were previously under `im.crisp.client` package are now under `im.crisp.client.external` one!
+
 # 2.0.6
 * Update Crisp Android SDK `2.0.1beta2` to `2.0.3beta4`
 

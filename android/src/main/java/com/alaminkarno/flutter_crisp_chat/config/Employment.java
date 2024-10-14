@@ -25,8 +25,8 @@ public class Employment {
     }
 
 
-    public im.crisp.client.data.Employment toCrispEmployment() {
-        return new im.crisp.client.data.Employment(
+    public im.crisp.client.external.data.Employment toCrispEmployment() {
+        return new im.crisp.client.external.data.Employment(
                 title,
                 role
         );

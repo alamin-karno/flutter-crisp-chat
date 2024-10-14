@@ -4,6 +4,16 @@ A flutter plugin package for using crisp chat natively on Android & iOS.
 
 ![Crisp Chat](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/image-1.png?raw=true)
 
+[![pub version](https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=crisp_chat&style=flat-square)](https://pub.dev/packages/crisp_chat)
+[![Last Commit](https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square)](https://github.com/alamin-karno/flutter-crisp-chat/commits/main/)
+[![License](https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square)](https://github.com/alamin-karno/flutter-crisp-chat?tab=MIT-1-ov-file)
+[![GitHub Contributors](https://img.shields.io/github/contributors/alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors)
+[![Stars](https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social)](https://pub.dev/packages/crisp_chat)
+[![GitHub Closed Issues](https://img.shields.io/github/issues-closed-raw/alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/issues?q=is%3Aissue+is%3Aclosed)
+[![Sponsors](https://img.shields.io/github/sponsors/alamin-karno)](https://patreon.com/alamin_karno)
+[![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://buymeacoffee.com/alaminkarno)
+
+
 <p align="center">
   <a href="https://pub.dev/packages/crisp_chat"><img alt="pub version" src="https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=crisp_chat&style=flat-square"></a>
   <a href="https://github.com/alamin-karno/flutter-crisp-chat/commits/main/"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square"/></a>
@@ -49,7 +59,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.0.6
+  crisp_chat: ^2.0.7
 ```
 
 ### iOS
@@ -164,6 +174,21 @@ import 'package:crisp_chat/crisp_chat.dart';
                     key: "a_number",
                     value: 12345,
                   );
+
+                  /// Checking session ID After 5 sec
+                  await Future.delayed(const Duration(seconds: 5), () async {
+                    String? sessionId =
+                    await FlutterCrispChat.getSessionIdentifier();
+                    if (sessionId != null) {
+                      if (kDebugMode) {
+                        print('Session ID: $sessionId');
+                      }
+                    } else {
+                      if (kDebugMode) {
+                        print('No active session found!');
+                      }
+                    }
+                  });
                 },
                 child: const Text('Open Crisp Chat'),
               ),
@@ -208,6 +233,18 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
 - [Flutter Crisp Chat (pub.dev)](https://pub.dev/packages/crisp_chat)
 - [Flutter Crisp Chat (GitHub)](https://github.com/alamin-karno/flutter-crisp-chat)
+
+### Project Maintainer ❤️
+
+| ![Md. Al-Amin](https://avatars.githubusercontent.com/alamin-karno) |
+|:------------------------------------------------------------------:|
+|         [**Md. Al-Amin**](https://github.com/alamin-karno)         |
+
+### ✨VALUABLE CONTRIBUTORS✨
+
+[![Contributors](https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors)
+
+### Happy Coding 👨‍💻
 
 <h3 align=center> Project Maintainer ❤️ </h3>
 <p align="center">

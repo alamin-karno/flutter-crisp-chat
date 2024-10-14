@@ -1,4 +1,5 @@
 import 'package:crisp_chat/crisp_chat.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -70,6 +71,21 @@ class _MyAppState extends State<MyApp> {
                     key: "a_number",
                     value: 12345,
                   );
+
+                  /// Checking session ID After 5 sec
+                  await Future.delayed(const Duration(seconds: 5), () async {
+                    String? sessionId =
+                        await FlutterCrispChat.getSessionIdentifier();
+                    if (sessionId != null) {
+                      if (kDebugMode) {
+                        print('Session ID: $sessionId');
+                      }
+                    } else {
+                      if (kDebugMode) {
+                        print('No active session found!');
+                      }
+                    }
+                  });
                 },
                 child: const Text('Open Crisp Chat'),
               ),

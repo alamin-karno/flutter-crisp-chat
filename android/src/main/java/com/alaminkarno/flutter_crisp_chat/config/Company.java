@@ -47,7 +47,7 @@ public class Company {
         return company;
     }
 
-    public im.crisp.client.data.Company toCrispCompany() {
+    public im.crisp.client.external.data.Company toCrispCompany() {
         java.net.URL companyUrl = null;
         if(url != null){
             try {
@@ -56,7 +56,7 @@ public class Company {
                 throw new RuntimeException(e);
             }
         }
-        return new im.crisp.client.data.Company(
+        return new im.crisp.client.external.data.Company(
                 name,
                 companyUrl,
                 companyDescription,
