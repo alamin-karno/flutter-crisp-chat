@@ -1,6 +1,6 @@
 PODS:
   - Crisp (1.1.0)
-  - crisp_chat (2.0.3):
+  - crisp_chat (2.0.7):
     - Crisp
     - Flutter
   - Flutter (1.0.0)
@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Crisp: b88f081c87566254e603d885dcdbc97596ade755
-  crisp_chat: 2a726a86ce1c796388db27c80f0f49c423b7c260
+  crisp_chat: f187030b93ce074ca4899e51085bfb704e4bef6b
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
 
 PODFILE CHECKSUM: a69b4e639ad4e65c02c4d8b5b17642141111f056
