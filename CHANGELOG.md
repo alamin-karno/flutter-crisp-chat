@@ -1,5 +1,5 @@
 # 2.0.9
-* Fixed reset chat session exception on iOS
+* Fixed [#20] reset chat session exception on iOS
 * Added `getSessionIdentifier` feature for iOS
 
 # 2.0.8
