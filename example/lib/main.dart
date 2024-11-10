@@ -25,8 +25,7 @@ class _MyAppState extends State<MyApp> {
       tokenId: "Token Id",
       sessionSegment: 'test_segment',
       user: User(
-        avatar:
-            "https://storage.googleapis.com/cms-storage-bucket/6a07d8a62f4308d2b854.svg",
+        avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
         email: "user@user.com",
         nickName: "Nick Name",
         phone: "5555555555",

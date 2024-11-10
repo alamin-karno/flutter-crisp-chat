@@ -20,13 +20,12 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
    /// [handle] is Handling MethodChannel Call and Getting Arguments from methods then pass through the Crisp SDK.
    /// then using ViewController opening the [ChatViewController] in UI.
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let args = call.arguments as? [String: Any] else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "No arguments passed.", details: nil))
-            return
-        }
-
         switch call.method {
         case "openCrispChat":
+            guard let args = call.arguments as? [String: Any] else {
+                        result(FlutterError(code: "INVALID_ARGUMENTS", message: "No arguments passed.", details: nil))
+                        return
+                    }
             let crispConfig = CrispConfig.fromJson(args)
             CrispSDK.configure(websiteID: crispConfig.websiteID)
 
@@ -56,9 +55,12 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
 
         case "resetCrispChatSession":
             CrispSDK.session.reset()
+            result(nil)
 
         case "setSessionString":
-            guard let key = args["key"] as? String, let value = args["value"] as? String else {
+            guard let args = call.arguments as? [String: Any],
+                  let key = args["key"] as? String,
+                  let value = args["value"] as? String else {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected key of type String and value of type String.", details: nil))
                 return
             }
@@ -66,12 +68,21 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             result(nil)
 
         case "setSessionInt":
-            guard let key = args["key"] as? String, let value = args["value"] as? Int else {
+            guard let args = call.arguments as? [String: Any],
+                  let key = args["key"] as? String,
+                  let value = args["value"] as? Int else {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected key of type String and value of type Int.", details: nil))
                 return
             }
             CrispSDK.session.setInt(value, forKey: key)
             result(nil)
+
+        case "getSessionIdentifier":
+                if let sessionId = CrispSDK.session.identifier {
+                    result(sessionId)
+                } else {
+                    result(FlutterError(code: "NO_SESSION", message: "No active session found", details: nil))
+                }
 
         default:
             result(FlutterMethodNotImplemented)
