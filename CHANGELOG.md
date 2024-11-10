@@ -1,3 +1,7 @@
+# 2.0.9
+* Fixed reset chat session exception on iOS
+* Added `getSessionIdentifier` feature for iOS
+
 # 2.0.8
 * Update Crisp Android SDK `2.0.4` to `2.0.5`. This fixed camera app crash on take photo feature on some devices
 * Update Crisp Android (Example App) Kotlin Version `1.6.10` to `1.7.10`
