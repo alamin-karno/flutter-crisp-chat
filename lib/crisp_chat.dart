@@ -8,18 +8,22 @@ export 'src/config.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
-  /// [openCrispChat] to open crisp chat. This method need
+  /// [openCrispChat] to open crisp chat. This method needs
   /// a required argument `CrispConfig` object which will be used to configure
-  /// crisp chat.
+  /// Crisp chat.
   static Future<void> openCrispChat({required CrispConfig config}) {
     // Validate email if provided
-    if (config.user?.email?.isEmail == false) {
+    final email = config.user?.email;
+    if (email != null && !email.isEmail) {
       throw Exception("User email is incorrect!");
     }
+
     // Validate company URL if provided
-    if (config.user?.company?.url?.isUrl == false) {
-      throw Exception("Company url is incorrect!");
+    final url = config.user?.company?.url;
+    if (url != null && !url.isUrl) {
+      throw Exception("Company URL is incorrect!");
     }
+
     // Call the platform-specific method to open Crisp chat
     return FlutterCrispChatPlatform.instance.openCrispChat(config: config);
   }
