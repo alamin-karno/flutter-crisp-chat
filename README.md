@@ -45,7 +45,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.0.9
+  crisp_chat: ^2.1.0
 ```
 
 ### iOS

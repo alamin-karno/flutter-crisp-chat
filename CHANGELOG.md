@@ -1,3 +1,7 @@
+# 2.1.0
+* Fixed [#21] unable to open chat for specific domain email
+* `isEmail` and `isUrl` helper validation fixed
+
 # 2.0.9
 * Fixed [#20] reset chat session exception on iOS
 * Added `getSessionIdentifier` feature for iOS
