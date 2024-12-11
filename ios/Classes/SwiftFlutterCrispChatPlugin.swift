@@ -88,5 +88,44 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             result(FlutterMethodNotImplemented)
         }
     }
+
+    public func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+            CrispSDK.setDeviceToken(deviceToken)
+    }
+
+    public func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                       willPresent notification: UNNotification,
+                                       withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+       if CrispSDK.isCrispPushNotification(notification) {
+            CrispSDK.handlePushNotification(notification)
+            completionHandler([.banner, .sound])
+          } else {
+              completionHandler([])
+          }
+       }
+
+    public func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                       didReceive response: UNNotificationResponse,
+                                       withCompletionHandler completionHandler: @escaping () -> Void) {
+       let notification = response.notification
+       if CrispSDK.isCrispPushNotification(notification) {
+           CrispSDK.handlePushNotification(notification)
+       }
+       completionHandler()
+    }
+
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                DispatchQueue.main.async {
+                        application.registerForRemoteNotifications()
+                }
+            }
+        }
+        center.delegate = self
+        return true
+    }
 }
 
