@@ -189,6 +189,8 @@ Notifications will be handled by **Crisp** `CrispNotificationService` and a tap 
     - Click the **“+”** button and add **“Push Notifications”**
  
 ![Push Notifications](https://github.com/user-attachments/assets/8581c872-f836-45f6-9a8c-7a5c5a998cea)
+- Important
+    - `Currently, push notifications are only sent to production APNs channels. Notifications will not be received when testing with development provisioning profiles or in sandbox mode. This limitation will be resolved in a future update.`
 
 
 #### v). Ensure Firebase initialization in your Flutter project
@@ -229,7 +231,7 @@ print('User granted permission: ${settings.authorizationStatus}');
 
 #### vii). Background messages
 
-The process of handling background messages is different on native (Android and Apple) and web based platforms.
+The process of handling background messages is different on native Android and Apple platforms.
 
 There are a few things to keep in mind about your background message handler:
 
