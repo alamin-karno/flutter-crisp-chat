@@ -147,10 +147,10 @@ and `res/xml/file_paths.xml` add this
 - Select your Workspace,
 - Go to **Settings** > **Chatbox Settings** > **Push Notifications**,
 - Under the **Firebase Cloud Messaging** section :
-        - Enable the **Notify users using Android (3)** option,
-        - Paste the **Sender ID** you have copied previously into the **Project ID (4)** field,
-        - Select or drag your **Firebase Admin private key** file you have downloaded earlier in the **Certificate (5)** box,
-        - Click on the Verify **Credentials (6)** button.
+    - Enable the **Notify users using Android (3)** option,
+    - Paste the **Sender ID** you have copied previously into the **Project ID (4)** field,
+    - Select or drag your **Firebase Admin private key** file you have downloaded earlier in the **Certificate (5)** box,
+    - Click on the Verify **Credentials (6)** button.
   
 ![Enable Push Notifications in Crisp dashboard](https://github.com/user-attachments/assets/1fe0225e-4a1b-49bd-8814-c4d662fbf703)
 
@@ -263,8 +263,14 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 ```
-      
-### 4. Usage
+
+### 4. Get your Website ID:
+---
+Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
+
+![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)      
+
+### 5. Setup your flutter app to use Crisp
 ---
 
 To open ChatView for crisp, use the `openCrispChat` method of the `FlutterCrispChat` class:
@@ -350,11 +356,6 @@ import 'package:crisp_chat/crisp_chat.dart';
   ```
 
 To use this code, you will need to provide your own Crisp website ID. You can do this by replacing `YOUR_WEBSITE_KEY` with your own website ID. Once you have done this, you can run the app and press the `"Open Crisp Chat"` button to launch the chat window. You can add more information using `CrispConfig`.
-
-### Get your Website ID:
-Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
-
-![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
 
 
 ## Screenshot (GIF)
