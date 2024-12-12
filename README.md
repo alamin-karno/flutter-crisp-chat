@@ -21,11 +21,12 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 
 ## Features
 
-- [x] Null-safety enable
-- [x] Easy to use
-- [x] Customizable
-- [x] User configuration with company and geoLocation
-- [x] Supports for iOS & Android
+- Null-safety enable
+- Easy to use
+- Customizable
+- User configuration with company and geoLocation
+- Send user notification about missing messages
+- Supports for iOS & Android
 
 ## Installation
 
@@ -56,7 +57,7 @@ dependencies:
 
 #### iOS
 
-Add two rows to the `ios/Runner/Info.plist`:
+Add three rows to the `ios/Runner/Info.plist`:
 
 * key `Privacy - Camera Usage Description` and a usage description.
 * key `Privacy - Photo Library Additions Usage Description` and a usage description.
@@ -117,23 +118,25 @@ and `res/xml/file_paths.xml` add this
 ### 3. Configure your app to receive Crisp notifications
 ---
 
-#### a). Create a Firebase project and add it to your Android app
-In order to complete this step, follow the Firebase [Get started](https://firebase.google.com/docs/android/setup) guide.
+#### i). Create a Firebase project and add it to your Flutter project
 
-At the end of it, also add the following dependency to your project.
-```yaml
-flutter pub add firebase_core
-flutter pub add firebase_messaging
-```
+- In order to complete this step, follow the Firebase [Get started](https://firebase.google.com/docs/android/setup) guide.
 
-#### b). Enable Push notifications in Crisp dashboard (Android)
+- At the end of it, also add the following dependency to your project.
+  ```yaml
+  flutter pub add firebase_core
+  flutter pub add firebase_messaging
+  ```
+
+#### ii). Enable Push notifications in Crisp dashboard for your Android app
+
 - Go to your Firebase **Project settings**,
 - Go to the **Cloud Messaging** tab,
-- In the Firebase **Cloud Messaging API (V1)** section, copy your *Sender ID (1)*, you will need it later.
+- In the Firebase **Cloud Messaging API (V1)** section, copy your **Sender ID (1)**, you will need it later.
 
 ![Copy your Firebase Cloud Messaging Sender ID](https://github.com/user-attachments/assets/778fcfdd-a9ad-465b-b425-a0b45bf5f0eb)
 
-- Copy your Firebase Cloud Messaging Sender ID
+- Copy your Firebase Cloud Messaging **Sender ID**
 - Go to the **Service accounts** tab,
 - In the **Firebase Admin SDK** section, click on the **Generate new private key (2)** button and save it for later.
   
@@ -159,7 +162,7 @@ flutter pub add firebase_messaging
   
 ![Crisp checking FCM Credentials](https://github.com/user-attachments/assets/9e6f902a-f37b-4d79-a5d6-8fe25e6a8e7f)
 
-#### c). Handle Push notifications in your Android app
+#### iii). Handle Push notifications in your Android app
 
 You just have to declare our `CrispNotificationService` in the application tag of your `AndroidManifest.xml`.
 
@@ -170,12 +173,12 @@ You just have to declare our `CrispNotificationService` in the application tag o
     <intent-filter>
       <action android:name="com.google.firebase.MESSAGING_EVENT" />
     </intent-filter>
-  </service>
+</service>
 ```
 
 Notifications will be handled by **Crisp** `CrispNotificationService` and a tap on it will launch your `MainActivity` and open **Crisp** `ChatActivity` with the corresponding session.
 
-#### d). Enable Push notifications in Crisp dashboard (iOS)
+#### iv). Enable Push notifications in Crisp dashboard for your iOS app
 
 - Create an **APNs-enabled** private key in your Apple Developer account. See the [Apple documentation](https://developer.apple.com/help/account/manage-keys/create-a-private-key/) for detailed instructions.
 - Upload your key and configure push notifications in the Crisp web app at **Settings** > **Chatbox Settings** > **Push Notifications**.
@@ -188,16 +191,65 @@ Notifications will be handled by **Crisp** `CrispNotificationService` and a tap 
 ![Push Notifications](https://github.com/user-attachments/assets/8581c872-f836-45f6-9a8c-7a5c5a998cea)
 
 
-#### e). Ensure Firebase initialization in your Flutter project
+#### v). Ensure Firebase initialization in your Flutter project
 
 ```dart
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
+}
+```
+
+#### vi). Request permission to receive messages
+
+On iOS, and Android 13 (or newer), before FCM payloads can be received on your device, you must first ask the user's permission.
+
+```dart
+FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+NotificationSettings settings = await messaging.requestPermission(
+  alert: true,
+  announcement: false,
+  badge: true,
+  carPlay: false,
+  criticalAlert: false,
+  provisional: false,
+  sound: true,
+);
+
+print('User granted permission: ${settings.authorizationStatus}');
+```
+
+#### vii). Background messages
+
+The process of handling background messages is different on native (Android and Apple) and web based platforms.
+
+There are a few things to keep in mind about your background message handler:
+
+- It must not be an anonymous function.
+- It must be a top-level function (e.g. not a class method which requires initialization).
+- When using Flutter version 3.3.0 or higher, the message handler must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
+
+```dart
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'firebase_options.dart';
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  if (kDebugMode) {
-    print("Handling a background message: ${message.messageId}");
-  }
+  print("Handling a background message: ${message.messageId}");
 }
 
 Future<void> main() async {
@@ -300,15 +352,12 @@ To use this code, you will need to provide your own Crisp website ID. You can do
 ### Get your Website ID:
 Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
-![Crisp Dashboard](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/image.png?raw=true)
+![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
+
 
 ## Screenshot (GIF)
 
-|                                                            Android  (GIF)                                                             |                                                           iOS    (GIF)                                                            |
-|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.gif?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.gif?raw=true" width = "250"> |
-|                                                           Android  (Image)                                                            |                                                          iOS    (Image)                                                           |
-| <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.png?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.png?raw=true" width = "250"> |
+![Crisp Chat SDK for Android](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
 
 
 ## Examples of companies using Crisp Chat
