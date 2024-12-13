@@ -1,3 +1,10 @@
+# 2.2.0
+* Update Crisp Android SDK `2.0.5` to `2.0.8`.
+* Added notification support for sending missing messages
+* Fixed [#10]: Message Callback
+* Fixed [#10]: Event: onMessageReceived
+* Fixed [#24]: Add Notifications Support
+
 # 2.1.0
 * Fixed [#21] unable to open chat for specific domain email
 * `isEmail` and `isUrl` helper validation fixed
