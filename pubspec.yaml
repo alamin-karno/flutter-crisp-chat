@@ -26,3 +26,17 @@ flutter:
       ios:
         pluginClass: FlutterCrispChatPlugin
 
+topics:
+  - crisp
+  - crisp-chat
+  - chat
+  - communication
+
+funding:
+  - https://buymeacoffee.com/alaminkarno
+  - https://www.patreon.com/alamin_karno
+
+false_secrets:
+  - /example/lib/firebase_options.dart
+  - /example/android/app/google-services.json
+
