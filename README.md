@@ -145,7 +145,7 @@ and `res/xml/file_paths.xml` add this
 - Generate and download your Firebase Admin private key
 - Go to your **[Crisp Dashboard](https://app.crisp.chat/)**,
 - Select your Workspace,
-- Go to **Settings** > **Chatbox Settings** > **Push Notifications**,
+- Go to **Settings** > **ChatBox Settings** > **Push Notifications**,
 - Under the **Firebase Cloud Messaging** section :
     - Enable the **Notify users using Android (3)** option,
     - Paste the **Sender ID** you have copied previously into the **Project ID (4)** field,
@@ -178,7 +178,28 @@ You just have to declare our `CrispNotificationService` in the application tag o
 
 Notifications will be handled by **Crisp** `CrispNotificationService` and a tap on it will launch your `MainActivity` and open **Crisp** `ChatActivity` with the corresponding session.
 
-#### iv). Enable Push notifications in Crisp dashboard for your iOS app
+#### iv). Customize Push notifications for android app
+
+Crisp Push notifications customizable in 3 ways: color, icon and sound.
+
+For the first two, you can update them from your `AndroidManifest.xml` as you would do with Firebase.
+
+```xml
+  <application>
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@drawable/my_notification_icon"
+      tools:replace="android:resource" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_color"
+      android:resource="@color/my_notification_color"
+      tools:replace="android:resource" />
+  </application>
+```
+
+For the sound, you can add a `raw` resource named `crisp_chat_message_receive` to your app which will be played upon notification receipt.
+
+#### v). Enable Push notifications in Crisp dashboard for your iOS app
 
 - Create an **APNs-enabled** private key in your Apple Developer account. See the [Apple documentation](https://developer.apple.com/help/account/manage-keys/create-a-private-key/) for detailed instructions.
 - Upload your key and configure push notifications in the Crisp web app at **Settings** > **Chatbox Settings** > **Push Notifications**.
@@ -193,7 +214,7 @@ Notifications will be handled by **Crisp** `CrispNotificationService` and a tap 
     - `Currently, push notifications are only sent to production APNs channels. Notifications will not be received when testing with development provisioning profiles or in sandbox mode. This limitation will be resolved in a future update.`
 
 
-#### v). Ensure Firebase initialization in your Flutter project
+#### vi). Ensure Firebase initialization in your Flutter project
 
 ```dart
 import 'package:firebase_core/firebase_core.dart';
@@ -209,7 +230,7 @@ Future<void> main() async {
 }
 ```
 
-#### vi). Request permission to receive messages
+#### vii). Request permission to receive messages
 
 On iOS, and Android 13 (or newer), before FCM payloads can be received on your device, you must first ask the user's permission.
 
@@ -229,7 +250,7 @@ NotificationSettings settings = await messaging.requestPermission(
 print('User granted permission: ${settings.authorizationStatus}');
 ```
 
-#### vii). Background messages
+#### viii). Background messages
 
 The process of handling background messages is different on native Android and Apple platforms.
 
