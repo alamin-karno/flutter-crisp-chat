@@ -1,16 +1,16 @@
 # 2.2.0
 * Update Crisp Android SDK `2.0.5` to `2.0.8`.
 * Added notification support for sending missing messages
-* Fixed [#10]: Message Callback
-* Fixed [#10]: Event: onMessageReceived
-* Fixed [#24]: Add Notifications Support
+* Fixed [#10](https://github.com/alamin-karno/flutter-crisp-chat/issues/10): Message Callback
+* Fixed [#17](https://github.com/alamin-karno/flutter-crisp-chat/issues/17): Event: onMessageReceived
+* Fixed [#24](https://github.com/alamin-karno/flutter-crisp-chat/issues/24): Add Notifications Support
 
 # 2.1.0
-* Fixed [#21] unable to open chat for specific domain email
+* Fixed [#21](https://github.com/alamin-karno/flutter-crisp-chat/issues/21) unable to open chat for specific domain email
 * `isEmail` and `isUrl` helper validation fixed
 
 # 2.0.9
-* Fixed [#20] reset chat session exception on iOS
+* Fixed [#20](https://github.com/alamin-karno/flutter-crisp-chat/issues/20) reset chat session exception on iOS
 * Added `getSessionIdentifier` feature for iOS
 
 # 2.0.8
@@ -49,7 +49,7 @@ Features
 ---
 Fixes
 ---
-* added missing markwon proguard rules,
+* added missing markdown proguard rules,
 * fixed [#173](https://github.com/crisp-im/crisp-sdk-android/issues/173) crash by asking permission on photo taking when embedding app declares using `CAMERA` permission. If user denied it, next taps on this feature will show a dialog redirecting him to the app permission setting,
 * fixed attachment & loading dialogs color in Dark mode,
 * fixed `SecurityException` crashes on link touch due to `file://` schemes or 3rd-party installed app set to open any link but not exporting their Activity... So added a `Unable to open link. Check if an app, except you browser, is configured to open any link.` toast when touched link cannot be opened,
