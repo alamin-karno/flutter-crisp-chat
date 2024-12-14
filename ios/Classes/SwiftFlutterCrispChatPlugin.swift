@@ -115,17 +115,20 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
        completionHandler()
     }
 
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    @objc(application:didFinishLaunchingWithOptions:)
+    public func application(_ application: UIApplication,
+                            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
                 DispatchQueue.main.async {
-                        application.registerForRemoteNotifications()
+                    application.registerForRemoteNotifications()
                 }
             }
         }
         center.delegate = self
         return true
     }
+
 }
 
