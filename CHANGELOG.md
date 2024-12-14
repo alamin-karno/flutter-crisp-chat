@@ -1,3 +1,9 @@
+# 2.2.1
+* Added proper documentation for notification sending via crisp
+* Fixed issue: [27](https://github.com/alamin-karno/flutter-crisp-chat/issues/27)
+* Fixed issue: [28](https://github.com/alamin-karno/flutter-crisp-chat/issues/28)
+* Fixed issue: [29](https://github.com/alamin-karno/flutter-crisp-chat/issues/29)
+
 # 2.2.0
 * Update Crisp Android SDK `2.0.5` to `2.0.8`.
 * Added notification support for sending missing messages
