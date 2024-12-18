@@ -1,3 +1,8 @@
+# 2.2.2
+* Added Specific Crisp iOS SDK `2.8.1`
+* Fixed issue: [33](https://github.com/alamin-karno/flutter-crisp-chat/issues/33)
+* Fixed issue: [36](https://github.com/alamin-karno/flutter-crisp-chat/issues/36)
+
 # 2.2.1
 * Added proper documentation for notification sending via crisp
 * Fixed issue: [27](https://github.com/alamin-karno/flutter-crisp-chat/issues/27)
