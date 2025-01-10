@@ -1,3 +1,6 @@
+# 2.2.3
+* Update Crisp Android SDK `2.0.8` to `2.0.9`.
+* 
 # 2.2.2
 * Added Specific Crisp iOS SDK `2.8.1`
 * Fixed issue: [33](https://github.com/alamin-karno/flutter-crisp-chat/issues/33)
