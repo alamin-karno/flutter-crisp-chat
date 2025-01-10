@@ -48,7 +48,8 @@ class _MyAppState extends State<MyApp> {
         nickName: "Md. Al-Amin",
         phone: "5555555555",
         company: Company(
-          companyDescription: "Unlock superior software solutions with Vivasoft, a leading offshore development firm delivering creativity and expertise.",
+          companyDescription:
+              "Unlock superior software solutions with Vivasoft, a leading offshore development firm delivering creativity and expertise.",
           name: "Vivasoft Limited",
           url: "https://vivasoftltd.com/",
           employment: Employment(
