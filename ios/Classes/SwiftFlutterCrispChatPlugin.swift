@@ -112,7 +112,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     }
 
     /// Handles incoming notifications and checks if they are Crisp notifications.
-    /// If they are, they are processed by the Crisp SDK.
+    /// If they are Crisp notifications, they are processed by the Crisp SDK. Otherwise, they are handled as usual.
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -124,17 +124,27 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 completionHandler([.alert, .sound])
             }
         } else {
-            completionHandler([])
+            // Notify Flutter or rethrow to allow other handlers to process the notification
+            channel?.invokeMethod("onNotificationReceived", arguments: notification.request.content.userInfo)
+            if #available(iOS 14.0, *) {
+                completionHandler([.banner, .sound, .badge])
+            } else {
+                completionHandler([.alert, .sound, .badge])
+            }
         }
     }
 
     /// Handles user interactions with notifications.
+    /// Crisp notifications are processed by the Crisp SDK. Non-Crisp notifications are re-thrown.
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
         let notification = response.notification
         if CrispSDK.isCrispPushNotification(notification) {
             CrispSDK.handlePushNotification(notification)
+        } else {
+            // Notify Flutter about the interaction or rethrow for further processing
+            channel?.invokeMethod("onNotificationTapped", arguments: response.notification.request.content.userInfo)
         }
         completionHandler()
     }
