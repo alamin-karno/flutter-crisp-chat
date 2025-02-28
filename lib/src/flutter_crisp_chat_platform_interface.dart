@@ -56,8 +56,10 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
 
   /// [setSessionSegments] Sets a collection of session segments
   /// and optionally overwrite existing ones (default is false)
-  void setSessionSegments(
-      {required List<String> segments, bool overwrite = false}) {
+  void setSessionSegments({
+    required List<String> segments,
+    bool overwrite = false,
+  }) {
     throw UnimplementedError('setSessionSegments() has not been implemented.');
   }
 }
