@@ -98,7 +98,19 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             } else {
                 result(FlutterError(code: "NO_SESSION", message: "No active session found", details: nil))
             }
-
+            
+        case "setSessionSegments":
+            // Sets session segment
+            guard let args = call.arguments as? [String: Any],
+                  let segments = args["segments"] as? [String],
+                  let overwrite = args["overwrite"] as? Bool else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected segments of type String and overwrite of type Bool.", details: nil))
+                return
+            }
+            
+            let previousSegments = CrispSDK.session.segments
+            CrispSDK.session.segments = overwrite ? segments : (previousSegments ?? []) + segments
+            result(nil)
         default:
             // Handles unimplemented method calls
             result(FlutterMethodNotImplemented)

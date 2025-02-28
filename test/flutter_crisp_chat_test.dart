@@ -34,6 +34,12 @@ class MockFlutterCrispChatPlatform
   Future<String?> getSessionIdentifier() {
     throw UnimplementedError();
   }
+
+  @override
+  void setSessionSegments(
+      {required List<String> segments, bool overwrite = false}) {
+    throw UnimplementedError();
+  }
 }
 
 void main() {

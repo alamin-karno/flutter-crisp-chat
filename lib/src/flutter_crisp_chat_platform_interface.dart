@@ -53,4 +53,11 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     throw UnimplementedError(
         'getSessionIdentifier() has not been implemented.');
   }
+
+  /// [setSessionSegments] Sets a collection of session segments
+  /// and optionally overwrite existing ones (default is false)
+  void setSessionSegments(
+      {required List<String> segments, bool overwrite = false}) {
+    throw UnimplementedError('setSessionSegments() has not been implemented.');
+  }
 }
