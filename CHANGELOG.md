@@ -3,6 +3,7 @@
 * Update Crisp iOS SDK `2.8.1` to `2.8.2`.
 * Added `enableNotifications` flag in `CrispConfig` to enable/disable notifications for your site.
 * Improved JSON parsing and type safety for `enableNotifications` flag.
+* Added `setSessionSegments` method to support clients using multiple segments with Crisp.
 
 # 2.2.3
 * Update Crisp Android SDK `2.0.8` to `2.0.9`.
