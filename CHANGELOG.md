@@ -1,6 +1,12 @@
+# 2.2.4
+* Update Crisp Android SDK `2.0.9` to `2.0.10`.
+* Update Crisp iOS SDK `2.8.1` to `2.8.2`.
+* Added `enableNotifications` flag in `CrispConfig` to enable/disable notifications for your site.
+* Improved JSON parsing and type safety for `enableNotifications` flag.
+
 # 2.2.3
 * Update Crisp Android SDK `2.0.8` to `2.0.9`.
-* 
+
 # 2.2.2
 * Added Specific Crisp iOS SDK `2.8.1`
 * Fixed issue: [33](https://github.com/alamin-karno/flutter-crisp-chat/issues/33)
