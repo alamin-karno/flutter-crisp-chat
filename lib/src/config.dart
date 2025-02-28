@@ -5,17 +5,20 @@
 /// - [websiteID]: The ID of your website. Replace it with your WEBSITE_ID.
 /// - [tokenId]: Assigns the next session with a tokenID.
 /// - [sessionSegment]: Assigns a session segment name for more information.
+/// - [enableNotifications]: Enable notification for your site. by default it's true.
 /// - [user]: Represents user information.
 class CrispConfig {
   String websiteID;
   String? tokenId;
   String? sessionSegment;
+  bool enableNotifications;
   User? user;
 
   CrispConfig({
     required this.websiteID,
     this.tokenId,
     this.sessionSegment,
+    this.enableNotifications = true,
     this.user,
   });
 
@@ -27,6 +30,7 @@ class CrispConfig {
       "websiteId": websiteID, // Appears as "websiteId" in the JSON.
       "tokenId": tokenId,
       "sessionSegment": sessionSegment,
+      "enableNotifications": enableNotifications,
       "user": user?.toJson(),
     };
   }

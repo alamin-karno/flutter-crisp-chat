@@ -62,11 +62,16 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   /// [setSessionSegments] Sets a collection of session segments
   /// and optionally overwrite existing ones (default is false)
   @override
-  void setSessionSegments(
-      {required List<String> segments, bool overwrite = false}) {
-    methodChannel.invokeMethod('setSessionSegments', <String, dynamic>{
-      'segments': segments,
-      'overwrite': overwrite,
-    });
+  void setSessionSegments({
+    required List<String> segments,
+    bool overwrite = false,
+  }) {
+    methodChannel.invokeMethod(
+      'setSessionSegments',
+      <String, dynamic>{
+        'segments': segments,
+        'overwrite': overwrite,
+      },
+    );
   }
 }

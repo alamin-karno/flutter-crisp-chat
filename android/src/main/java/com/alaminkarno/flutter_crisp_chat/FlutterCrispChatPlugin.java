@@ -77,6 +77,8 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 } else {
                     Crisp.configure(context, config.websiteId);
                 }
+
+                Crisp.enableNotifications(context, config.enableNotifications);
                 setCrispData(context, config);
                 openActivity();
             } else {

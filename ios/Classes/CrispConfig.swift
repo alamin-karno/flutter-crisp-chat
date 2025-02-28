@@ -116,12 +116,14 @@ struct CrispConfig {
     let tokenId: String?
     let sessionSegment: String?
     let user: User?
+    let enableNotifications: Bool
     
-    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?) {
+    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?, enableNotifications: Bool) {
         self.websiteID = websiteID
         self.tokenId = tokenId
         self.sessionSegment = sessionSegment
         self.user = user
+        self.enableNotifications = enableNotifications
     }
     
     static func fromJson(_ json: [String: Any]) -> CrispConfig {
@@ -129,7 +131,8 @@ struct CrispConfig {
             websiteID: json["websiteId"] as! String,
             tokenId: json["tokenId"] as? String,
             sessionSegment: json["sessionSegment"] as? String,
-            user: User.fromJson(json["user"] as? [String: Any] ?? [:])
+            user: User.fromJson(json["user"] as? [String: Any] ?? [:]),
+            enableNotifications: json["enableNotifications"] as? Bool ?? true
         )
     }
 }
