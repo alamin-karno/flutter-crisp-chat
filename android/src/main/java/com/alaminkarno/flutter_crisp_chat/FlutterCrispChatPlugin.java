@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.alaminkarno.flutter_crisp_chat.config.CrispConfig;
 
 import java.util.HashMap;
+import java.util.List;
 
 import im.crisp.client.external.ChatActivity;
 import im.crisp.client.external.Crisp;
@@ -98,12 +99,18 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 Crisp.setSessionInt(key, value);
             }
         } else if (call.method.equals("getSessionIdentifier")) {
-
             String sessionId = Crisp.getSessionIdentifier(context);
             if (sessionId != null) {
                 result.success(sessionId);
             } else {
                 result.error("NO_SESSION", "No active session found", null);
+            }
+        } else if (call.method.equals("setSessionSegments")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                List<String> segments = (List<String>) args.get("segments");
+                boolean overwrite = (boolean) args.get("overwrite");
+                Crisp.setSessionSegments(segments, overwrite);
             }
         }
         else {

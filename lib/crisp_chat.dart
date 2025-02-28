@@ -70,4 +70,12 @@ class FlutterCrispChat {
       return null;
     }
   }
+
+  /// [setSessionSegments] Sets a collection of session segments
+  /// and optionally overwrite existing ones (default is false)
+  static void setSessionSegments(
+      {required List<String> segments, bool overwrite = false}) {
+    FlutterCrispChatPlatform.instance
+        .setSessionSegments(segments: segments, overwrite: overwrite);
+  }
 }

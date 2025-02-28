@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'config.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
@@ -56,5 +57,16 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       debugPrint("Failed to get session identifier: '${e.message}'.");
       return null;
     }
+  }
+
+  /// [setSessionSegments] Sets a collection of session segments
+  /// and optionally overwrite existing ones (default is false)
+  @override
+  void setSessionSegments(
+      {required List<String> segments, bool overwrite = false}) {
+    methodChannel.invokeMethod('setSessionSegments', <String, dynamic>{
+      'segments': segments,
+      'overwrite': overwrite,
+    });
   }
 }
