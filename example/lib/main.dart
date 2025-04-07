@@ -44,12 +44,13 @@ class _MyAppState extends State<MyApp> {
       sessionSegment: 'test_segment',
       user: User(
         avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
-        email: "alamin.karno@vivasoftltd.com",
+        email: "alamin.karno@gmail.com",
         nickName: "Md. Al-Amin",
         phone: "5555555555",
         company: Company(
-          companyDescription:
-              "Unlock superior software solutions with Vivasoft, a leading offshore development firm delivering creativity and expertise.",
+          companyDescription: "Unlock superior software solutions"
+              " with Vivasoft, a leading offshore development firm"
+              " delivering creativity and expertise.",
           name: "Vivasoft Limited",
           url: "https://vivasoftltd.com/",
           employment: Employment(
@@ -81,10 +82,14 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () async {
                   FlutterCrispChat.openCrispChat(config: config);
+
+                  /// Setting session data
                   FlutterCrispChat.setSessionString(
                     key: "a_string",
                     value: "Crisp Chat",
                   );
+
+                  /// Setting session data
                   FlutterCrispChat.setSessionInt(
                     key: "a_number",
                     value: 12345,
@@ -104,15 +109,15 @@ class _MyAppState extends State<MyApp> {
                       }
                     }
                   });
+
+                  /// Reset crisp Chat Session
+                  /// This will remove all the session data after 5 minutes
+                  /// and close the chat window
+                  await Future.delayed(const Duration(minutes: 5), () async {
+                    await FlutterCrispChat.resetCrispChatSession();
+                  });
                 },
                 child: const Text('Open Crisp Chat'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  await FlutterCrispChat.resetCrispChatSession();
-                },
-                child: const Text('Reset Chat Session'),
               ),
             ],
           ),
