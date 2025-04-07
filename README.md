@@ -209,11 +209,23 @@ For the sound, you can add a `raw` resource named `crisp_chat_message_receive` t
     - Click the **“+”** button and add **“Push Notifications”**
  
 ![Push Notifications](https://github.com/user-attachments/assets/8581c872-f836-45f6-9a8c-7a5c5a998cea)
+
+#### vi). 🔔 iOS Push Notification Setup
+
+To enable Crisp push notifications on iOS, **you must register for remote notifications in your app's `AppDelegate.swift`**.
+
+➡️ **Step: Add the following inside `didFinishLaunchingWithOptions`**:
+
+```swift
+DispatchQueue.main.async {
+    UIApplication.shared.registerForRemoteNotifications()
+}
+```
 - Important
     - `Currently, push notifications are only sent to production APNs channels. Notifications will not be received when testing with development provisioning profiles or in sandbox mode. This limitation will be resolved in a future update.`
 
 
-#### vi). Ensure Firebase initialization in your Flutter project
+#### vii). Ensure Firebase initialization in your Flutter project
 
 ```dart
 import 'package:firebase_core/firebase_core.dart';
@@ -229,7 +241,7 @@ Future<void> main() async {
 }
 ```
 
-#### vii). Request permission to receive messages
+#### viii). Request permission to receive messages
 
 On iOS, and Android 13 (or newer), before FCM payloads can be received on your device, you must first ask the user's permission.
 
@@ -249,7 +261,7 @@ NotificationSettings settings = await messaging.requestPermission(
 print('User granted permission: ${settings.authorizationStatus}');
 ```
 
-#### viii). Background messages
+#### ix). Background messages
 
 The process of handling background messages is different on native Android and Apple platforms.
 
