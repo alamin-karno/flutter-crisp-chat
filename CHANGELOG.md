@@ -1,3 +1,8 @@
+# 2.2.5
+* Update Crisp Android SDK `2.0.10` to `2.0.11`.
+* Fixed Issue: [#45](https://github.com/alamin-karno/flutter-crisp-chat/issues/45): Push view up when the keyboard is open
+* Added remote notification registration in application launch for iOS
+
 # 2.2.4
 * Update Crisp Android SDK `2.0.9` to `2.0.10`.
 * Update Crisp iOS SDK `2.8.1` to `2.8.2`.
