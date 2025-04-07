@@ -23,8 +23,6 @@ The `example` folder contains a Flutter project to test the Crisp Chat plugin.
 
 You’ll need to add some secrets and configurations to run it properly:
 
----
-
 ### 3. Add Firebase Support
 
 - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/).
@@ -50,6 +48,7 @@ final String websiteID = "YOUR_WEBSITE_ID";
 ```
 You can get your Website ID from your [Crisp Dashboard](https://app.crisp.chat/).
 
+---
 
 ## 🔧 Contributing Code
 
@@ -82,6 +81,8 @@ You can get your Website ID from your [Crisp Dashboard](https://app.crisp.chat/)
     ```
     - Open a pull request on GitHub, referencing the issue number in the description.
 
+---
+
 ## ✅ Code Style & Best Practices
 
 - Use meaningful commit messages. Example:
@@ -90,6 +91,8 @@ fix(iOS): handle missing deviceToken crash on launch
 ```
 - Always test your code using the example project.
 - If your change includes a fix or feature, update the README.md if needed.
+
+---
 
 ## 💬 Need Help?
 
