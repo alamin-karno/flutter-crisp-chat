@@ -63,7 +63,10 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany()
 
             // Present the chat view controller on the root view controller
-            if let viewController = UIApplication.shared.windows.first?.rootViewController {
+            if let viewController = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap({ $0.windows })
+                .first(where: { $0.isKeyWindow })?.rootViewController {
                 viewController.present(ChatViewController(), animated: true)
             }
 
