@@ -20,6 +20,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         instance.channel = channel
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.addApplicationDelegate(instance)
+
+        // Set UNUserNotificationCenter delegate
+        UNUserNotificationCenter.current().delegate = instance
     }
 
     /// Handles method calls from Flutter to native iOS.
@@ -63,6 +66,8 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             if let viewController = UIApplication.shared.windows.first?.rootViewController {
                 viewController.present(ChatViewController(), animated: true)
             }
+
+            result(nil)
 
         case "resetCrispChatSession":
             // Resets the current Crisp chat session
@@ -115,6 +120,15 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             // Handles unimplemented method calls
             result(FlutterMethodNotImplemented)
         }
+    }
+
+    /// Called when app finishes launching — registers for remote notifications
+    public func application(_ application: UIApplication,
+                            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        DispatchQueue.main.async {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+        return true
     }
 
     /// Handles registration of device token for push notifications.
