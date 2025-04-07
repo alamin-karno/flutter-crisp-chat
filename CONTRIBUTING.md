@@ -14,7 +14,7 @@ To run and work on this project locally, follow these steps:
 - Clone your forked repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/flutter_crisp_chat.git
+git clone https://github.com/alamin-karno/flutter-crisp-chat
 cd flutter_crisp_chat
 ```
 
@@ -29,12 +29,17 @@ You’ll need to add some secrets and configurations to run it properly:
 
 - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/).
 
-- Add an iOS app and an Android app (optional).
+- Add an iOS app and an Android app (optional) and get the Firebase auto setup. `If not then follow below steps`.
 
 - Download the `GoogleService-Info.plist` file for iOS and place it in:
 ```bash
 example/ios/Runner/GoogleService-Info.plist
 ```
+- Download the `google-services.json` file for Android and place it in:
+```bash
+example/android/app/google-services.json
+```
+
 _You may also need to enable Firebase Cloud Messaging if you want to test push notifications._
 
 ### 4. Add Crisp Website ID
