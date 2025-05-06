@@ -81,17 +81,22 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 Crisp.enableNotifications(context, config.enableNotifications);
                 setCrispData(context, config);
                 openActivity();
+                result.success(null);
             } else {
                 result.notImplemented();
             }
         } else if (call.method.equals("resetCrispChatSession")) {
             Crisp.resetChatSession(context);
+            result.success(null);
         } else if (call.method.equals("setSessionString")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {
                 String key = (String) args.get("key");
                 String value = (String) args.get("value");
                 Crisp.setSessionString(key, value);
+                result.success(null);
+            } else {
+                result.notImplemented();
             }
         } else if (call.method.equals("setSessionInt")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
@@ -99,6 +104,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 String key = (String) args.get("key");
                 int value = (int) args.get("value");
                 Crisp.setSessionInt(key, value);
+                result.success(null);
+            } else {
+                result.notImplemented();
             }
         } else if (call.method.equals("getSessionIdentifier")) {
             String sessionId = Crisp.getSessionIdentifier(context);
@@ -113,6 +121,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 List<String> segments = (List<String>) args.get("segments");
                 boolean overwrite = (boolean) args.get("overwrite");
                 Crisp.setSessionSegments(segments, overwrite);
+                result.success(null);
+            } else {
+                result.notImplemented();
             }
         }
         else {
