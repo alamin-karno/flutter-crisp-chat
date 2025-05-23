@@ -1,3 +1,24 @@
+# 2.3.0 - 2024-07-29
+
+### Added
+- New section in `README.md` detailing supported native Crisp SDK versions (Android & iOS).
+- `{@category}` tags to Dart classes and methods for improved generated documentation.
+- More comprehensive usage examples in `README.md`, including detailed `CrispConfig` setup with `User` and `Company` objects.
+- Guidance on using `resetCrispChatSession` and clearer calling sequences in `README.md`.
+- Notes on testing push notifications for both iOS and Android in `README.md`.
+
+### Changed
+- Significantly updated `README.md` with the above additions and overall structural improvements.
+- Enhanced Dartdoc comments for all public APIs in `lib/crisp_chat.dart` and configuration classes in `lib/src/config.dart` for better clarity, parameter descriptions, and usage examples.
+- Added inline developer comments to Dart, Kotlin (Android), and Swift (iOS) codebases to clarify complex logic and SDK interactions.
+- Refined error handling in `lib/crisp_chat.dart`:
+    - `getSessionIdentifier()` now consistently returns `String?` relying on platform error mapping, removing redundant Dart-side exceptions for "no session" cases.
+    - Switched from generic `Exception` to `ArgumentError` for input validation with more descriptive messages.
+- Refactored Android native configuration classes from Java to Kotlin data classes for improved type safety and consistency with the Kotlin-based plugin. (Internal change, no impact on public API).
+
+### Fixed
+- N/A (No specific bugs were addressed in this set of changes, focus was on improvements and refactoring).
+
 # 2.2.5
 * Update Crisp Android SDK `2.0.10` to `2.0.11`.
 * Fixed Issue: [#45](https://github.com/alamin-karno/flutter-crisp-chat/issues/45): Push view up when the keyboard is open
@@ -175,5 +196,3 @@ tools:replace="android:resource" />
 # 0.0.1
 
 * crisp Chat add for native platform
-
-

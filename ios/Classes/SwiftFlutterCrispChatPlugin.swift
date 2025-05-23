@@ -39,30 +39,38 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
 
             // Initialize Crisp configuration from arguments
             let crispConfig = CrispConfig.fromJson(args)
+            // Initialize the Crisp SDK with the website ID. This is the first and essential step.
             CrispSDK.configure(websiteID: crispConfig.websiteID)
 
             // Configure Crisp session if additional data is provided
+            // Set the session token ID, if available.
             if let tokenId = crispConfig.tokenId {
                 CrispSDK.setTokenID(tokenID: tokenId)
             }
+            // Set the session segment, if available.
             if let segment = crispConfig.sessionSegment {
                 CrispSDK.session.segment = segment
             }
 
-            // Set user details such as email, nickname, phone, and avatar
+            // Set user details to provide more context to the support team.
+            // Set user's email.
             CrispSDK.user.email = crispConfig.user?.email
+            // Set user's nickname.
             CrispSDK.user.nickname = crispConfig.user?.nickName
+            // Set user's phone number.
             CrispSDK.user.phone = crispConfig.user?.phone
+            // Set user's avatar URL.
             if let avatarURLString = crispConfig.user?.avatar, let avatarURL = URL(string: avatarURLString) {
                 CrispSDK.user.avatar = avatarURL
             } else {
                 CrispSDK.user.avatar = nil
             }
 
-            // Configure company details if available
+            // Set company details for the user, if available.
             CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany()
 
-            // Present the chat view controller on the root view controller
+            // Present the chat view controller.
+            // This sequence finds the key window's root view controller to present the chat UI modally.
             if let viewController = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .flatMap({ $0.windows })
@@ -136,14 +144,20 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Check if the incoming notification is from Crisp.
         if CrispSDK.isCrispPushNotification(notification) {
+            // If it's a Crisp notification, let the Crisp SDK handle it.
             CrispSDK.handlePushNotification(notification)
+            // Specify presentation options for the notification when the app is in the foreground.
+            // .banner (iOS 14+) or .alert (older iOS) shows the notification content, .sound plays a sound.
             if #available(iOS 14.0, *) {
                 completionHandler([.banner, .sound])
             } else {
                 completionHandler([.alert, .sound])
             }
         } else {
+            // If not a Crisp notification, don't show any specific presentation options here.
+            // This allows other notification handling logic (if any) to take over.
             completionHandler([])
         }
     }
