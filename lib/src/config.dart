@@ -1,19 +1,45 @@
-/// This class represents the configuration for the Crisp chat system.
+/// Configuration for the Crisp chat SDK.
 ///
-/// Use this class to convert Crisp configuration data to JSON format for integration with the Crisp SDK.
+/// This class holds all the necessary settings to initialize and customize the
+/// Crisp chat experience.
 ///
-/// - [websiteID]: The ID of your website. Replace it with your WEBSITE_ID.
-/// - [tokenId]: Assigns the next session with a tokenID.
-/// - [sessionSegment]: Assigns a session segment name for more information.
-/// - [enableNotifications]: Enable notification for your site. by default it's true.
-/// - [user]: Represents user information.
+/// {@category Configuration}
 class CrispConfig {
+  /// The unique identifier for your website on Crisp.
+  ///
+  /// This ID connects the SDK to your specific Crisp account and website.
+  /// Replace with your actual `WEBSITE_ID` from the Crisp dashboard.
   String websiteID;
+
+  /// An optional token identifier for the session.
+  ///
+  /// This can be used to link sessions across different platforms or devices.
   String? tokenId;
+
+  /// An optional segment name for the session.
+  ///
+  /// Segments help categorize users or sessions (e.g., "premium-user", "trial").
   String? sessionSegment;
+
+  /// Enables or disables push notifications from Crisp.
+  ///
+  /// Defaults to `true`. If set to `false`, users will not receive
+  /// push notifications for new messages.
   bool enableNotifications;
+
+  /// Optional user information for the session.
+  ///
+  /// Providing user details can enrich the chat experience and provide
+  /// context to your support agents.
   User? user;
 
+  /// Creates a new [CrispConfig] instance.
+  ///
+  /// @param websiteID The Crisp website ID.
+  /// @param tokenId (Optional) A token for the session.
+  /// @param sessionSegment (Optional) A segment name for the session.
+  /// @param enableNotifications (Optional) Whether to enable notifications. Defaults to `true`.
+  /// @param user (Optional) User information.
   CrispConfig({
     required this.websiteID,
     this.tokenId,
@@ -22,12 +48,14 @@ class CrispConfig {
     this.user,
   });
 
-  /// Converts the configuration to a JSON format.
+  /// Converts this [CrispConfig] object to a JSON map.
   ///
-  /// Returns a JSON representation of the Crisp configuration.
+  /// This format is used by the native Crisp SDK.
+  ///
+  /// @return A map representing the JSON structure of the configuration.
   Map<String, dynamic> toJson() {
     return {
-      "websiteId": websiteID, // Appears as "websiteId" in the JSON.
+      "websiteId": websiteID,
       "tokenId": tokenId,
       "sessionSegment": sessionSegment,
       "enableNotifications": enableNotifications,
@@ -36,25 +64,39 @@ class CrispConfig {
   }
 }
 
-/// This class represents user information for Crisp chat.
+/// Represents user-specific data for Crisp chat.
 ///
-/// Use this class to convert user data to JSON format for integration with the Crisp SDK.
+/// This information can be used to personalize the chat experience and
+/// provide context to support agents.
+///
+/// {@category Configuration}
 class User {
   /// The user's email address.
+  ///
+  /// Providing an email helps in identifying the user across sessions.
   final String? email;
 
-  /// The user's nickname.
+  /// The user's nickname or display name.
   final String? nickName;
 
   /// The user's phone number.
   final String? phone;
 
   /// The URL of the user's avatar image.
+  ///
+  /// This image will be displayed in the Crisp chat interface.
   final String? avatar;
 
-  /// The user's company information.
+  /// Information about the user's company.
   final Company? company;
 
+  /// Creates a new [User] instance.
+  ///
+  /// @param email (Optional) The user's email.
+  /// @param nickName (Optional) The user's nickname.
+  /// @param phone (Optional) The user's phone number.
+  /// @param avatar (Optional) URL to the user's avatar.
+  /// @param company (Optional) The user's company details.
   User({
     this.email,
     this.nickName,
@@ -63,9 +105,11 @@ class User {
     this.company,
   });
 
-  /// Converts user information to JSON format.
+  /// Converts this [User] object to a JSON map.
   ///
-  /// Returns a JSON representation of the user information.
+  /// This format is used by the native Crisp SDK.
+  ///
+  /// @return A map representing the JSON structure of the user data.
   Map<String, dynamic> toJson() {
     return {
       "email": email,
@@ -77,24 +121,34 @@ class User {
   }
 }
 
-/// This class represents company information for Crisp chat.
+/// Represents company-specific data for a Crisp user.
 ///
-/// Use this class to convert company data to JSON format for integration with the Crisp SDK.
+/// {@category Configuration}
 class Company {
+  /// The name of the company.
   String? name;
 
   /// The URL of the company's website.
+  ///
+  /// Example: `https://company.com`
   String? url;
 
-  /// A description of the company.
+  /// A brief description of the company.
   String? companyDescription;
 
-  /// The employment details of the company.
+  /// Employment details of the user within the company.
   final Employment? employment;
 
-  /// The geolocation of the company.
+  /// Geolocation data for the company.
   final GeoLocation? geoLocation;
 
+  /// Creates a new [Company] instance.
+  ///
+  /// @param name (Optional) The company's name.
+  /// @param url (Optional) The company's website URL.
+  /// @param companyDescription (Optional) A description of the company.
+  /// @param employment (Optional) User's employment details.
+  /// @param geoLocation (Optional) Company's geolocation.
   Company({
     this.name,
     this.url,
@@ -103,9 +157,11 @@ class Company {
     this.geoLocation,
   });
 
-  /// Converts company information to JSON format.
+  /// Converts this [Company] object to a JSON map.
   ///
-  /// Returns a JSON representation of the company information.
+  /// This format is used by the native Crisp SDK.
+  ///
+  /// @return A map representing the JSON structure of the company data.
   Map<String, dynamic> toJson() {
     return {
       "name": name,
@@ -117,24 +173,30 @@ class Company {
   }
 }
 
-/// This class represents employment details for Crisp chat.
+/// Represents employment details of a user.
 ///
-/// Use this class to convert employment data to JSON format for integration with the Crisp SDK.
+/// {@category Configuration}
 class Employment {
-  /// The job title of the employee.
+  /// The job title of the user (e.g., "Software Engineer").
   String? title;
 
-  /// The role of the employee.
+  /// The role of the user within the company (e.g., "Lead Developer").
   String? role;
 
+  /// Creates a new [Employment] instance.
+  ///
+  /// @param title (Optional) The user's job title.
+  /// @param role (Optional) The user's role.
   Employment({
     this.title,
     this.role,
   });
 
-  /// Converts employment details to JSON format.
+  /// Converts this [Employment] object to a JSON map.
   ///
-  /// Returns a JSON representation of the employment details.
+  /// This format is used by the native Crisp SDK.
+  ///
+  /// @return A map representing the JSON structure of the employment data.
   Map<String, dynamic> toJson() {
     return {
       "title": title,
@@ -143,21 +205,27 @@ class Employment {
   }
 }
 
-/// This class represents geoLocation information for Crisp chat.
+/// Represents geolocation data.
 ///
-/// Use this class to convert geoLocation data to JSON format for integration with the Crisp SDK.
+/// {@category Configuration}
 class GeoLocation {
-  /// The city where the user is located.
+  /// The city name.
   String? city;
 
-  /// The country where the user is located.
+  /// The country name.
   String? country;
 
+  /// Creates a new [GeoLocation] instance.
+  ///
+  /// @param city (Optional) The city name.
+  /// @param country (Optional) The country name.
   GeoLocation({this.city, this.country});
 
-  /// Converts geoLocation information to JSON format.
+  /// Converts this [GeoLocation] object to a JSON map.
   ///
-  /// Returns a JSON representation of the geoLocation information.
+  /// This format is used by the native Crisp SDK.
+  ///
+  /// @return A map representing the JSON structure of the geolocation data.
   Map<String, dynamic> toJson() {
     return {
       "city": city,
