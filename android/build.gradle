@@ -37,6 +37,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    // ADD THIS BLOCK for Kotlin options
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     defaultConfig {
         minSdkVersion 21
         multiDexEnabled true
