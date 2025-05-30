@@ -48,12 +48,27 @@ example/android/app/google-services.json
 _You may also need to enable Firebase Cloud Messaging if you want to test push notifications._
 
 ### 4. Add Crisp Website ID
-In the `example/lib/main.dart` or wherever you're calling the Crisp chat, provide your Crisp **Website ID**:
 
-```dart
-final String websiteID = "YOUR_WEBSITE_ID";
-```
-You can get your Website ID from your [Crisp Dashboard](https://app.crisp.chat/).
+- First, you need to create a Crisp account and set up a website.
+
+- You can get your Website ID from your [Crisp Dashboard](https://app.crisp.chat/).
+
+- Then, create a `config.json` file in the `example/lib/` directory to store your Crisp Website ID.
+
+- In the `example/lib/config.json` provide your Crisp **Website ID**:
+
+   ```json
+   {
+       "WEBSITE_ID": "PUT_YOUR_WEBSITE_ID_HERE"
+   }
+   ```
+
+- Then, run your project: 
+
+   ```bash
+   flutter run --dart-define-from-file=config.json
+   ```
+or, you can  add `--dart-define-from-file=config.json` on Android Studio or VSCode run configurations.
 
 ---
 
