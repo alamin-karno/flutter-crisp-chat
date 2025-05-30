@@ -45,3 +45,4 @@ app.*.map.json
 
 # Security related
 config.json
+/lib/firebase_options.dart
