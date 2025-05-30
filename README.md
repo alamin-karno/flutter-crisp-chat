@@ -81,10 +81,10 @@ Add Internet permission on `AndroidManifest.xml` in your `android/app/src/main/A
 <uses-permission android:name="android.permission.INTERNET"/>
 ```
 
-Change the minimum Compile SDK version to 34 (or higher) in your `android/app/build.gradle` file.
+Change the minimum Compile SDK version to 35 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
-compileSdkVersion 34
+compileSdkVersion 35
 ```
 
 Change the minimum Android SDK version to 21 (or higher) in your `android/app/build.gradle` file.
