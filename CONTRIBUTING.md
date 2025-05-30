@@ -25,6 +25,13 @@ You’ll need to add some secrets and configurations to run it properly:
 
 ### 3. Add Firebase Support
 
+To run this project, you need to add your Firebase configuration files:
+
+- `android/app/google-services.json`
+- `ios/Runner/GoogleService-Info.plist`
+
+These files are not included in this repo for security reasons.
+
 - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/).
 
 - Add an iOS app and an Android app (optional) and get the Firebase auto setup. `If not then follow below steps`.

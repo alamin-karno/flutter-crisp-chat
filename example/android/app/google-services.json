@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "40685838967",
+    "project_id": "flutter-crisp-chat",
+    "storage_bucket": "flutter-crisp-chat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40685838967:android:509b1a861f1f2a4d241c72",
+        "android_client_info": {
+          "package_name": "com.alaminkarno.flutter_crisp_chat_example"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHFkaPikBy6nuT1bWW-YkxK_BAFl80E9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

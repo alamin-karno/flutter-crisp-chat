@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
+// Background message handler
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -20,8 +21,42 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Set up background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Request notification permission
+  await _requestNotificationPermission();
+
   runApp(const MyApp());
+}
+
+Future<void> _requestNotificationPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    if (kDebugMode) {
+      print('✅ User granted permission');
+    }
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    if (kDebugMode) {
+      print('⚠️ User granted provisional permission');
+    }
+  } else {
+    if (kDebugMode) {
+      print('❌ User declined or has not accepted permission');
+    }
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -32,12 +67,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String websiteID = "YOUR_WEBSITE_ID";
+  final String websiteID =
+      "b3f3d31f-f27c-4f54-a9b2-b9db89a86316"; //"YOUR_WEBSITE_ID";
   late CrispConfig config;
 
   @override
   void initState() {
     super.initState();
+
     config = CrispConfig(
       websiteID: websiteID,
       tokenId: "Token Id",
