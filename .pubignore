@@ -1,2 +1,19 @@
+# Ignore firebase_core package files
 /example/lib/firebase_options.dart
 /example/android/app/google-services.json
+/example/ios/Runner/GoogleService-Info.plist
+
+# Ignore the example app's pubspec.lock file
+/example/pubspec.lock
+
+# Ignore the example app's build directories
+/example/build/
+
+# Ignore the example app's generated files
+/example/.dart_tool/
+
+# Ignore the example app's IDE specific files
+/example/.idea/
+
+# Ignore the example app's config files
+/example/config.json

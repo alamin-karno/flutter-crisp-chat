@@ -1,3 +1,27 @@
+# 2.3.0 - Saturday, 31 May 2025
+
+Added
+---
+* New section in `README.md` detailing supported native Crisp SDK versions (Android & iOS).
+* More comprehensive usage examples in `README.md`, including detailed `CrispConfig` setup with `User` and `Company` objects.
+* `{@category}` tags to Dart classes and methods for improved generated documentation.
+* Guidance on using `resetCrispChatSession` and clearer calling sequences in `README.md`.
+* Notes on testing push notifications for both iOS and Android in `README.md`.
+
+Changed
+---
+* Update Crisp Android SDK `2.0.11` to `2.0.12`.
+* Upgraded `compileSdk` and `targetSdk` to `35`
+* Upgraded `AGP` from `8.1.1` to `8.3.0`
+* Upgraded `Gradle` from `8.2` to `8.4`
+* Enhanced error handling for `getSessionIdentifier` method.
+* Improved documentation for public APIs for better clarity.
+* Switched from generic `Exception` to `ArgumentError` for input validation with more descriptive messages.
+
+Fixed
+___
+* Fixed issue: [#46](https://github.com/alamin-karno/flutter-crisp-chat/issues/57) Android mailto: links in chat fail to launch email app on some devices (e.g., Xiaomi/Redmi, Android 12+)
+
 # 2.2.5
 * Update Crisp Android SDK `2.0.10` to `2.0.11`.
 * Fixed Issue: [#45](https://github.com/alamin-karno/flutter-crisp-chat/issues/45): Push view up when the keyboard is open

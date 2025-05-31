@@ -48,7 +48,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.2.5
+  crisp_chat: ^2.3.0
 ```
 
 ### 2. Setup platform specific settings
@@ -305,90 +305,119 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 ### 5. Setup your flutter app to use Crisp
 ---
 
-To open ChatView for crisp, use the `openCrispChat` method of the `FlutterCrispChat` class:
 
-#### First Imported Package:
+Here's a more detailed example of how to configure CrispConfig and use the plugin methods. To open ChatView for crisp, use the `openCrispChat` method of the `FlutterCrispChat` class:
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:crisp_chat/crisp_chat.dart';
-```
+import 'package:flutter/foundation.dart'; // For kDebugMode
 
-#### Then:
+class CrispChatPage extends StatefulWidget {
+  const CrispChatPage({super.key});
 
-```dart
- final String websiteID = 'YOUR_WEBSITE_KEY';
- late CrispConfig config;
+  @override
+  State<CrispChatPage> createState() => _CrispChatPageState();
+}
 
-   @override
+class _CrispChatPageState extends State<CrispChatPage> {
+  final String websiteID = 'YOUR_WEBSITE_ID'; // Replace with your actual Website ID
+  late CrispConfig _crispConfig;
+
+  @override
   void initState() {
     super.initState();
-    config = CrispConfig(
-      websiteID: websiteID,
+
+    // Configure Crisp User (Optional)
+    // All user fields are optional. Only provide what you have.
+    final crispUser = User(
+      email: "user@example.com", // User's email
+      nickName: "John Doe", // User's nickname
+      phone: "1234567890", // User's phone number
+      avatar: "https://example.com/avatar.png", // URL for user's avatar. Must be a valid URL.
+      company: Company(
+        name: "Example Corp", // Company name
+        url: "https://example.com", // Company website URL. Must be a valid URL.
+        companyDescription: "A sample company providing excellent services.", // Company description
+        employment: Employment(title: "Lead Developer", role: "Software Engineer"), // User's employment details
+        geoLocation: GeoLocation(city: "New York", country: "USA"), // Company's location
+      ),
     );
+
+    // 1. Initialize CrispConfig with all desired parameters.
+    _crispConfig = CrispConfig(
+      websiteID: websiteID, // This is the only mandatory field.
+      tokenId: "your_user_token_id_optional", // Optional: Assign a unique token to this session.
+      sessionSegment: "beta_testers", // Optional: Assign a segment to categorize users (e.g., "premium", "trial").
+      user: crispUser, // Optional: Provide user details.
+      enableNotifications: true, // Optional: Enable or disable push notifications. Defaults to true.
+    );
+
+    // 2. Optionally, set additional session data *before* opening the chat.
+    // This data is associated with the session when it's created or next resumed.
+    // Useful for sending custom attributes that might not fit into the User object.
+    FlutterCrispChat.setSessionString(key: "custom_data_point", value: "some_important_value");
+    FlutterCrispChat.setSessionInt(key: "user_score", value: 120);
+    FlutterCrispChat.setSessionSegments(segments: ["registered_user", "newsletter_subscriber"], overwrite: false);
   }
-```
 
+  void _openChat() async {
+    // 3. Open the Crisp Chat UI using the prepared configuration.
+    await FlutterCrispChat.openCrispChat(config: _crispConfig);
 
- ```dart 
-   @override
+    // 4. Optionally, retrieve the session identifier after the chat is opened.
+    // This can be useful for logging or internal tracking.
+    String? sessionId = await FlutterCrispChat.getSessionIdentifier();
+    if (sessionId != null) {
+      if (kDebugMode) {
+        print('Crisp Session ID: $sessionId');
+      }
+    } else {
+      if (kDebugMode) {
+        print('No active Crisp session found or an error occurred while retrieving the ID.');
+      }
+    }
+  }
+
+  void _resetSession() async {
+    // Call resetCrispChatSession, for example, when your app user logs out.
+    // This is crucial for privacy and ensuring that the next user (or a guest)
+    // does not see or interact with the previous user's chat history and data
+    // within the Crisp SDK session on the device.
+    await FlutterCrispChat.resetCrispChatSession();
+    if (kDebugMode) {
+      print('Crisp session has been reset. The previous user\'s data is cleared from the local SDK session.');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Crisp Chat'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  await FlutterCrispChat.openCrispChat(config: config);
-                  FlutterCrispChat.setSessionString(
-                    key: "a_string",
-                    value: "Crisp Chat",
-                  );
-                  FlutterCrispChat.setSessionInt(
-                    key: "a_number",
-                    value: 12345,
-                  );
-
-                  /// Checking session ID After 5 sec
-                  await Future.delayed(const Duration(seconds: 5), () async {
-                    String? sessionId =
-                    await FlutterCrispChat.getSessionIdentifier();
-                    if (sessionId != null) {
-                      if (kDebugMode) {
-                        print('Session ID: $sessionId');
-                      }
-                    } else {
-                      if (kDebugMode) {
-                        print('No active session found!');
-                      }
-                    }
-                  });
-                },
-                child: const Text('Open Crisp Chat'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  await FlutterCrispChat.resetCrispChatSession();
-                },
-                child: const Text('Reset Chat Session'),
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Crisp Chat Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: _openChat,
+              child: const Text('Open Crisp Chat (Full Config)'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _resetSession,
+              child: const Text('Reset Crisp Session'),
+            ),
+          ],
         ),
       ),
     );
   }
-  ```
+}
+```
 
-To use this code, you will need to provide your own Crisp website ID. You can do this by replacing `YOUR_WEBSITE_KEY` with your own website ID. Once you have done this, you can run the app and press the `"Open Crisp Chat"` button to launch the chat window. You can add more information using `CrispConfig`.
-
+To use this code, replace `YOUR_WEBSITE_ID` with your own website ID from the Crisp dashboard. The example demonstrates initializing `CrispConfig` with detailed user and company information, setting additional session data, opening the chat interface, retrieving the session ID, and resetting the session. Adjust the configuration and data according to your application's needs.
 
 ## Screenshot (GIF)
 
@@ -405,6 +434,14 @@ To use this code, you will need to provide your own Crisp website ID. You can do
 
 - [Flutter Crisp Chat (pub.dev)](https://pub.dev/packages/crisp_chat)
 - [Flutter Crisp Chat (GitHub)](https://github.com/alamin-karno/flutter-crisp-chat)
+
+## Supported SDK Versions
+This plugin aims to stay compatible with the latest versions of the native Crisp SDKs. As of the latest update, it has been tested with:
+
+- Crisp Android SDK version: `2.0.12`
+- Crisp iOS SDK version: ~> `2.8.2`
+
+While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current native SDK details.
 
 ### Project Maintainer ❤️
 
