@@ -62,4 +62,10 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError('setSessionSegments() has not been implemented.');
   }
+
+  /// Pushes a session event to Crisp.
+  /// [event] is a map describing the event (type, name, color, etc).
+  Future<void> pushSessionEvent(Map<String, dynamic> event) {
+    throw UnimplementedError('pushSessionEvent() has not been implemented.');
+  }
 }

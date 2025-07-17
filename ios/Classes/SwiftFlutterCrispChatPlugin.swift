@@ -119,6 +119,18 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             let previousSegments = CrispSDK.session.segments
             CrispSDK.session.segments = overwrite ? segments : (previousSegments ?? []) + segments
             result(nil)
+
+        case "pushSessionEvent":
+            // Pushes a session event to Crisp
+            guard let args = call.arguments as? [String: Any],
+                  let name = args["name"] as? String else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected at least 'name' of type String.", details: nil))
+                return
+            }
+            
+            let event = SessionEvent(name: name, color: .blue)
+            CrispSDK.session.pushEvents([event])
+            result(nil)
         default:
             // Handles unimplemented method calls
             result(FlutterMethodNotImplemented)

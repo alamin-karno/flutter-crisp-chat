@@ -74,4 +74,9 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       },
     );
   }
+
+  @override
+  Future<void> pushSessionEvent(Map<String, dynamic> event) async {
+    await methodChannel.invokeMethod('pushSessionEvent', event);
+  }
 }
