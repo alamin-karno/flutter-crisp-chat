@@ -50,8 +50,9 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   @override
   Future<String?> getSessionIdentifier() async {
     try {
-      final sessionId =
-          await methodChannel.invokeMethod<String>('getSessionIdentifier');
+      final sessionId = await methodChannel.invokeMethod<String>(
+        'getSessionIdentifier',
+      );
       return sessionId;
     } on PlatformException catch (e) {
       debugPrint("Failed to get session identifier: '${e.message}'.");
@@ -66,17 +67,22 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     required List<String> segments,
     bool overwrite = false,
   }) {
-    methodChannel.invokeMethod(
-      'setSessionSegments',
-      <String, dynamic>{
-        'segments': segments,
-        'overwrite': overwrite,
-      },
-    );
+    methodChannel.invokeMethod('setSessionSegments', <String, dynamic>{
+      'segments': segments,
+      'overwrite': overwrite,
+    });
   }
 
+  /// [pushSessionEvent] is used to invoke the Method Channel and call native
+  /// code with arguments `name` and `color`.
   @override
-  Future<void> pushSessionEvent(Map<String, dynamic> event) async {
-    await methodChannel.invokeMethod('pushSessionEvent', event);
+  Future<void> pushSessionEvent({
+    required String name,
+    SessionEventColor color = SessionEventColor.blue,
+  }) async {
+    await methodChannel.invokeMethod('pushSessionEvent', <String, dynamic>{
+      'name': name,
+      'color': color.name.toString(),
+    });
   }
 }

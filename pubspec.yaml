@@ -13,7 +13,7 @@ documentation: https://pub.dev/documentation/crisp_chat/latest/
 
 
 environment:
-  sdk: '>=2.12.0 <4.0.0'
+  sdk: '>=2.15.0 <4.0.0'
   flutter: ">=2.5.0"
 
 dependencies:

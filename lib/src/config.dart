@@ -233,3 +233,22 @@ class GeoLocation {
     };
   }
 }
+
+/// Represents the color options for session events in Crisp chat.
+/// This enum is used to categorize events visually in the chat interface.
+/// Each color corresponds to a specific color used in the Crisp chat UI.
+/// The colors are used to differentiate events and provide a visual cue
+/// to users and support agents.
+/// {@category Configuration}
+enum SessionEventColor {
+  black,
+  blue,
+  brown,
+  green,
+  grey,
+  orange,
+  pink,
+  purple,
+  red,
+  yellow,
+}

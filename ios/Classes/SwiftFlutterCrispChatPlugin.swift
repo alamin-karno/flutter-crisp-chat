@@ -121,14 +121,33 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             result(nil)
 
         case "pushSessionEvent":
-            // Pushes a session event to Crisp
             guard let args = call.arguments as? [String: Any],
                   let name = args["name"] as? String else {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected at least 'name' of type String.", details: nil))
                 return
             }
+
+            var eventColor: SessionEventColor = .blue
+
+            if let colorString = args["color"] as? String {
+                switch colorString.lowercased() {
+                case "black": eventColor = .black
+                case "blue": eventColor = .blue
+                case "brown": eventColor = .brown
+                case "green": eventColor = .green
+                case "grey": eventColor = .grey
+                case "orange": eventColor = .orange
+                case "pink": eventColor = .pink
+                case "purple": eventColor = .purple
+                case "red": eventColor = .red
+                case "yellow": eventColor = .yellow
+                default:
+                    print("Invalid color string: \(colorString). Using default: .blue")
+                    eventColor = .blue
+                }
+            }
             
-            let event = SessionEvent(name: name, color: .blue)
+            let event = SessionEvent(name: name, color: eventColor)
             CrispSDK.session.pushEvents([event])
             result(nil)
         default:
