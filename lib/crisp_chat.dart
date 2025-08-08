@@ -128,4 +128,12 @@ class FlutterCrispChat {
       overwrite: overwrite,
     );
   }
+
+  /// Pushes a session event to Crisp.
+  ///
+  /// [event] is a map describing the event (type, name, color, etc).
+  /// This method proxies the call to the native platform implementation.
+  static Future<void> pushSessionEvent(Map<String, dynamic> event) {
+    return FlutterCrispChatPlatform.instance.pushSessionEvent(event);
+  }
 }

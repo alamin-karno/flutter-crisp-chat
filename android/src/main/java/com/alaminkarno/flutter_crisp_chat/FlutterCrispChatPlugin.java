@@ -14,6 +14,7 @@ import java.util.List;
 
 import im.crisp.client.external.ChatActivity;
 import im.crisp.client.external.Crisp;
+import im.crisp.client.external.data.SessionEvent.Color;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -121,6 +122,18 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 List<String> segments = (List<String>) args.get("segments");
                 boolean overwrite = (boolean) args.get("overwrite");
                 Crisp.setSessionSegments(segments, overwrite);
+                result.success(null);
+            } else {
+                result.notImplemented();
+            }
+        } else if (call.method.equals("pushSessionEvent")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String name = (String) args.get("name");
+                im.crisp.client.external.data.SessionEvent event =
+                        new im.crisp.client.external.data.SessionEvent(name, Color.GREEN);
+
+                Crisp.pushSessionEvent(event);
                 result.success(null);
             } else {
                 result.notImplemented();
