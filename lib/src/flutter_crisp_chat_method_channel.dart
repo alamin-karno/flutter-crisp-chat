@@ -85,4 +85,9 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       'color': color.name.toString(),
     });
   }
+
+  @override
+  Future<void> pushSessionEvent(Map<String, dynamic> event) async {
+    await methodChannel.invokeMethod('pushSessionEvent', event);
+  }
 }
