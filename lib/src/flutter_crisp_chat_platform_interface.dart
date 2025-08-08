@@ -62,4 +62,14 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError('setSessionSegments() has not been implemented.');
   }
+
+  /// [pushSessionEvent] pushes a session event to the native platform.
+  /// /// [name] is the name of the event, and [color] is the color associated with
+  /// the event, defaulting to blue.
+  Future<void> pushSessionEvent({
+    required String name,
+    SessionEventColor color = SessionEventColor.blue,
+  }) {
+    throw UnimplementedError('pushSessionEvent() has not been implemented.');
+  }
 }

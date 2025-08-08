@@ -11,9 +11,11 @@ import com.alaminkarno.flutter_crisp_chat.config.CrispConfig;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import im.crisp.client.external.ChatActivity;
 import im.crisp.client.external.Crisp;
+import im.crisp.client.external.data.SessionEvent.Color;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -23,11 +25,9 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-/// [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
-/// to handling Method Channel Callback from Flutter and Open new Activity.
-
 /**
- * FlutterCrispChatPlugin
+ * [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
+ * to handling Method Channel Callback from Flutter and Open new Activity.
  */
 public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
 
@@ -125,6 +125,27 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.notImplemented();
             }
+        } else if (call.method.equals("pushSessionEvent")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+
+            if (args != null) {
+                String name = (String) args.get("name");
+                if (name == null || name.isEmpty()) {
+                    result.error("INVALID_ARGUMENTS", "Missing 'name' argument", null);
+                    return;
+                }
+
+                String colorString = (String) args.get("color");
+                Color eventColor = parseColorOrDefault(colorString, Color.BLUE);
+
+                im.crisp.client.external.data.SessionEvent event =
+                        new im.crisp.client.external.data.SessionEvent(name, eventColor);
+
+                Crisp.pushSessionEvent(event);
+                result.success(null);
+            } else {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+            }
         }
         else {
             result.notImplemented();
@@ -174,6 +195,31 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             activity.startActivity(intent);
         } else {
             context.startActivity(intent);
+        }
+    }
+
+    private Color parseColorOrDefault(String colorString, Color defaultColor) {
+        if (colorString == null) {
+            return defaultColor;
+        }
+
+        String safeColor = colorString.toLowerCase(Locale.ROOT);
+
+        switch (safeColor) {
+            case "black": return Color.BLACK;
+            case "blue": return Color.BLUE;
+            case "brown": return Color.BROWN;
+            case "green": return Color.GREEN;
+            case "grey":
+            case "gray": return Color.GREY;
+            case "orange": return Color.ORANGE;
+            case "pink": return Color.PINK;
+            case "purple": return Color.PURPLE;
+            case "red": return Color.RED;
+            case "yellow": return Color.YELLOW;
+            default:
+                Log.w("CrispSDK", "Unknown color: " + safeColor + ". Using default color.");
+                return defaultColor;
         }
     }
 

@@ -131,6 +131,13 @@ class _MyAppState extends State<MyApp> {
                     value: 12345,
                   );
 
+                  await Future.delayed(Duration(seconds: 1), () {
+                    FlutterCrispChat.pushSessionEvent(
+                      name: 'test_event',
+                      color: SessionEventColor.green,
+                    );
+                  });
+
                   /// Checking session ID After 5 sec
                   await Future.delayed(const Duration(seconds: 5), () async {
                     String? sessionId =

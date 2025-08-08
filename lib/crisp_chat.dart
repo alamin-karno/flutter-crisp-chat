@@ -128,4 +128,23 @@ class FlutterCrispChat {
       overwrite: overwrite,
     );
   }
+
+  /// [pushSessionEvent] sends a custom event to the Crisp session.
+  /// This can be used to log specific actions or milestones
+  /// within the chat session, such as user interactions or significant
+  /// events that occur during the chat.
+  ///
+  /// {@category Session Events}
+  /// @param name The name of the event to log.
+  /// @param color The color associated with the event, used for visual
+  ///              differentiation in the Crisp dashboard. Defaults to `SessionEventColor.blue`.
+  static Future<void> pushSessionEvent({
+    required String name,
+    SessionEventColor color = SessionEventColor.blue,
+  }) {
+    return FlutterCrispChatPlatform.instance.pushSessionEvent(
+      name: name,
+      color: color,
+    );
+  }
 }
