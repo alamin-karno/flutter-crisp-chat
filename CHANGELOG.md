@@ -1,3 +1,14 @@
+# 2.4.0 - Sunday, 10 August 2025
+
+Added
+---
+* Added new function `pushSessionEvent` to sends a custom event to the Crisp session with `name` and `color`.
+
+Changed
+---
+* Increased the minimum Dart SDK constraint from `>=2.12.0` to `>=2.15.0`.
+
+
 # 2.3.0 - Saturday, 31 May 2025
 
 Added

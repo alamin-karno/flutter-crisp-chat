@@ -48,7 +48,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.3.0
+  crisp_chat: ^2.4.0
 ```
 
 ### 2. Setup platform specific settings
@@ -331,22 +331,22 @@ class _CrispChatPageState extends State<CrispChatPage> {
     // Configure Crisp User (Optional)
     // All user fields are optional. Only provide what you have.
     final crispUser = User(
-      email: "user@example.com", // User's email
-      nickName: "John Doe", // User's nickname
-      phone: "1234567890", // User's phone number
-      avatar: "https://example.com/avatar.png", // URL for user's avatar. Must be a valid URL.
+      email: "user@example.com",
+      nickName: "John Doe",
+      phone: "1234567890", 
+      avatar: "https://example.com/avatar.png", 
       company: Company(
-        name: "Example Corp", // Company name
-        url: "https://example.com", // Company website URL. Must be a valid URL.
-        companyDescription: "A sample company providing excellent services.", // Company description
-        employment: Employment(title: "Lead Developer", role: "Software Engineer"), // User's employment details
-        geoLocation: GeoLocation(city: "New York", country: "USA"), // Company's location
+        name: "Example Corp",
+        url: "https://example.com", 
+        companyDescription: "A sample company providing excellent services.",
+        employment: Employment(title: "Lead Developer", role: "Software Engineer"),
+        geoLocation: GeoLocation(city: "New York", country: "USA"),
       ),
     );
 
     // 1. Initialize CrispConfig with all desired parameters.
     _crispConfig = CrispConfig(
-      websiteID: websiteID, // This is the only mandatory field.
+      websiteID: websiteID, // [required] Your Crisp website ID.
       tokenId: "your_user_token_id_optional", // Optional: Assign a unique token to this session.
       sessionSegment: "beta_testers", // Optional: Assign a segment to categorize users (e.g., "premium", "trial").
       user: crispUser, // Optional: Provide user details.
