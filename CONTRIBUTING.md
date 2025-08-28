@@ -127,7 +127,3 @@ We’re happy to help you get started!
 
 Thank you for contributing! 🙌
 
----
-
-Let me know if you want this tailored further — like adding GitHub Actions setup, lint rules, or commit 
-
