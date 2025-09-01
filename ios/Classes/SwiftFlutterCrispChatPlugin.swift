@@ -146,7 +146,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                     eventColor = .blue
                 }
             }
-            
+
             let event = SessionEvent(name: name, color: eventColor)
             CrispSDK.session.pushEvents([event])
             result(nil)
