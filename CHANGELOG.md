@@ -1,4 +1,18 @@
-# 2.4.0 - Sunday, 10 August 2025
+# 2.4.1
+
+Added
+---
+* Package now supported Google Play's 16KB page size requirement.
+
+Changed
+---
+* Update Crisp Android SDK `2.0.12` to `2.0.13`.
+* Update AGP from `8.6` to `8.7`.
+* Update Project Level Gradle from `8.4.1` to `8.6.1`.
+* Update `example` project Kotlin from `1.7.10` to `2.1.0`.
+
+
+# 2.4.0
 
 Added
 ---
@@ -9,7 +23,7 @@ Changed
 * Increased the minimum Dart SDK constraint from `>=2.12.0` to `>=2.15.0`.
 
 
-# 2.3.0 - Saturday, 31 May 2025
+# 2.3.0
 
 Added
 ---
