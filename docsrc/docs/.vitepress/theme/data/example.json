@@ -1,0 +1,66 @@
+{
+    "platinum": [
+        {
+            "name": "Sponsor 1",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor 1",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor 3",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor 4",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        }
+    ],
+    "average": [
+        {
+            "name": "Sponsor1",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor2",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor3",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor4",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor5",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor6",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor7",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        },
+        {
+            "name": "Sponsor8",
+            "image": "/graphics/advertisement/bmc.png",
+            "link": "https://tabpole.dev"
+        }
+    ]
+}
