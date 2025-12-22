@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: '18' # Use a Long-Term Support (LTS) version of Node.js
           cache: 'npm' # Cache npm dependencies for faster builds
-          cache-dependency-path: 'docsrc/package-lock.json' # Or package.json if you don't use a lock file
+          cache-dependency-path: 'docsrc/package.json' # Or package.json if you don't use a lock file
 
       # 3. Install dependencies and build the static site
       - name: Build VitePress site
