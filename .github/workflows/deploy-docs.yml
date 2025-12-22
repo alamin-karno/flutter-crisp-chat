@@ -1,0 +1,63 @@
+# Name of the GitHub Actions workflow
+name: Deploy VitePress Docs to GitHub Pages
+
+# Controls when the action will run.
+# This workflow runs on pushes to the 'main' branch, but only if files inside 'docsrc/' have changed.
+# It also allows you to run it manually from the Actions tab in your GitHub repository.
+on:
+  push:
+    branches:
+      - main # Or your default branch (e.g., master)
+    paths:
+      - 'docsrc/**'
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+jobs:
+  # This job is named "build-and-deploy"
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # 1. Checks out your repository under $GITHUB_WORKSPACE, so the job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # VitePress uses git history to show "last updated" info. Fetch all history.
+          fetch-depth: 0
+
+      # 2. Sets up Node.js in the runner environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Use a Long-Term Support (LTS) version of Node.js
+          cache: 'npm' # Cache npm dependencies for faster builds
+          cache-dependency-path: 'docsrc/package-lock.json' # Or package.json if you don't use a lock file
+
+      # 3. Install dependencies and build the static site
+      - name: Build VitePress site
+        run: |
+          cd docsrc # Navigate into the directory with package.json
+          npm install
+          npm run build # This command runs `vitepress build docs`
+
+      # 4. Deploy the built site to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          # The folder where the built site is located, relative to the repository root
+          folder: docsrc/docs/.vitepress/dist
+
+    # Grant permissions for the GITHUB_TOKEN to upload to GitHub Pages
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    # Configure the deployment environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+

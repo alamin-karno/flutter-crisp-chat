@@ -3,6 +3,9 @@
 /example/android/app/google-services.json
 /example/ios/Runner/GoogleService-Info.plist
 
+# Igone docsrc
+/docsrc/*
+
 # Ignore the example app's pubspec.lock file
 /example/pubspec.lock
 
