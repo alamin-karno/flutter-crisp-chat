@@ -1,9 +1,9 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "vitepress";
 
 export default defineConfig({
   title: 'Crisp',
   description: 'Crisp Documentation',
-  base: "/",
+  base: "/flutter-crisp-chat/",
   lastUpdated: true,
   lang: 'en-US',
   // Clean URLs are prettier, but they require server config and dedicated 404 page. 
