@@ -67,7 +67,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String websiteID = String.fromEnvironment('WEBSITE_ID');
+  static const String websiteID = String.fromEnvironment('websiteId');
+  static const String identifier = String.fromEnvironment('identifier');
+  static const String crispApiKey = String.fromEnvironment('crispApiKey');
+
+  int count = 0;
   late CrispConfig config;
 
   @override
@@ -100,6 +104,23 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void _checkUnreadMessages() async {
+    int? unreadCount = await FlutterCrispChat.getUnreadMessageCount(
+      websiteId: websiteID,
+      identifier: identifier,
+      key: crispApiKey,
+    );
+
+    if (unreadCount != null && unreadCount > 0) {
+      if (kDebugMode) {
+        print('You have $unreadCount unread messages.');
+      }
+      setState(() {
+        count = unreadCount;
+      });
+    }
   }
 
   @override
@@ -162,6 +183,16 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: const Text('Open Crisp Chat'),
               ),
+              SizedBox(height: 20),
+              Badge.count(
+                count: count,
+                isLabelVisible: count != 0,
+                maxCount: 9,
+                child: ElevatedButton(
+                  onPressed: _checkUnreadMessages,
+                  child: Text('Unread'),
+                ),
+              )
             ],
           ),
         ),
