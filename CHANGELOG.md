@@ -1,3 +1,14 @@
+
+# [Unreleased]
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.13` to `2.0.16`.
+* Increased `minSdkVersion` from `21` to `23`.
+* Updated `compileSdkVersion` from `35` to `36`.
+* Upgraded Android Gradle Plugin (AGP) from `8.6.1` to `8.9.1`.
+* Upgraded Gradle from `8.7` to `8.11.1`.
+
 # 2.4.1
 
 Added
