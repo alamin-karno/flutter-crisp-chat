@@ -72,6 +72,12 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {
                 CrispConfig config = CrispConfig.fromJson(args);
+
+                if(config.websiteId == null || config.websiteId.equals("")) {
+                    result.error("INVALID_ARGUMENTS", "Missing 'websiteId' argument", null);
+                    return;
+                }
+
                 if (config.tokenId != null) {
                     Crisp.configure(context, config.websiteId, config.tokenId);
                 } else {
