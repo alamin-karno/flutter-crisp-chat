@@ -1,5 +1,11 @@
 
-# [Unreleased]
+# 2.4.2
+
+Added
+---
+* Added `getUnreadMessageCount` to get unread message count,
+* Added **Swift Package Manager** support for iOS,
+* Add validation for websiteID on iOS & Android SDK Level.
 
 Changed
 ---
@@ -10,9 +16,6 @@ Changed
 * Upgraded Gradle from `8.7` to `8.11.1`,
 * Upgraded Crisp iOS SDK from `2.8.2` to `2.12.0`,
 * Increased the minimum iOS deployment target from `9.0` to `13.0`,
-* Added `getUnreadMessageCount` to get unread message count,
-* Added **Swift Package Manager** support for iOS,
-* Add validation for websiteID on iOS & Android SDK Level.
 
 # 2.4.1
 
