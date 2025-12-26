@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import 'src/config.dart';
 import 'src/flutter_crisp_chat_platform_interface.dart';
@@ -146,5 +150,73 @@ class FlutterCrispChat {
       name: name,
       color: color,
     );
+  }
+
+  /// Fetches the unread message count for the current visitor session.
+  ///
+  /// This method makes a REST API call to Crisp to get conversation details,
+  /// including the number of unread messages for the visitor.
+  ///
+  /// {@category General}
+  /// @param websiteId Your Crisp Website ID.
+  /// @param identifier Your Crisp REST API Identifier.
+  /// @param key Your Crisp REST API Key.
+  /// @return A [Future] that completes with an [int] representing the unread
+  ///         message count, or `null` if the session is not found or an
+  ///         error occurs.
+  static Future<int?> getUnreadMessageCount({
+    required String websiteId,
+    required String identifier,
+    required String key,
+  }) async {
+    final sessionId = await getSessionIdentifier();
+    if (sessionId == null) {
+      log(
+        'No active session, so no unread messages.',
+        name: 'FlutterCrispChat',
+      );
+      return null;
+    }
+
+    final uri = Uri.parse(
+      'https://api.crisp.chat/v1/website/$websiteId/conversation/$sessionId',
+    );
+    final credentials = base64Encode(utf8.encode('$identifier:$key'));
+
+    try {
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Basic $credentials',
+          'X-Crisp-Tier': 'plugin',
+        },
+      );
+
+      if (kDebugMode) {
+        log('URL: $uri - STATUS: ${response.statusCode}', name: 'API');
+        log('BODY: ${response.body}', name: 'API');
+      }
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final unreadCount = data['data']?['unread']?['visitor'] as int?;
+        return unreadCount ?? 0;
+      } else {
+        log(
+          'Failed to get unread count. Status: ${response.statusCode}, Body: ${response.body}',
+          name: 'FlutterCrispChat',
+        );
+
+        return null;
+      }
+    } catch (e, stackTrace) {
+      log(
+        'An error occurred while fetching unread message count: $e',
+        stackTrace: stackTrace,
+        name: 'FlutterCrispChat',
+      );
+
+      return null;
+    }
   }
 }

@@ -39,7 +39,21 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
 
             // Initialize Crisp configuration from arguments
             let crispConfig = CrispConfig.fromJson(args)
-            CrispSDK.configure(websiteID: crispConfig.websiteID)
+
+            // Validate websiteID (nil or empty)
+            let websiteID = crispConfig.websiteID.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !websiteID.isEmpty else {
+                result(
+                    FlutterError(
+                        code: "INVALID_ARGUMENTS",
+                        message: "Crisp website ID not found.",
+                        details: nil
+                    )
+                )
+                return
+            }
+
+            CrispSDK.configure(websiteID: websiteID)
 
             // Configure Crisp session if additional data is provided
             if let tokenId = crispConfig.tokenId {

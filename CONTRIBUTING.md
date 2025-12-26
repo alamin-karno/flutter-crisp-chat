@@ -59,9 +59,27 @@ _You may also need to enable Firebase Cloud Messaging if you want to test push n
 
    ```json
    {
-       "WEBSITE_ID": "PUT_YOUR_WEBSITE_ID_HERE"
+       "websiteId": "PUT_YOUR_WEBSITE_ID_HERE",
+       "identifier": "YOUR_CRISP_API_IDENTIFIER",
+       "crispApiKey": "YOUR_CRISP_API_KEY"
    }
    ```
+  
+- For every request that you make to `getUnreadMessageCount`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`.
+  - **Obtaining `Identifier` & `Key`:**
+    1. Head over to the [Crisp Marketplace](https://marketplace.crisp.chat/)
+    2. Sign in or create an account (this account is different from your main Crisp account)
+    3. Once logged-in, go to **Plugins** and click on the **New Plugin button**
+    4. Select the plugin type, in this case Private 
+    5. Name your plugin a name, eg. "My First Crisp Plugin", and hit **Create**
+    6. On the plugin tab, go to **Tokens** and scroll down to **Development Token** to view (and manage) your token `identifier`/`key` pair 
+    7. Obtaining a production token is the next natural step once you are ready to step into production with your plugin or if your usage requires higher quotas.
+  
+  - Before using your development token, you now need to associate your marketplace account to your Crisp workspace. This is done by specifying a **Trusted Workspace**:
+    1. Go to the **Settings** of your **Crisp Marketplace** account 
+    2. Click on **Add Trusted Workspace** and submit your `website_id`
+    3. Enter the credentials of your main Crisp account (the ones you use to access your main Crisp account) and then submit your 2FA token (if any is enabled)
+    4. You're all done! You are now ready to use REST API and start building your plugin
 
 - Then, run your project: 
 

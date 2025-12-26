@@ -1,0 +1,20 @@
+/* options : https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+
+:root {
+
+    /* Typography */
+    --vp-font-family-base: 'Ubuntu';
+
+    /* Code Snippet font */
+    --vp-font-family-mono: 'Roboto Mono', monospace;
+
+    --vp-c-brand-1: #8e43b6;
+    --vp-c-brand-2: #8e43b6;
+    --vp-c-brand-3: #8e43b6;
+    --vp-c-brand-soft: #8e43b6;
+
+}

@@ -1,3 +1,19 @@
+
+# [Unreleased]
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.13` to `2.0.16`.
+* Increased `minSdkVersion` from `21` to `23`.
+* Updated `compileSdkVersion` from `35` to `36`.
+* Upgraded Android Gradle Plugin (AGP) from `8.6.1` to `8.9.1`.
+* Upgraded Gradle from `8.7` to `8.11.1`,
+* Upgraded Crisp iOS SDK from `2.8.2` to `2.12.0`,
+* Increased the minimum iOS deployment target from `9.0` to `13.0`,
+* Added `getUnreadMessageCount` to get unread message count,
+* Added **Swift Package Manager** support for iOS,
+* Add validation for websiteID on iOS & Android SDK Level.
+
 # 2.4.1
 
 Added

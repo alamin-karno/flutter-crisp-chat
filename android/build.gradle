@@ -23,7 +23,7 @@ apply plugin: 'com.android.library'
 
 android {
     namespace 'com.alaminkarno.flutter_crisp_chat'
-    compileSdkVersion 35
+    compileSdkVersion 36
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -31,12 +31,12 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
         multiDexEnabled true
     }
 }
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'im.crisp:crisp-sdk:2.0.13'
+    implementation 'im.crisp:crisp-sdk:2.0.16'
 }
