@@ -12,6 +12,9 @@ export 'src/config.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
+  /// The cached session identifier.
+  static String? _sessionIdentifier;
+
   /// Opens the Crisp chat interface.
   ///
   /// This method initializes and displays the Crisp chat view using the
@@ -22,25 +25,45 @@ class FlutterCrispChat {
   /// @return A [Future] that completes when the chat is opened.
   /// @throws Exception if the user email in [config] is invalid.
   /// @throws Exception if the company URL in [config] is invalid.
-  static Future<void> openCrispChat({required CrispConfig config}) {
+  static Future<void> openCrispChat({required CrispConfig config}) async {
     // Validate email if provided. This ensures that any email passed to the
     // native Crisp SDK is in a recognizable format.
     final email = config.user?.email;
     if (email != null && !email.isEmail) {
       throw ArgumentError.value(
-          email, 'config.user.email', 'Invalid email format provided.');
+        email,
+        'config.user.email',
+        'Invalid email format provided.',
+      );
     }
 
     // Validate company URL if provided. This ensures that any URL passed for
     // the company is a well-formed absolute URL.
     final url = config.user?.company?.url;
     if (url != null && !url.isUrl) {
-      throw ArgumentError.value(url, 'config.user.company.url',
-          'Invalid company URL format provided.');
+      throw ArgumentError.value(
+        url,
+        'config.user.company.url',
+        'Invalid company URL format provided.',
+      );
     }
 
     // Call the platform-specific method to open Crisp chat
-    return FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+    await FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+
+    // After opening, get and cache the session identifier.
+    await Future.delayed(const Duration(seconds: 3));
+    try {
+      final newSessionId =
+          await FlutterCrispChatPlatform.instance.getSessionIdentifier();
+      if (newSessionId != null && newSessionId != _sessionIdentifier) {
+        _sessionIdentifier = newSessionId;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error caching session identifier: $e");
+      }
+    }
   }
 
   /// Resets the current Crisp chat session.
@@ -50,8 +73,9 @@ class FlutterCrispChat {
   ///
   /// {@category General}
   /// @return A [Future] that completes when the session has been reset.
-  static Future<void> resetCrispChatSession() {
-    return FlutterCrispChatPlatform.instance.resetCrispChatSession();
+  static Future<void> resetCrispChatSession() async {
+    await FlutterCrispChatPlatform.instance.resetCrispChatSession();
+    _sessionIdentifier = null;
   }
 
   /// Sets a string value in the current session data.
@@ -104,14 +128,19 @@ class FlutterCrispChat {
       // MethodChannelFlutterCrispChat catches PlatformException and returns null.
       final sessionId =
           await FlutterCrispChatPlatform.instance.getSessionIdentifier();
-      return sessionId;
+      if (sessionId != null) {
+        if (sessionId != _sessionIdentifier) {
+          _sessionIdentifier = sessionId;
+        }
+        return sessionId;
+      }
     } catch (e) {
       // This catch block handles any other unexpected errors during the platform call.
       if (kDebugMode) {
         print("Error retrieving session identifier: $e");
       }
-      return null;
     }
+    return _sessionIdentifier;
   }
 
   /// Sets user segments in the current session.
