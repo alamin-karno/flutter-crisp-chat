@@ -99,7 +99,7 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Documentation', link: '/getting_started/overview.md' },
       { text: 'About', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
-      { text: 'Support', link: 'https://www.buymeacoffee.com/XXXXXXXX' },
+      { text: 'Support', link: 'https://www.buymeacoffee.com/alaminkarno' },
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
