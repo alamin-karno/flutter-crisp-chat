@@ -1,4 +1,10 @@
 
+# Unrelease
+
+Fixed
+---
+* Fixed issue: [#98](https://github.com/alamin-karno/flutter-crisp-chat/issues/98) Bug: `getSessionIdentifier()` returns null after closing chat, preventing unread message checks
+
 # 2.4.2
 
 Added
@@ -63,7 +69,7 @@ Changed
 * Switched from generic `Exception` to `ArgumentError` for input validation with more descriptive messages.
 
 Fixed
-___
+---
 * Fixed issue: [#46](https://github.com/alamin-karno/flutter-crisp-chat/issues/57) Android mailto: links in chat fail to launch email app on some devices (e.g., Xiaomi/Redmi, Android 12+)
 
 # 2.2.5
