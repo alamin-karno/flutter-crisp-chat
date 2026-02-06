@@ -87,7 +87,7 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
       { icon: 'x', link: 'https://x.com/alamin_karno' },
-      { icon: 'linkedin', link: 'https://www.linkedin.com/in/alaborkarno/' },
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/alaminkarno/' },
     ],
 
     sidebar: [

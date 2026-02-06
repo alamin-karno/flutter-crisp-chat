@@ -27,7 +27,7 @@ Thanks for your interest in contributing to **Flutter Crisp Chat**! Contribution
 
 ```bash
 # Fork the repo on GitHub, then:
-git clone https://github.com/<your-username>/flutter-crisp-chat.git
+git clone https://github.com/alaminkarno/flutter-crisp-chat.git
 cd flutter-crisp-chat
 ```
 

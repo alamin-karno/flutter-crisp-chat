@@ -1,20 +1,296 @@
-/* options : https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+/* Flutter-inspired theme for Flutter Crisp Chat docs */
+/* Reference: https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap');
 
-
+/* ============================================
+   Light Mode — Flutter Blue
+   ============================================ */
 :root {
-
     /* Typography */
-    --vp-font-family-base: 'Ubuntu';
+    --vp-font-family-base: 'Roboto', 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --vp-font-family-mono: 'Roboto Mono', 'Fira Code', monospace;
 
-    /* Code Snippet font */
-    --vp-font-family-mono: 'Roboto Mono', monospace;
+    /* Flutter Blue Brand Colors */
+    --vp-c-brand-1: #027DFD;
+    --vp-c-brand-2: #0468D7;
+    --vp-c-brand-3: #02569B;
+    --vp-c-brand-soft: rgba(2, 125, 253, 0.14);
 
-    --vp-c-brand-1: #8e43b6;
-    --vp-c-brand-2: #8e43b6;
-    --vp-c-brand-3: #8e43b6;
-    --vp-c-brand-soft: #8e43b6;
+    /* Tip / Info boxes */
+    --vp-c-tip-1: #027DFD;
+    --vp-c-tip-2: rgba(2, 125, 253, 0.14);
+    --vp-c-tip-3: rgba(2, 125, 253, 0.08);
 
+    /* Background tweaks */
+    --vp-c-bg-soft: #f6f8fa;
+    --vp-c-bg-alt: #f0f4f8;
+
+    /* Home hero gradient */
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: linear-gradient(135deg, #02569B 0%, #027DFD 50%, #13B9FD 100%);
+
+    /* Home hero image glow */
+    --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(2, 125, 253, 0.3) 0%, rgba(19, 185, 253, 0.2) 100%);
+    --vp-home-hero-image-filter: blur(56px);
+
+    /* Button brand */
+    --vp-button-brand-border: transparent;
+    --vp-button-brand-text: #ffffff;
+    --vp-button-brand-bg: #027DFD;
+    --vp-button-brand-hover-border: transparent;
+    --vp-button-brand-hover-text: #ffffff;
+    --vp-button-brand-hover-bg: #0468D7;
+    --vp-button-brand-active-border: transparent;
+    --vp-button-brand-active-text: #ffffff;
+    --vp-button-brand-active-bg: #02569B;
+
+    /* Button alt */
+    --vp-button-alt-border: #e2e8f0;
+    --vp-button-alt-text: #1a202c;
+    --vp-button-alt-bg: #f7fafc;
+    --vp-button-alt-hover-border: #cbd5e0;
+    --vp-button-alt-hover-text: #027DFD;
+    --vp-button-alt-hover-bg: #edf2f7;
+
+    /* Custom properties */
+    --flutter-blue: #027DFD;
+    --flutter-dark-blue: #02569B;
+    --flutter-cyan: #13B9FD;
+    --flutter-navy: #0553B1;
+}
+
+/* ============================================
+   Dark Mode — Flutter Blue (darker tones)
+   ============================================ */
+.dark {
+    --vp-c-brand-1: #4DA8FF;
+    --vp-c-brand-2: #027DFD;
+    --vp-c-brand-3: #6BBBFF;
+    --vp-c-brand-soft: rgba(77, 168, 255, 0.16);
+
+    --vp-c-tip-1: #4DA8FF;
+    --vp-c-tip-2: rgba(77, 168, 255, 0.16);
+
+    --vp-home-hero-name-background: linear-gradient(135deg, #4DA8FF 0%, #13B9FD 50%, #6BBBFF 100%);
+    --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(77, 168, 255, 0.25) 0%, rgba(19, 185, 253, 0.15) 100%);
+
+    --vp-button-brand-bg: #027DFD;
+    --vp-button-brand-hover-bg: #4DA8FF;
+    --vp-button-brand-active-bg: #0468D7;
+
+    --vp-button-alt-border: #2d3748;
+    --vp-button-alt-text: #e2e8f0;
+    --vp-button-alt-bg: #1a202c;
+    --vp-button-alt-hover-border: #4a5568;
+    --vp-button-alt-hover-text: #4DA8FF;
+    --vp-button-alt-hover-bg: #2d3748;
+}
+
+/* ============================================
+   Hero Section Enhancements
+   ============================================ */
+.VPHero .VPImage {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 20px;
+}
+
+.VPHero .tagline {
+    font-size: 1.1rem !important;
+    line-height: 1.6;
+    max-width: 560px;
+}
+
+/* ============================================
+   Feature Cards
+   ============================================ */
+.VPFeature {
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.VPFeature:hover {
+    border-color: var(--vp-c-brand-1);
+    box-shadow: 0 4px 20px rgba(2, 125, 253, 0.08);
+    transform: translateY(-2px);
+}
+
+.VPFeature .title {
+    font-weight: 600;
+}
+
+/* ============================================
+   Sidebar
+   ============================================ */
+.VPSidebar .group .title {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+/* ============================================
+   Custom Container Boxes
+   ============================================ */
+.custom-block.tip {
+    border-color: var(--flutter-blue);
+}
+
+.custom-block.warning {
+    border-color: #f6993f;
+}
+
+.custom-block.danger {
+    border-color: #e3342f;
+}
+
+/* ============================================
+   Code Blocks
+   ============================================ */
+.vp-code-group .tabs label.active {
+    color: var(--vp-c-brand-1);
+}
+
+div[class*='language-'] > button.copy {
+    border-radius: 6px;
+}
+
+/* ============================================
+   Scrollbar (webkit)
+   ============================================ */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--vp-c-divider);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--vp-c-brand-1);
+}
+
+/* ============================================
+   Sponsor Section (Home page)
+   ============================================ */
+.sponsor-section {
+    max-width: 960px;
+    margin: 4rem auto 2rem;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+
+.sponsor-section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--flutter-dark-blue), var(--flutter-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dark .sponsor-section h2 {
+    background: linear-gradient(135deg, #4DA8FF, #13B9FD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sponsor-section .subtitle {
+    color: var(--vp-c-text-2);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.sponsor-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    min-height: 80px;
+}
+
+.sponsor-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100px;
+    border: 2px dashed var(--vp-c-divider);
+    border-radius: 12px;
+    color: var(--vp-c-text-3);
+    font-size: 0.95rem;
+    padding: 1.5rem;
+}
+
+.sponsor-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, var(--flutter-dark-blue), var(--flutter-blue));
+    color: #ffffff !important;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(2, 125, 253, 0.25);
+}
+
+.sponsor-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(2, 125, 253, 0.35);
+    background: linear-gradient(135deg, var(--flutter-blue), var(--flutter-cyan));
+}
+
+/* ============================================
+   Powered By Section
+   ============================================ */
+.powered-by {
+    max-width: 960px;
+    margin: 2rem auto 4rem;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+
+.powered-by .logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.powered-by .logos img {
+    height: 40px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    filter: grayscale(30%);
+}
+
+.powered-by .logos img:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.powered-by h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--vp-c-text-3);
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   Footer Enhancement
+   ============================================ */
+.VPFooter {
+    border-top: 1px solid var(--vp-c-divider);
 }
