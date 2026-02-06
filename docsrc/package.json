@@ -13,6 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "vitepress": "^1.6.4",
-    "vue": "^3.2.47"
+    "vue": "^3.5.0"
+  },
+  "overrides": {
+    "esbuild": "^0.25.0"
   }
 }

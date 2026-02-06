@@ -58,6 +58,19 @@ class MockFlutterCrispChatPlatform
   }) async {
     setSessionAttributesArgs = {'name': name, 'color': color};
   }
+
+  bool openChatboxFromNotificationCalled = false;
+  bool mockOpenChatboxResult = false;
+  @override
+  Future<bool> openChatboxFromNotification() async {
+    openChatboxFromNotificationCalled = true;
+    return mockOpenChatboxResult;
+  }
+
+  @override
+  void setOnNotificationTappedCallback(VoidCallback? callback) {
+    // No-op for testing
+  }
 }
 
 void main() {

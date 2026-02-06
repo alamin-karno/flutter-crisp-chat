@@ -1,4 +1,23 @@
 
+# Unreleased
+
+Added
+---
+* Added `CrispChatNotificationService` — a custom `FirebaseMessagingService` that handles Crisp push notifications without auto-opening `ChatActivity`. This allows the app to open first, then programmatically open the chatbox.
+* Added `openChatboxFromNotification()` method to open the Crisp chatbox from a notification intent after the app has launched.
+* Added `setOnNotificationTappedCallback()` method to listen for Crisp notification taps while the app is in the background.
+* Added `firebase-messaging` as a `compileOnly` dependency in the SDK's `build.gradle`.
+
+Changed
+---
+* Upgraded Crisp iOS SDK from `2.12.0` to `2.13.0`.
+* Updated `FlutterCrispChatPlugin.java` to implement `NewIntentListener` for detecting notification taps via `onNewIntent`.
+* Updated `README.md` with two notification handling approaches: **Option A** (auto-open ChatActivity) and **Option B** (open app first, then chatbox).
+
+Fixed
+---
+* Fixed issue: [#79](https://github.com/alamin-karno/flutter-crisp-chat/issues/79) — Crisp notification tap directly opens ChatActivity instead of the app's main screen on terminated state.
+
 # 2.4.3
 
 Fixed

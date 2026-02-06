@@ -16,6 +16,7 @@ import java.util.Locale;
 import im.crisp.client.external.ChatActivity;
 import im.crisp.client.external.Crisp;
 import im.crisp.client.external.data.SessionEvent.Color;
+import im.crisp.client.external.notification.CrispNotificationClient;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -24,18 +25,20 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 
 /**
  * [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
  * to handling Method Channel Callback from Flutter and Open new Activity.
  */
-public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.NewIntentListener {
 
     private static final String CHANNEL_NAME = "flutter_crisp_chat";
 
     private MethodChannel channel;
     private Context context;
     private Activity activity;
+    private ActivityPluginBinding activityBinding;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -47,22 +50,46 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        this.activityBinding = binding;
         this.activity = binding.getActivity();
+        binding.addOnNewIntentListener(this);
     }
 
     @Override
     public void onDetachedFromActivityForConfigChanges() {
+        if (activityBinding != null) {
+            activityBinding.removeOnNewIntentListener(this);
+        }
+        this.activityBinding = null;
         this.activity = null;
     }
 
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        this.activityBinding = binding;
         this.activity = binding.getActivity();
+        binding.addOnNewIntentListener(this);
     }
 
     @Override
     public void onDetachedFromActivity() {
+        if (activityBinding != null) {
+            activityBinding.removeOnNewIntentListener(this);
+        }
+        this.activityBinding = null;
         this.activity = null;
+    }
+
+    @Override
+    public boolean onNewIntent(@NonNull Intent intent) {
+        if (activity != null) {
+            activity.setIntent(intent);
+        }
+        // Notify Flutter side about a new intent (potential Crisp notification tap)
+        if (channel != null) {
+            channel.invokeMethod("onCrispNotificationTapped", null);
+        }
+        return false;
     }
 
     /// [onMethodCall] if for handling method call from flutter end.
@@ -130,6 +157,13 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 result.success(null);
             } else {
                 result.notImplemented();
+            }
+        } else if (call.method.equals("openChatboxFromNotification")) {
+            if (activity != null) {
+                boolean opened = CrispNotificationClient.openChatbox(activity, activity.getIntent());
+                result.success(opened);
+            } else {
+                result.success(false);
             }
         } else if (call.method.equals("pushSessionEvent")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
@@ -233,6 +267,7 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
         context = null;
+        activityBinding = null;
     }
 
 }

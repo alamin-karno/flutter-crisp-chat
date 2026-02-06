@@ -46,15 +46,15 @@ Future<void> _requestNotificationPermission() async {
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     if (kDebugMode) {
-      print('✅ User granted permission');
+      print('User granted permission');
     }
   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
     if (kDebugMode) {
-      print('⚠️ User granted provisional permission');
+      print('User granted provisional permission');
     }
   } else {
     if (kDebugMode) {
-      print('❌ User declined or has not accepted permission');
+      print('User declined or has not accepted permission');
     }
   }
 }
@@ -77,6 +77,20 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
+    // Try to open Crisp chatbox if the app was launched from a Crisp notification
+    // (terminated state). This opens the app first, then opens the chatbox.
+    FlutterCrispChat.openChatboxFromNotification();
+
+    // Listen for Crisp notification taps while the app is in the background.
+    // When the user taps a notification, this callback fires, and we can
+    // then open the chatbox.
+    FlutterCrispChat.setOnNotificationTappedCallback(() {
+      if (kDebugMode) {
+        print('Crisp notification tapped while app was in background');
+      }
+      FlutterCrispChat.openChatboxFromNotification();
+    });
 
     config = CrispConfig(
       websiteID: websiteID,
