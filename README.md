@@ -370,6 +370,15 @@ class _CrispChatPageState extends State<CrispChatPage> {
   void initState() {
     super.initState();
 
+    // Handle Crisp notification tap (Option B only - see section 3.iii)
+    // Opens the chatbox if the app was launched from a Crisp notification (terminated state)
+    FlutterCrispChat.openChatboxFromNotification();
+
+    // Listen for Crisp notification taps while the app is in the background
+    FlutterCrispChat.setOnNotificationTappedCallback(() {
+      FlutterCrispChat.openChatboxFromNotification();
+    });
+
     // Configure Crisp User (Optional)
     // All user fields are optional. Only provide what you have.
     final crispUser = User(
@@ -528,7 +537,7 @@ Before using your development token, you now need to associate your marketplace 
 This plugin aims to stay compatible with the latest versions of the native Crisp SDKs. As of the latest update, it has been tested with:
 
 - Crisp Android SDK version: `2.0.16`
-- Crisp iOS SDK version: ~> `2.12.0`
+- Crisp iOS SDK version: ~> `2.13.0`
 
 While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current native SDK details.
 

@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/crisp-im/crisp-sdk-ios.git",
-            from: "2.12.0"
+            from: "2.13.0"
         )
     ],
     targets: [
@@ -24,7 +24,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Crisp", package: "crisp-sdk-ios")
             ],
-            path: "ios/Classes"
+            path: "../Classes"
         )
     ]
 )

@@ -10,6 +10,7 @@ Added
 
 Changed
 ---
+* Upgraded Crisp iOS SDK from `2.12.0` to `2.13.0`.
 * Updated `FlutterCrispChatPlugin.java` to implement `NewIntentListener` for detecting notification taps via `onNewIntent`.
 * Updated `README.md` with two notification handling approaches: **Option A** (auto-open ChatActivity) and **Option B** (open app first, then chatbox).
 
