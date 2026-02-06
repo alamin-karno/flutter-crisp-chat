@@ -164,6 +164,11 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             let event = SessionEvent(name: name, color: eventColor)
             CrispSDK.session.pushEvents([event])
             result(nil)
+
+        case "openChatboxFromNotification":
+            // Android-specific feature; iOS handles notifications via APNs delegates
+            result(false)
+
         default:
             // Handles unimplemented method calls
             result(FlutterMethodNotImplemented)

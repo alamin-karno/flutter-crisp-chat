@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -247,5 +248,34 @@ class FlutterCrispChat {
 
       return null;
     }
+  }
+
+  /// Attempts to open the Crisp chatbox from a notification intent.
+  ///
+  /// When using `CrispChatNotificationService` (which handles notifications
+  /// without auto-opening the chatbox), call this method to open the chatbox
+  /// after the app has launched or resumed.
+  ///
+  /// Returns `true` if the chatbox was opened successfully (i.e., the app
+  /// was launched from a Crisp notification), `false` otherwise.
+  ///
+  /// {@category General}
+  /// @return A [Future] that completes with a [bool] indicating success.
+  static Future<bool> openChatboxFromNotification() async {
+    return await FlutterCrispChatPlatform.instance
+        .openChatboxFromNotification();
+  }
+
+  /// Sets a callback that will be invoked when a Crisp notification is tapped
+  /// while the app is already running (background → foreground).
+  ///
+  /// This is useful for detecting notification taps when the app is in the
+  /// background (not terminated). After receiving this callback, you can
+  /// call [openChatboxFromNotification] to open the chatbox.
+  ///
+  /// {@category General}
+  /// @param callback The callback to invoke, or `null` to remove it.
+  static void setOnNotificationTappedCallback(VoidCallback? callback) {
+    FlutterCrispChatPlatform.instance.setOnNotificationTappedCallback(callback);
   }
 }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'crisp_chat'
-  s.version          = '2.4.3'
+  s.version          = '2.4.4'
   s.summary          = 'Flutter plugin for Crisp Chat'
   s.description      = 'A Flutter plugin for Crisp Chat SDK on iOS.'
   s.homepage         = 'https://github.com/alamin-karno/flutter-crisp-chat'
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source_files     = 'Classes/**/*'
 
   s.dependency 'Flutter'
-  s.dependency 'Crisp', '~> 2.12.0'
+  s.dependency 'Crisp', '~> 2.13.0'
 
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES'

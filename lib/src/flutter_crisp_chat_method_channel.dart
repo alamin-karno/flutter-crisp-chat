@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +12,31 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_crisp_chat');
+
+  /// Callback invoked when a Crisp notification is tapped while the app
+  /// is running (background → foreground via onNewIntent).
+  VoidCallback? _onNotificationTappedCallback;
+
+  /// Whether the native method call handler has been set up.
+  bool _isHandlerRegistered = false;
+
+  /// Lazily registers the native → Dart method call handler.
+  /// This avoids calling [setMethodCallHandler] before the binding is ready.
+  void _ensureNativeHandlerRegistered() {
+    if (!_isHandlerRegistered) {
+      _isHandlerRegistered = true;
+      methodChannel.setMethodCallHandler(_handleNativeMethodCall);
+    }
+  }
+
+  /// Handles method calls from native platform to Dart.
+  Future<dynamic> _handleNativeMethodCall(MethodCall call) async {
+    switch (call.method) {
+      case 'onCrispNotificationTapped':
+        _onNotificationTappedCallback?.call();
+        break;
+    }
+  }
 
   /// [openCrispChat] is use to invoke the Method Channel and call native
   /// code with arguments `websiteID`.
@@ -84,5 +111,30 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       'name': name,
       'color': color.name.toString(),
     });
+  }
+
+  /// [openChatboxFromNotification] attempts to open the Crisp chatbox from
+  /// a notification intent. Returns `true` if the chatbox was opened
+  /// successfully, `false` otherwise.
+  @override
+  Future<bool> openChatboxFromNotification() async {
+    _ensureNativeHandlerRegistered();
+    try {
+      final result = await methodChannel.invokeMethod<bool>(
+        'openChatboxFromNotification',
+      );
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to open chatbox from notification: '${e.message}'.");
+      return false;
+    }
+  }
+
+  /// [setOnNotificationTappedCallback] sets a callback that fires when a
+  /// Crisp notification is tapped while the app is running.
+  @override
+  void setOnNotificationTappedCallback(VoidCallback? callback) {
+    _ensureNativeHandlerRegistered();
+    _onNotificationTappedCallback = callback;
   }
 }

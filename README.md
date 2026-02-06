@@ -48,7 +48,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.4.3
+  crisp_chat: ^2.4.4
 ```
 
 ### 2. Setup platform specific settings
@@ -163,7 +163,11 @@ and `res/xml/file_paths.xml` add this
 
 #### iii). Handle Push notifications in your Android app
 
-You just have to declare our `CrispNotificationService` in the application tag of your `AndroidManifest.xml`.
+You have two options for handling Crisp push notifications:
+
+##### Option A: Auto-open ChatActivity (Crisp only)
+
+Declare the Crisp `CrispNotificationService` in the `<application>` tag of your `AndroidManifest.xml`.
 
 ```xml
 <service
@@ -175,7 +179,41 @@ You just have to declare our `CrispNotificationService` in the application tag o
 </service>
 ```
 
-Notifications will be handled by **Crisp** `CrispNotificationService` and a tap on it will launch your `MainActivity` and open **Crisp** `ChatActivity` with the corresponding session.
+Notifications will be handled by **Crisp** `CrispNotificationService` and a tap on it will launch your `MainActivity` and **automatically open** the Crisp `ChatActivity` with the corresponding session.
+
+##### Option B: Open app first, then chatbox (recommended)
+
+If you want your app to open first (so the user sees your app UI) and then open the Crisp chatbox programmatically, use the SDK's `CrispChatNotificationService` instead:
+
+```xml
+<service
+    android:name="com.alaminkarno.flutter_crisp_chat.CrispChatNotificationService"
+    android:exported="false">
+    <intent-filter>
+      <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+```
+
+Then in your Flutter code, handle the notification tap to open the chatbox:
+
+```dart
+@override
+void initState() {
+  super.initState();
+
+  // Handle app launched from a Crisp notification (terminated state)
+  FlutterCrispChat.openChatboxFromNotification();
+
+  // Handle notification tap while app is in the background
+  FlutterCrispChat.setOnNotificationTappedCallback(() {
+    FlutterCrispChat.openChatboxFromNotification();
+  });
+}
+```
+
+- `openChatboxFromNotification()` — Checks if the app was launched from a Crisp notification and opens the chatbox. Returns `true` if successful, `false` otherwise.
+- `setOnNotificationTappedCallback(callback)` — Sets a callback that fires when a Crisp notification is tapped while the app is already running in the background.
 
 #### iv). Customize Push notifications for android app
 
@@ -331,6 +369,15 @@ class _CrispChatPageState extends State<CrispChatPage> {
   @override
   void initState() {
     super.initState();
+
+    // Handle Crisp notification tap (Option B only - see section 3.iii)
+    // Opens the chatbox if the app was launched from a Crisp notification (terminated state)
+    FlutterCrispChat.openChatboxFromNotification();
+
+    // Listen for Crisp notification taps while the app is in the background
+    FlutterCrispChat.setOnNotificationTappedCallback(() {
+      FlutterCrispChat.openChatboxFromNotification();
+    });
 
     // Configure Crisp User (Optional)
     // All user fields are optional. Only provide what you have.
@@ -490,7 +537,7 @@ Before using your development token, you now need to associate your marketplace 
 This plugin aims to stay compatible with the latest versions of the native Crisp SDKs. As of the latest update, it has been tested with:
 
 - Crisp Android SDK version: `2.0.16`
-- Crisp iOS SDK version: ~> `2.12.0`
+- Crisp iOS SDK version: ~> `2.13.0`
 
 While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current native SDK details.
 
