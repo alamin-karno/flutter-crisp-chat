@@ -2,68 +2,67 @@
 head:
   - - meta
     - name: description
-      content: Flutter Crisp Chat is a Flutter plugin package for integrating Crisp Chat natively on Android & iOS. It provides an easy-to-use interface for customer communication and support.
+      content: Flutter Crisp Chat — a Flutter plugin for integrating Crisp live chat natively on Android & iOS with push notifications, user management, and session control.
 
   - - meta
     - name: keywords
-      content: "Overview of Flutter Crisp Chat, outline of Flutter Crisp Chat, Flutter Crisp Chat package overview, Flutter Crisp Chat plugin intro, Flutter Crisp Chat documentation"
-      
+      content: "flutter crisp chat overview, crisp chat flutter plugin, flutter live chat, crisp sdk flutter integration"
+
 prev: false
 
 next:
-  text: 'About'
-  link: 'getting_started/about.md'
+  text: 'Installation'
+  link: '/getting_started/install'
 ---
-
-
 
 # Overview
 
-A simple and short Flutter Crisp Chat guideline
+**Flutter Crisp Chat** (`crisp_chat`) is a Flutter plugin that integrates the [Crisp](https://crisp.chat) live chat platform natively into your Android and iOS apps. It wraps the official Crisp Android SDK and Crisp iOS SDK, giving you a fully native chat experience with push notifications, user identification, session management, and more.
 
-## Introduction
+## Why Crisp Chat?
 
-`flutter_crisp_chat` is a Flutter plugin package that provides seamless integration of the Crisp Chat platform into Flutter applications. It is designed to enable real-time customer communication and support with minimal effort. The package is lightweight, efficient, and works natively on both Android and iOS platforms. It is particularly useful for developers looking to add live chat functionality to their apps.
+[Crisp](https://crisp.chat) is a customer messaging platform used by thousands of companies worldwide. It provides live chat, a shared inbox, knowledge base, and CRM — all in one place. This Flutter plugin lets you bring that experience directly into your mobile app.
 
-## Table of Content
+## What This Plugin Provides
 
-### Getting Started
+| Feature | Description |
+|---|---|
+| **Open Chat** | Launch the native Crisp chat UI with one method call |
+| **User Identification** | Set user email, name, phone, avatar, and company details |
+| **Push Notifications** | Full FCM (Android) and APNs (iOS) support with two handling modes |
+| **Session Management** | Set custom session data, segments, and events |
+| **Unread Messages** | Query unread message count via the Crisp REST API |
+| **Session Control** | Get session identifiers and reset sessions on logout |
 
-- [Overview](./overview.md)
-- [About](./about.md)
-- [Benchmark](./benchmark.md)
-- [Install](./install.md)
-- [Uninstall](./uninstall.md)
+## Supported SDK Versions
 
-### Core Features
+| Platform | SDK | Version |
+|---|---|---|
+| Android | Crisp Android SDK | `2.0.16` |
+| iOS | Crisp iOS SDK | `~> 2.13.0` |
 
-- [Initialize](../core_feature/initialize.md)
-- [Send Message](../core_feature/send_message.md)
-- [Receive Message](../core_feature/receive_message.md)
-- [Customizations](../core_feature/customizations.md)
-- [Notifications](../core_feature/notifications.md)
+## Requirements
 
-### Advanced Features
+| Platform | Minimum Version |
+|---|---|
+| Flutter | 3.0+ |
+| Dart | 2.15.0+ |
+| Android | API 23 (Android 6.0) |
+| iOS | 13.0+ |
+| compileSdkVersion | 36 |
 
-- [Multi-Language Support](../advanced_feature/multi_language_support.md)
-- [Offline Mode](../advanced_feature/offline_mode.md)
-- [Chat History](../advanced_feature/chat_history.md)
-- [Analytics Integration](../advanced_feature/analytics_integration.md)
-- [Custom Events](../advanced_feature/custom_events.md)
+## Quick Links
 
-### Troubleshooting
+- [Installation](/getting_started/install) — Add the package to your project
+- [Platform Setup](/getting_started/platform_setup) — Configure Android and iOS
+- [Quick Start](/getting_started/quick_start) — Open your first chat in 5 minutes
+- [Push Notifications](/notifications/firebase_setup) — Set up FCM and APNs
+- [API Reference](/reference/api_documentation) — Complete method documentation
+- [Full Example](/reference/examples) — Working example app code
 
-- [Common Issues](../troubleshooting/common_issues.md)
-- [Debugging](../troubleshooting/debugging.md)
-- [Error Handling](../troubleshooting/error_handling.md)
+## Package Links
 
-### References
-
-- [API Documentation](../reference/api_documentation.md)
-- [Examples](../reference/examples.md)
-- [FAQ](../reference/faq.md)
-- [Changelog](../reference/changelog.md)
-
-## Conclusion
-
-Overall, `flutter_crisp_chat` is a powerful and versatile plugin that simplifies the integration of live chat functionality into Flutter applications. It is particularly useful for developers aiming to enhance customer communication and support in their apps.
+- [pub.dev](https://pub.dev/packages/crisp_chat)
+- [GitHub Repository](https://github.com/alamin-karno/flutter-crisp-chat)
+- [Issue Tracker](https://github.com/alamin-karno/flutter-crisp-chat/issues)
+- [Changelog](/reference/changelog)

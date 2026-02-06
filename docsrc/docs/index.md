@@ -6,119 +6,52 @@ title: Home
 head:
   - - meta
     - name: description
-      content: Flutter Crisp Chat is a Flutter plugin package for integrating Crisp Chat natively on Android & iOS. It provides an easy-to-use interface for customer communication and support.
+      content: Flutter Crisp Chat — a Flutter plugin for integrating Crisp live chat natively on Android & iOS. Push notifications, user management, session control, and more.
 
   - - meta
     - name: keywords
-      content: "flutter crisp chat, crisp chat flutter, crisp chat dart, crisp chat package, crisp chat example, crisp chat tutorial, crisp chat documentation, crisp chat docs, crisp chat github, crisp chat pub.dev, crisp chat pub, crisp chat pub.dev package, crisp chat pub package, crisp chat pub.dev flutter, crisp chat pub flutter, crisp chat pub.dev dart, crisp chat pub dart, crisp chat pub.dev package flutter, crisp chat pub package flutter, crisp chat pub.dev package dart, crisp chat pub package dart, crisp chat pub.dev"
+      content: "flutter crisp chat, crisp chat flutter, crisp sdk flutter, flutter live chat, flutter customer support, crisp chat plugin, crisp_chat pub.dev, flutter chat widget"
 
 hero:
   name: Flutter Crisp Chat
-  text: Enhance Customer Communication
+  text: Native Crisp Live Chat for Flutter
+  tagline: Integrate Crisp customer messaging into your Flutter app with full push notification support, user management, and session control — on both Android & iOS.
   image:
     src: '/graphics/logo.png'
     alt: Flutter Crisp Chat
   actions:
     - theme: brand
       text: Get Started
-      link: getting_started/overview.md
+      link: /getting_started/overview
     - theme: alt
-      text: Package GitHub
-      link: https://github.com/alamin-karno/flutter-crisp-chat
+      text: View on pub.dev
+      link: https://pub.dev/packages/crisp_chat
     - theme: alt
-      text: Doc GitHub
+      text: GitHub
       link: https://github.com/alamin-karno/flutter-crisp-chat
 
 features:
-  - icon: 
-      src: /graphics/badge.png
-      alt: 'feature icon'
+  - icon: "\U0001F680"
     title: Easy Integration
+    details: Add Crisp live chat to your Flutter app with just a few lines of code. Simple API, minimal setup.
 
-  - icon:
-      src: /graphics/badge.png
-      alt: 'feature icon'
-    title: Cross-Platform Support
+  - icon: "\U0001F4F1"
+    title: Cross-Platform
+    details: Native implementation for both Android and iOS using the official Crisp SDKs. Consistent experience across platforms.
 
-  - icon: 
-      src: /graphics/badge.png
-      alt: 'feature icon'
-    title: Customizable
+  - icon: "\U0001F514"
+    title: Push Notifications
+    details: Full FCM (Android) and APNs (iOS) push notification support. Two notification handling approaches — auto-open or app-first.
 
-  - icon: 
-      src: /graphics/badge.png
-      alt: 'feature icon'
-    title: Notifications
+  - icon: "\U0001F464"
+    title: User Management
+    details: Set user details like name, email, phone, avatar, and company info. Identify returning users with token IDs.
 
-  - icon:
-      src: /graphics/badge.png
-      alt: 'feature icon'
-    title: Documentation
+  - icon: "\U0001F4CA"
+    title: Session Control
+    details: Manage sessions with custom data, segments, events, and unread message counts via the Crisp REST API.
 
-  - icon: 
-      src: /graphics/badge.png
-      alt: 'feature icon'
-    title: Community Support
-
-sidebar:
-  - title: Getting Started
-    items:
-      - text: Overview
-        link: getting_started/overview.md
-      - text: About
-        link: getting_started/about.md
-      - text: Benchmark
-        link: getting_started/benchmark.md
-      - text: Install
-        link: getting_started/install.md
-      - text: Uninstall
-        link: getting_started/uninstall.md
-
-  - title: Core Features
-    items:
-      - text: Initialize
-        link: functionality/initialize.md
-      - text: Send Message
-        link: functionality/send_message.md
-      - text: Receive Message
-        link: functionality/receive_message.md
-      - text: Customizations
-        link: functionality/customizations.md
-      - text: Notifications
-        link: functionality/notifications.md
-      - text: User Management
-        link: functionality/user_management.md
-
-  - title: Advanced Features
-    items:
-      - text: Multi-Language Support
-        link: functionality/multi_language_support.md
-      - text: Offline Mode
-        link: functionality/offline_mode.md
-      - text: Chat History
-        link: functionality/chat_history.md
-      - text: Analytics Integration
-        link: functionality/analytics_integration.md
-      - text: Custom Events
-        link: functionality/custom_events.md
-
-  - title: Troubleshooting
-    items:
-      - text: Common Issues
-        link: troubleshooting/common_issues.md
-      - text: Debugging
-        link: troubleshooting/debugging.md
-      - text: Error Handling
-        link: troubleshooting/error_handling.md
-
-  - title: References
-    items:
-      - text: API Documentation
-        link: reference/api_documentation.md
-      - text: Examples
-        link: reference/examples.md
-      - text: FAQ
-        link: reference/faq.md
-      - text: Changelog
-        link: reference/changelog.md
+  - icon: "\U0001F6E0\uFE0F"
+    title: Fully Documented
+    details: Comprehensive documentation with step-by-step guides, API reference, full examples, and troubleshooting tips.
 ---
