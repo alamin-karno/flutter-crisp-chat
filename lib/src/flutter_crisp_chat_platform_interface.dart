@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'config.dart';
@@ -71,5 +73,22 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     SessionEventColor color = SessionEventColor.blue,
   }) {
     throw UnimplementedError('pushSessionEvent() has not been implemented.');
+  }
+
+  /// [openChatboxFromNotification] attempts to open the Crisp chatbox from
+  /// a notification intent. Returns `true` if the chatbox was opened
+  /// successfully (i.e., the app was launched from a Crisp notification),
+  /// `false` otherwise.
+  Future<bool> openChatboxFromNotification() {
+    throw UnimplementedError(
+        'openChatboxFromNotification() has not been implemented.');
+  }
+
+  /// [setOnNotificationTappedCallback] sets a callback that will be invoked
+  /// when a Crisp notification is tapped while the app is running
+  /// (background → foreground via onNewIntent).
+  void setOnNotificationTappedCallback(VoidCallback? callback) {
+    throw UnimplementedError(
+        'setOnNotificationTappedCallback() has not been implemented.');
   }
 }
