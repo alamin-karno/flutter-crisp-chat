@@ -1,0 +1,26 @@
+{
+  "blogs": [
+    {
+      "id": "introducing-crisp-chat",
+      "title": "Introducing Crisp Chat: Enhance Your Flutter Apps with Real-time Customer Support",
+      "description": "Learn how to integrate Crisp live chat into your Flutter applications to provide real-time customer support and improve user engagement.",
+      "url": "https://alaminkarno.medium.com/introducing-crisp-chat-enhance-your-flutter-apps-with-real-time-customer-support-80f0e36b3ed5",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*ifOwY9pZ8TbmulqtL1jKog.png",
+      "date": "June 26, 2024",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Crisp Chat", "Packags"],
+      "readTime": "3 min read"
+    },
+    {
+      "id": "fixing-crisp-fcm-notifications",
+      "title": "Taking Back Control: How I Fixed Crisp FCM Notifications in a Flutter Plugin",
+      "description": "Discover the journey of fixing Firebase Cloud Messaging notifications in the Crisp Flutter plugin and implementing custom notification handling.",
+      "url": "https://alaminkarno.medium.com/taking-back-control-how-i-fixed-crisp-fcm-notifications-in-a-flutter-plugin-d93f4264828f",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:4800/format:webp/1*XdJWVsqPE7iZq04AsmUPSw.png",
+      "date": "February 7, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "FCM", "Notifications"],
+      "readTime": "4 min read"
+    }
+  ]
+}
