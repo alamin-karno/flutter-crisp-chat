@@ -243,6 +243,34 @@ function goAuthor() {
     flex-shrink: 0;
 }
 
+/* Dark theme adjustments */
+.dark .ha-card {
+    background: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .ha-card:hover {
+    border-color: #4DA8FF;
+    box-shadow: 0 4px 20px rgba(77, 168, 255, 0.12);
+}
+
+.dark .ha-name {
+    color: #ffffff;
+}
+
+.dark .ha-role {
+    color: #b3b3b3;
+}
+
+.dark .ha-about {
+    color: #e5e7eb;
+}
+
+.dark .ha-avatar {
+    border-color: #4DA8FF;
+    box-shadow: 0 2px 8px rgba(77, 168, 255, 0.25);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .ha-card {

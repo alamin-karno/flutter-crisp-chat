@@ -88,4 +88,14 @@ const sponsors = [...sponsorsJson.platinum, ...sponsorsJson.average];
     font-size: 0.85rem;
     font-weight: 500;
 }
+
+/* Dark theme adjustments */
+.dark .sponsor-card:hover {
+    box-shadow: 0 4px 16px rgba(77, 168, 255, 0.15);
+}
+
+.dark .sponsor-empty {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+}
 </style>

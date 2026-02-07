@@ -256,6 +256,39 @@ function fmt(n) {
     background: linear-gradient(180deg, #4DA8FF, #027DFD);
 }
 
+/* Dark theme adjustments for better contrast */
+.dark .pkg-stats-inner {
+    background: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .pkg-stats-inner:hover {
+    border-color: #4DA8FF;
+    box-shadow: 0 2px 16px rgba(77, 168, 255, 0.12);
+}
+
+.dark .stats-heading {
+    color: #ffffff;
+}
+
+.dark .stats-source {
+    color: #b3b3b3;
+}
+
+.dark .stats-source a {
+    color: #4DA8FF;
+}
+
+.dark .stat-val {
+    color: #4DA8FF;
+}
+
+.dark .stat-max,
+.dark .stat-lbl,
+.dark .col-label {
+    color: #b3b3b3;
+}
+
 .col-label {
     font-size: 0.65rem;
     color: var(--vp-c-text-3);

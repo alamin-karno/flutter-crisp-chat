@@ -11,9 +11,10 @@ export default defineConfig({
 
   markdown: {
     theme: {
-      light: 'min-light',
-      dark: 'material-theme-palenight',
+      light: 'github-light',
+      dark: 'github-dark',
     },
+    languages: ['dart', 'yaml', 'json', 'bash', 'java', 'swift', 'kotlin', 'xml'],
     lineNumbers: true,
     linkify: true,
     anchors: {
