@@ -11,9 +11,10 @@ export default defineConfig({
 
   markdown: {
     theme: {
-      light: 'min-light',
-      dark: 'material-theme-palenight',
+      light: 'github-light',
+      dark: 'github-dark',
     },
+    languages: ['dart', 'yaml', 'json', 'bash', 'java', 'swift', 'kotlin', 'xml'],
     lineNumbers: true,
     linkify: true,
     anchors: {
@@ -87,7 +88,7 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
       { icon: 'x', link: 'https://x.com/alamin_karno' },
-      { icon: 'linkedin', link: 'https://www.linkedin.com/in/alaborkarno/' },
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/alaminkarno/' },
     ],
 
     sidebar: [

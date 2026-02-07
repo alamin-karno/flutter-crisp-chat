@@ -19,10 +19,17 @@ next:
 
 # Author & Maintainer
 
-<div style="text-align: center; margin: 2rem 0;">
-  <img src="https://avatars.githubusercontent.com/u/56608168?v=4" alt="Md. Al-Amin" style="border-radius: 50%; width: 150px; height: 150px;" />
-  <h2 style="margin-top: 1rem; margin-bottom: 0.25rem;">Md. Al-Amin</h2>
-  <p style="color: var(--vp-c-text-2); margin-top: 0;">Software Engineer · Mobile Application Developer</p>
+<div class="author-profile">
+  <img src="https://avatars.githubusercontent.com/u/56608168?v=4" alt="Md. Al-Amin" class="author-avatar" />
+  <h2 class="author-name">Md. Al-Amin</h2>
+  <p class="author-title">Software Engineer · Mobile Application Developer</p>
+  <p class="author-location">Dhaka, Bangladesh</p>
+  <div class="author-links">
+    <a href="https://github.com/alamin-karno" target="_blank" class="author-link">GitHub</a>
+    <a href="https://x.com/alamin_karno" target="_blank" class="author-link">Twitter / X</a>
+    <a href="https://www.linkedin.com/in/alaminkarno/" target="_blank" class="author-link">LinkedIn</a>
+    <a href="https://pub.dev/packages/crisp_chat" target="_blank" class="author-link">pub.dev</a>
+  </div>
 </div>
 
 ## About
@@ -43,27 +50,35 @@ Al-Amin is an active open source contributor. The Flutter Crisp Chat plugin is o
 - **License:** MIT
 - **Native SDKs:** Crisp Android SDK `2.0.16` · Crisp iOS SDK `~> 2.13.0`
 
-## Connect
-
-| Platform | Link |
-|---|---|
-| **GitHub** | [@alamin-karno](https://github.com/alamin-karno) |
-| **Twitter / X** | [@alamin_karno](https://x.com/alamin_karno) |
-| **LinkedIn** | [Md. Al-Amin](https://www.linkedin.com/in/alaborkarno/) |
-| **pub.dev** | [crisp_chat](https://pub.dev/packages/crisp_chat) |
-
 ## Support My Work
 
 If this plugin has been helpful to you, consider supporting the development:
 
-| Platform | Link |
-|---|---|
-| **SupportKori** | [supportkori.com/alaminkarno](https://www.supportkori.com/alaminkarno) |
-| **Buy Me a Coffee** | [buymeacoffee.com/alaminkarno](https://www.buymeacoffee.com/alaminkarno) |
-| **GitHub Sponsors** | [github.com/sponsors/alamin-karno](https://github.com/sponsors/alamin-karno) |
-| **Patreon** | [patreon.com/alamin_karno](https://patreon.com/alamin_karno) |
+<div class="support-buttons">
+  <a href="https://www.supportkori.com/alaminkarno" target="_blank" class="support-button" style="background: linear-gradient(135deg, #02569B, #027DFD); color: white;">SupportKori</a>
+  <a href="https://www.buymeacoffee.com/alaminkarno" target="_blank" class="support-button" style="background: #FFDD00; color: #000;">Buy Me a Coffee</a>
+  <a href="https://github.com/sponsors/alamin-karno" target="_blank" class="support-button" style="background: #ea4aaa; color: white;">GitHub Sponsors</a>
+  <a href="https://patreon.com/alamin_karno" target="_blank" class="support-button" style="background: #FF424D; color: white;">Patreon</a>
+</div>
 
 Your support helps maintain this plugin, fix bugs, add new features, and keep the documentation up to date.
+
+---
+
+## Hire Me
+
+Looking for an experienced **Flutter & Mobile App Developer** for your project? I'm available for freelance work!
+
+<div class="hire-section">
+  <h3 class="hire-title">Available for Freelance Projects</h3>
+  <p class="hire-description">I specialize in Flutter app development, native Android/iOS plugins, Firebase integration, and customer messaging solutions.</p>
+  <div class="hire-buttons">
+    <a href="https://www.fiverr.com/s/kLEWZzQ" target="_blank" class="hire-button-fiverr">Hire Me on Fiverr</a>
+    <a href="https://www.linkedin.com/in/alaminkarno/" target="_blank" class="hire-button-linkedin">Connect on LinkedIn</a>
+  </div>
+</div>
+
+---
 
 ## Contributors
 
