@@ -1,22 +1,20 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
-  title: 'Crisp',
-  description: 'Crisp Documentation',
+  title: 'Flutter Crisp Chat',
+  description: 'Official documentation for the Flutter Crisp Chat plugin — integrate Crisp live chat natively on Android & iOS.',
   base: "/flutter-crisp-chat/",
   lastUpdated: true,
   lang: 'en-US',
-  // Clean URLs are prettier, but they require server config and dedicated 404 page. 
-  // So keep it false.
   cleanUrls: false,
   assetsDir: 'assets',
 
   markdown: {
-    // Choose theme from here : node_modules/shiki/themes. 
     theme: {
-      light: 'min-light',
-      dark: 'material-theme-palenight',
+      light: 'github-light',
+      dark: 'github-dark',
     },
+    languages: ['dart', 'yaml', 'json', 'bash', 'java', 'swift', 'kotlin', 'xml'],
     lineNumbers: true,
     linkify: true,
     anchors: {
@@ -27,120 +25,114 @@ export default defineConfig({
   },
 
   sitemap: {
-    hostname: 'https://github.com/alamin-karno/flutter-crisp-chat'
+    hostname: 'https://alamin-karno.github.io/flutter-crisp-chat/'
   },
 
   head: [
-    // html head icon or favicon set up
-    ['link', { rel: "icon", type: "image/png", sizes: "16x16", href: "/graphics/logo.png", alt: "logo" }],
-
-    // Google Analytics
-    // ['script', { async: '', src: "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX" }],
-    // ['script',
-    //   {},
-    //   `window.dataLayer = window.dataLayer || [];
-    //   function gtag(){dataLayer.push(arguments);}
-    //   gtag('js', new Date());
-    //   gtag('config', 'G-XXXXXXXX');`
-    // ],
-
+    ['link', { rel: "icon", type: "image/png", sizes: "16x16", href: "/flutter-crisp-chat/graphics/logo.png", alt: "logo" }],
   ],
 
-  // Set up the open graph meta tags for better SEO
   transformPageData(pageData) {
-    let url = 'https://get-storage.tabpole.dev';
+    let url = 'https://alamin-karno.github.io/flutter-crisp-chat';
     pageData.frontmatter.head ??= []
     pageData.frontmatter.head.push(['meta', { property: 'og:locale', content: 'en_US' }])
     pageData.frontmatter.head.push(['meta', { property: 'og:type', content: 'website' }])
-    pageData.frontmatter.head.push(['meta', { property: 'og:title', content: `${pageData.title} | ${this.site.title}` }])
+    pageData.frontmatter.head.push(['meta', { property: 'og:title', content: `${pageData.title} | Flutter Crisp Chat` }])
     pageData.frontmatter.head.push(['meta', { property: 'og:description', content: `${pageData.description}` }])
     pageData.frontmatter.head.push(['meta', { property: 'og:image', content: `${url}/graphics/logo.png` }])
     pageData.frontmatter.head.push(['meta', { property: 'og:url', content: `${url}/${pageData.filePath.replace(".md", ".html")}` }])
   },
 
   themeConfig: {
-    siteTitle: 'Crisp Chat',
+    siteTitle: 'Flutter Crisp Chat',
     logo: {
       src: '/graphics/logo.png',
-      alt: 'logo',
+      alt: 'Flutter Crisp Chat',
     },
 
-    // search: {
-    //   provider: 'algolia',
-    //   options: {
-    //     appId: 'XXXXXXXXXXXXXXX',
-    //     apiKey: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    //     indexName: 'XXXXXXXXXXXXXX'
-    //   }
-    // },
-
-    // local search
-    // search: {
-    //   provider: 'local',
-    //   options: {
-    //     miniSearch: {
-    //       options: {},
-    //       searchOptions: {
-    //         fuzzy: 0.2,
-    //         prefix: true,
-    //         boost: { title: 4, text: 2, titles: 1 },
-    //       },
-    //     }
-    //   }
-    // },
+    search: {
+      provider: 'local',
+      options: {
+        miniSearch: {
+          options: {},
+          searchOptions: {
+            fuzzy: 0.2,
+            prefix: true,
+            boost: { title: 4, text: 2, titles: 1 },
+          },
+        }
+      }
+    },
 
     editLink: {
       pattern: 'https://github.com/alamin-karno/flutter-crisp-chat/tree/main/docsrc/docs/:path',
       text: 'Edit this page on GitHub'
     },
 
-    // Navigation Section
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Documentation', link: '/getting_started/overview.md' },
-      { text: 'About', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
-      { text: 'Support', link: 'https://www.buymeacoffee.com/alaminkarno' },
-    ],
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
-      { icon: 'twitter', link: 'https://x.com/alamin_karno' },
+      { text: 'Guide', link: '/getting_started/overview' },
+      { text: 'API Reference', link: '/reference/api_documentation' },
+      {
+        text: 'Links',
+        items: [
+          { text: 'pub.dev', link: 'https://pub.dev/packages/crisp_chat' },
+          { text: 'GitHub', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
+          { text: 'Changelog', link: '/reference/changelog' },
+          { text: 'Contributing', link: '/community/contributing' },
+          { text: 'Support the Author', link: 'https://www.supportkori.com/alaminkarno' },
+        ]
+      },
     ],
 
-    // Sidebar Section
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/alamin-karno/flutter-crisp-chat' },
+      { icon: 'x', link: 'https://x.com/alamin_karno' },
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/alaminkarno/' },
+    ],
+
     sidebar: [
       {
         text: 'Getting Started',
         collapsed: false,
         items: [
-          { text: 'Overview', link: '/getting_started/overview.md' },
-          { text: 'About', link: '/getting_started/about.md' },
-          { text: 'Benchmark', link: '/getting_started/benchmark.md' },
-          { text: 'Install', link: '/getting_started/install.md' },
-          { text: 'Uninstall', link: '/getting_started/uninstall.md' },
+          { text: 'Overview', link: '/getting_started/overview' },
+          { text: 'Installation', link: '/getting_started/install' },
+          { text: 'Platform Setup', link: '/getting_started/platform_setup' },
+          { text: 'Quick Start', link: '/getting_started/quick_start' },
         ],
       },
 
       {
         text: 'Core Features',
-        collapsed: true,
+        collapsed: false,
         items: [
-          { text: 'Initialize', link: '/core_feature/initialize.md' },
-          { text: 'Send Message', link: '/core_feature/send_message.md' },
-          { text: 'Receive Message', link: '/core_feature/receive_message.md' },
-          { text: 'Customizations', link: '/core_feature/customizations.md' },
-          { text: 'Notifications', link: '/core_feature/notifications.md' },
+          { text: 'Configuration', link: '/core_feature/configuration' },
+          { text: 'User & Company', link: '/core_feature/user_and_company' },
+          { text: 'Session Management', link: '/core_feature/session_management' },
+          { text: 'Unread Messages', link: '/core_feature/unread_messages' },
         ],
       },
 
       {
-        text: 'Advanced Features',
+        text: 'Push Notifications',
+        collapsed: false,
+        items: [
+          { text: 'Firebase Setup', link: '/notifications/firebase_setup' },
+          { text: 'Android Notifications', link: '/notifications/android' },
+          { text: 'iOS Notifications', link: '/notifications/ios' },
+          { text: 'Notification Handling', link: '/notifications/handling' },
+        ],
+      },
+
+      {
+        text: 'Reference',
         collapsed: true,
         items: [
-          { text: 'Multi-Language Support', link: '/advanced_feature/multi_language_support.md' },
-          { text: 'Offline Mode', link: '/advanced_feature/offline_mode.md' },
-          { text: 'Chat History', link: '/advanced_feature/chat_history.md' },
-          { text: 'Analytics Integration', link: '/advanced_feature/analytics_integration.md' },
-          { text: 'Custom Events', link: '/advanced_feature/custom_events.md' },
+          { text: 'API Documentation', link: '/reference/api_documentation' },
+          { text: 'Full Example', link: '/reference/examples' },
+          { text: 'FAQ', link: '/reference/faq' },
+          { text: 'Changelog', link: '/reference/changelog' },
         ],
       },
 
@@ -148,28 +140,25 @@ export default defineConfig({
         text: 'Troubleshooting',
         collapsed: true,
         items: [
-          { text: 'Common Issues', link: '/troubleshooting/common_issues.md' },
-          { text: 'Debugging', link: '/troubleshooting/debugging.md' },
-          { text: 'Error Handling', link: '/troubleshooting/error_handling.md' },
+          { text: 'Common Issues', link: '/troubleshooting/common_issues' },
+          { text: 'Platform-Specific', link: '/troubleshooting/platform_specific' },
         ],
       },
 
       {
-        text: 'References',
+        text: 'Community',
         collapsed: true,
         items: [
-          { text: 'API Documentation', link: '/reference/api_documentation.md' },
-          { text: 'Examples', link: '/reference/examples.md' },
-          { text: 'FAQ', link: '/reference/faq.md' },
-          { text: 'Changelog', link: '/reference/changelog.md' },
+          { text: 'Contributing', link: '/community/contributing' },
+          { text: 'Author & Maintainer', link: '/community/author' },
+          { text: 'Support', link: '/community/support' },
         ],
       },
     ],
 
-    // Footer Section
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2025 Crisp'
+      message: 'Released under the <a href="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/LICENSE">MIT License</a>.',
+      copyright: 'Copyright © 2022-present <a href="https://github.com/alamin-karno">Md. Al-Amin</a>'
     },
   },
 })

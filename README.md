@@ -15,6 +15,8 @@ A flutter plugin package for using crisp chat natively on Android & iOS.
 
 Chat with website visitors, integrate your favorite tools, and deliver a great customer experience. - Crisp. The `Crisp Chat` is a package that provides a simple way to open chat window using native channel. Connect with Crisp Chat, register a user to chat (or not) and render a chat widget. Tested on Android and iOS. 
 
+📖 **[Full Documentation](https://alamin-karno.github.io/flutter-crisp-chat/)** — Comprehensive guides, API reference, and examples.
+
 **Note:** Contributions are highly appreciated. If you have an idea or suggestion to improve this package, feel free to reach out. Before contributing, please review the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines and setup instructions.
 
 
