@@ -73,6 +73,7 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/getting_started/overview' },
       { text: 'API Reference', link: '/reference/api_documentation' },
+      { text: 'Blog', link: '/blog/' },
       {
         text: 'Links',
         items: [
@@ -133,6 +134,14 @@ export default defineConfig({
           { text: 'Full Example', link: '/reference/examples' },
           { text: 'FAQ', link: '/reference/faq' },
           { text: 'Changelog', link: '/reference/changelog' },
+        ],
+      },
+
+      {
+        text: 'Blog',
+        collapsed: true,
+        items: [
+          { text: 'All Posts', link: '/blog/' },
         ],
       },
 
