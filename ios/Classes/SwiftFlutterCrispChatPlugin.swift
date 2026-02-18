@@ -204,7 +204,18 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
         let notification = response.notification
         if CrispSDK.isCrispPushNotification(notification) {
+            // Currently does nothing, but call it anyway for future compatibility
             CrispSDK.handlePushNotification(notification)
+            
+            // Manually open the chat since SDK doesn't do it yet
+            DispatchQueue.main.async {
+                if let viewController = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .flatMap({ $0.windows })
+                    .first(where: { $0.isKeyWindow })?.rootViewController {
+                    viewController.present(ChatViewController(), animated: true)
+                }
+            }
         }
         completionHandler()
     }
