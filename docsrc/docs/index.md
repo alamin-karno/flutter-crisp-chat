@@ -12,6 +12,10 @@ head:
     - name: keywords
       content: "flutter crisp chat, crisp chat flutter, crisp sdk flutter, flutter live chat, flutter customer support, crisp chat plugin, crisp_chat pub.dev, flutter chat widget"
 
+  - - meta
+    - name: google-site-verification
+      content: gjJvl6jAwo8pORAiWoawGoaLl9DNNyoA9Mo73_M7AQY
+
 hero:
   name: Flutter Crisp Chat
   text: Native Crisp Live Chat for Flutter
