@@ -30,6 +30,13 @@ export default defineConfig({
 
   head: [
     ['link', { rel: "icon", type: "image/png", sizes: "16x16", href: "/flutter-crisp-chat/graphics/logo.png", alt: "logo" }],
+    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-SWJLYZRT92' }],
+    ['script', {}, `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-SWJLYZRT92');
+    `]
   ],
 
   transformPageData(pageData) {
