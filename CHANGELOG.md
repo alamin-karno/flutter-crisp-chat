@@ -1,4 +1,12 @@
 
+# [Unreleased]
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.16` to `2.0.17`.
+  - Scroll to last message after visitor sent it
+  - Updated smileys sorting according to Web dashboard
+
 # 2.4.4
 
 Added
