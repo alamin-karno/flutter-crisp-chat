@@ -25,7 +25,13 @@ export default defineConfig({
   },
 
   sitemap: {
-    hostname: 'https://alamin-karno.github.io/flutter-crisp-chat/'
+    hostname: 'https://alamin-karno.github.io/flutter-crisp-chat/',
+    transformItems: (items) => {
+      return items.map((item) => ({
+        ...item,
+        lastmod: item.lastmod ? new Date(item.lastmod).toISOString() : undefined
+      }))
+    }
   },
 
   head: [
