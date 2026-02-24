@@ -38,6 +38,6 @@ android {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'im.crisp:crisp-sdk:2.0.16'
+    implementation 'im.crisp:crisp-sdk:2.0.17'
     compileOnly 'com.google.firebase:firebase-messaging:24.1.0'
 }

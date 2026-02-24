@@ -25,11 +25,24 @@ export default defineConfig({
   },
 
   sitemap: {
-    hostname: 'https://alamin-karno.github.io/flutter-crisp-chat/'
+    hostname: 'https://alamin-karno.github.io/flutter-crisp-chat/',
+    transformItems: (items) => {
+      return items.map((item) => ({
+        ...item,
+        lastmod: item.lastmod ? new Date(item.lastmod).toISOString() : undefined
+      }))
+    }
   },
 
   head: [
     ['link', { rel: "icon", type: "image/png", sizes: "16x16", href: "/flutter-crisp-chat/graphics/logo.png", alt: "logo" }],
+    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-SWJLYZRT92' }],
+    ['script', {}, `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-SWJLYZRT92');
+    `]
   ],
 
   transformPageData(pageData) {
