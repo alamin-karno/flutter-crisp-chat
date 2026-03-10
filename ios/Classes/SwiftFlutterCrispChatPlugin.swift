@@ -81,7 +81,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 .compactMap({ $0 as? UIWindowScene })
                 .flatMap({ $0.windows })
                 .first(where: { $0.isKeyWindow })?.rootViewController {
-                viewController.present(ChatViewController(), animated: true)
+                let chatVC = ChatViewController()
+                chatVC.modalPresentationStyle = .fullScreen
+                viewController.present(chatVC, animated: true)
             }
 
             result(nil)
