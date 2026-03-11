@@ -54,6 +54,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             }
 
             CrispSDK.configure(websiteID: websiteID)
+            CrispSDK.setShouldPromptForNotificationPermission(crispConfig.enableNotifications)
 
             // Configure Crisp session if additional data is provided
             if let tokenId = crispConfig.tokenId {
