@@ -70,8 +70,27 @@ The Flutter Crisp Chat plugin's iOS implementation automatically:
 - Handles incoming notifications with `CrispSDK.handlePushNotification(notification)`
 - Shows notification banners when the app is in the foreground
 - Opens the chat when a notification is tapped
+- Respects the `enableNotifications` flag in `CrispConfig` to control permission prompts
 
 You don't need to write any additional Swift code — the plugin handles all of this internally.
+
+## Controlling Notification Permission Prompts
+
+You can control whether Crisp prompts the user for notification permissions using the `enableNotifications` parameter in `CrispConfig`:
+
+```dart
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  enableNotifications: false, // Disable notification permission prompts
+);
+
+await FlutterCrispChat.openCrispChat(config: config);
+```
+
+When `enableNotifications` is set to `false`:
+- The Crisp SDK will not prompt the user for notification permissions
+- No push notification permission dialog will be shown
+- Users can still use the chat, but won't receive push notifications
 
 ::: warning Production Only
 Currently, Crisp push notifications on iOS are only sent to **production APNs channels**. Notifications will **not** be received when testing with development provisioning profiles or in sandbox mode. This limitation may be resolved in a future Crisp SDK update.
