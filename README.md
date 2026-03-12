@@ -50,7 +50,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.4.5
+  crisp_chat: ^2.4.6
 ```
 
 ### 2. Setup platform specific settings

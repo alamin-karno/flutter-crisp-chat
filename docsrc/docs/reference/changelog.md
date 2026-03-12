@@ -19,7 +19,7 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
-## [Unreleased]
+## 2.4.6
 
 ### Added
 - `modalPresentationStyle` parameter to `CrispConfig` for iOS modal presentation style configuration
