@@ -117,22 +117,45 @@ struct CrispConfig {
     let sessionSegment: String?
     let user: User?
     let enableNotifications: Bool
+    let modalPresentationStyle: UIModalPresentationStyle
     
-    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?, enableNotifications: Bool) {
+    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?, enableNotifications: Bool, modalPresentationStyle: UIModalPresentationStyle) {
         self.websiteID = websiteID
         self.tokenId = tokenId
         self.sessionSegment = sessionSegment
         self.user = user
         self.enableNotifications = enableNotifications
+        self.modalPresentationStyle = modalPresentationStyle
     }
     
     static func fromJson(_ json: [String: Any]) -> CrispConfig {
+        let modalPresentationStyleString = json["modalPresentationStyle"] as? String
+        let modalPresentationStyle: UIModalPresentationStyle
+        
+        switch modalPresentationStyleString {
+        case "fullScreen":
+            modalPresentationStyle = .fullScreen
+        case "pageSheet":
+            modalPresentationStyle = .pageSheet
+        case "formSheet":
+            modalPresentationStyle = .formSheet
+        case "overFullScreen":
+            modalPresentationStyle = .overFullScreen
+        case "overCurrentContext":
+            modalPresentationStyle = .overCurrentContext
+        case "popover":
+            modalPresentationStyle = .popover
+        default:
+            modalPresentationStyle = .fullScreen
+        }
+        
         return CrispConfig(
             websiteID: json["websiteId"] as! String,
             tokenId: json["tokenId"] as? String,
             sessionSegment: json["sessionSegment"] as? String,
             user: User.fromJson(json["user"] as? [String: Any] ?? [:]),
-            enableNotifications: json["enableNotifications"] as? Bool ?? true
+            enableNotifications: json["enableNotifications"] as? Bool ?? true,
+            modalPresentationStyle: modalPresentationStyle
         )
     }
 }

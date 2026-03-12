@@ -4,12 +4,9 @@ import Crisp
 
 /// [SwiftFlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
-public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate {
+public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
-    // The method channel used to communicate with Flutter
     private var channel: FlutterMethodChannel?
-
-    // Configuration object for Crisp SDK
     private var crispConfig: CrispConfig?
 
     /// Registers the plugin with the Flutter engine.
@@ -21,8 +18,12 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.addApplicationDelegate(instance)
 
-        // Set UNUserNotificationCenter delegate
         UNUserNotificationCenter.current().delegate = instance
+        
+        // Register for remote notifications as required by Crisp SDK
+        DispatchQueue.main.async {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
     }
 
     /// Handles method calls from Flutter to native iOS.
@@ -31,16 +32,12 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         switch call.method {
 
         case "openCrispChat":
-            // Open Crisp Chat interface with given configuration
             guard let args = call.arguments as? [String: Any] else {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "No arguments passed.", details: nil))
                 return
             }
 
-            // Initialize Crisp configuration from arguments
             let crispConfig = CrispConfig.fromJson(args)
-
-            // Validate websiteID (nil or empty)
             let websiteID = crispConfig.websiteID.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !websiteID.isEmpty else {
                 result(
@@ -54,8 +51,8 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             }
 
             CrispSDK.configure(websiteID: websiteID)
+            CrispSDK.setShouldPromptForNotificationPermission(crispConfig.enableNotifications)
 
-            // Configure Crisp session if additional data is provided
             if let tokenId = crispConfig.tokenId {
                 CrispSDK.setTokenID(tokenID: tokenId)
             }
@@ -63,7 +60,6 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 CrispSDK.session.segment = segment
             }
 
-            // Set user details such as email, nickname, phone, and avatar
             CrispSDK.user.email = crispConfig.user?.email
             CrispSDK.user.nickname = crispConfig.user?.nickName
             CrispSDK.user.phone = crispConfig.user?.phone
@@ -73,26 +69,24 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 CrispSDK.user.avatar = nil
             }
 
-            // Configure company details if available
             CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany()
 
-            // Present the chat view controller on the root view controller
             if let viewController = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .flatMap({ $0.windows })
                 .first(where: { $0.isKeyWindow })?.rootViewController {
-                viewController.present(ChatViewController(), animated: true)
+                let chatVC = ChatViewController()
+                chatVC.modalPresentationStyle = crispConfig.modalPresentationStyle
+                viewController.present(chatVC, animated: true)
             }
 
             result(nil)
 
         case "resetCrispChatSession":
-            // Resets the current Crisp chat session
             CrispSDK.session.reset()
             result(nil)
 
         case "setSessionString":
-            // Sets a custom string attribute in the Crisp session
             guard let args = call.arguments as? [String: Any],
                   let key = args["key"] as? String,
                   let value = args["value"] as? String else {
@@ -103,7 +97,6 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             result(nil)
 
         case "setSessionInt":
-            // Sets a custom integer attribute in the Crisp session
             guard let args = call.arguments as? [String: Any],
                   let key = args["key"] as? String,
                   let value = args["value"] as? Int else {
@@ -114,7 +107,6 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             result(nil)
 
         case "getSessionIdentifier":
-            // Retrieves the current session identifier
             if let sessionId = CrispSDK.session.identifier {
                 result(sessionId)
             } else {
@@ -122,7 +114,6 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             }
             
         case "setSessionSegments":
-            // Sets session segment
             guard let args = call.arguments as? [String: Any],
                   let segments = args["segments"] as? [String],
                   let overwrite = args["overwrite"] as? Bool else {
@@ -166,11 +157,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             result(nil)
 
         case "openChatboxFromNotification":
-            // Android-specific feature; iOS handles notifications via APNs delegates
             result(false)
 
         default:
-            // Handles unimplemented method calls
             result(FlutterMethodNotImplemented)
         }
     }
@@ -178,6 +167,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     /// Handles registration of device token for push notifications.
     public func application(_ application: UIApplication,
                             didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        #if DEBUG
+        print("[CrispPlugin] Device token registered")
+        #endif
         CrispSDK.setDeviceToken(deviceToken)
     }
 
@@ -186,7 +178,13 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        #if DEBUG
+        print("[CrispPlugin] willPresent notification called")
+        #endif
         if CrispSDK.isCrispPushNotification(notification) {
+            #if DEBUG
+            print("[CrispPlugin] Crisp notification detected in willPresent")
+            #endif
             CrispSDK.handlePushNotification(notification)
             if #available(iOS 14.0, *) {
                 completionHandler([.banner, .sound])
@@ -194,6 +192,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 completionHandler([.alert, .sound])
             }
         } else {
+            #if DEBUG
+            print("[CrispPlugin] Non-Crisp notification in willPresent")
+            #endif
             completionHandler([])
         }
     }
@@ -202,9 +203,30 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
+        #if DEBUG
+        print("[CrispPlugin] didReceive notification response called")
+        #endif
         let notification = response.notification
         if CrispSDK.isCrispPushNotification(notification) {
+            #if DEBUG
+            print("[CrispPlugin] Crisp notification tapped - opening chat")
+            #endif
+            // Currently does nothing, but call it anyway for future compatibility
             CrispSDK.handlePushNotification(notification)
+            
+            // Manually open the chat since SDK doesn't do it yet
+            DispatchQueue.main.async {
+                if let viewController = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .flatMap({ $0.windows })
+                    .first(where: { $0.isKeyWindow })?.rootViewController {
+                    viewController.present(ChatViewController(), animated: true)
+                }
+            }
+        } else {
+            #if DEBUG
+            print("[CrispPlugin] Non-Crisp notification tapped")
+            #endif
         }
         completionHandler()
     }

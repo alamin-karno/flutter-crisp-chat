@@ -65,10 +65,10 @@ FlutterCrispChat.setSessionSegments(
 );
 ```
 
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `segments` | `List<String>` | — | List of segment strings |
-| `overwrite` | `bool` | `false` | If `true`, replaces existing segments. If `false`, appends. |
+| Parameter   | Type           | Default | Description                                                 |
+|-------------|----------------|---------|-------------------------------------------------------------|
+| `segments`  | `List<String>` | —       | List of segment strings                                     |
+| `overwrite` | `bool`         | `false` | If `true`, replaces existing segments. If `false`, appends. |
 
 ## Push Session Events
 
@@ -83,18 +83,18 @@ await FlutterCrispChat.pushSessionEvent(
 
 ### Available Colors
 
-| Color | Value |
-|---|---|
-| `SessionEventColor.black` | Black |
-| `SessionEventColor.blue` | Blue (default) |
-| `SessionEventColor.brown` | Brown |
-| `SessionEventColor.green` | Green |
-| `SessionEventColor.grey` | Grey |
-| `SessionEventColor.orange` | Orange |
-| `SessionEventColor.pink` | Pink |
-| `SessionEventColor.purple` | Purple |
-| `SessionEventColor.red` | Red |
-| `SessionEventColor.yellow` | Yellow |
+| Color                      | Value          |
+|----------------------------|----------------|
+| `SessionEventColor.black`  | Black          |
+| `SessionEventColor.blue`   | Blue (default) |
+| `SessionEventColor.brown`  | Brown          |
+| `SessionEventColor.green`  | Green          |
+| `SessionEventColor.grey`   | Grey           |
+| `SessionEventColor.orange` | Orange         |
+| `SessionEventColor.pink`   | Pink           |
+| `SessionEventColor.purple` | Purple         |
+| `SessionEventColor.red`    | Red            |
+| `SessionEventColor.yellow` | Yellow         |
 
 ## Get Session Identifier
 

@@ -30,6 +30,7 @@ CrispConfig config = CrispConfig(
   sessionSegment: 'premium',           // [optional] Segment to categorize users
   user: crispUser,                     // [optional] User details (see User & Company)
   enableNotifications: true,           // [optional] Enable push notifications (default: true)
+  modalPresentationStyle: ModalPresentationStyle.fullScreen, // [optional] iOS modal style (default: fullScreen)
 );
 ```
 
@@ -42,6 +43,7 @@ CrispConfig config = CrispConfig(
 | `sessionSegment` | `String?` | No | `null` | A segment string to categorize users (e.g., `"premium"`, `"trial"`) |
 | `user` | `User?` | No | `null` | User details like email, name, phone, avatar, and company |
 | `enableNotifications` | `bool` | No | `true` | Whether to enable push notifications for this site |
+| `modalPresentationStyle` | `ModalPresentationStyle?` | No | `fullScreen` | iOS modal presentation style (iOS only) |
 
 ## Website ID
 
@@ -120,6 +122,36 @@ final config = CrispConfig(
 
 await FlutterCrispChat.openCrispChat(config: config);
 ```
+
+## iOS Modal Presentation Styles
+
+The `modalPresentationStyle` parameter controls how the Crisp chat view is presented on iOS devices. This is particularly important for preventing touch events from passing through to the underlying Flutter UI.
+
+### Available Styles
+
+| Style | Description |
+|---|---|
+| `fullScreen` | Covers the entire screen (default) |
+| `pageSheet` | Standard page sheet with dimmed background |
+| `formSheet` | Centered form sheet |
+| `overFullScreen` | Full screen with transparent overlay |
+| `overCurrentContext` | Over current context |
+| `popover` | Popover style (iPad only) |
+
+### Example Usage
+
+```dart
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  modalPresentationStyle: ModalPresentationStyle.pageSheet,
+);
+
+await FlutterCrispChat.openCrispChat(config: config);
+```
+
+::: tip Platform Specific
+The `modalPresentationStyle` parameter only affects iOS devices. On Android, Crisp chat always opens as a full-screen activity. See [iOS Features](/core_feature/ios_features) for detailed iOS-specific configurations.
+:::
 
 ## Next Steps
 

@@ -9,8 +9,8 @@ head:
       content: "crisp chat user details, flutter crisp chat user, crisp company info, crisp user identification"
 
 prev:
-  text: 'Configuration'
-  link: '/core_feature/configuration'
+  text: 'iOS Features'
+  link: '/core_feature/ios_features'
 
 next:
   text: 'Session Management'
@@ -37,13 +37,13 @@ final user = User(
 
 ### User Fields
 
-| Field | Type | Description |
-|---|---|---|
-| `email` | `String?` | User's email address (validated format) |
-| `nickName` | `String?` | Display name shown in the Crisp dashboard |
-| `phone` | `String?` | Phone number |
-| `avatar` | `String?` | URL to the user's avatar image |
-| `company` | `Company?` | Company details (see below) |
+| Field      | Type       | Description                               |
+|------------|------------|-------------------------------------------|
+| `email`    | `String?`  | User's email address (validated format)   |
+| `nickName` | `String?`  | Display name shown in the Crisp dashboard |
+| `phone`    | `String?`  | Phone number                              |
+| `avatar`   | `String?`  | URL to the user's avatar image            |
+| `company`  | `Company?` | Company details (see below)               |
 
 ::: warning Email Validation
 If you provide an `email`, it must be a valid email format. `openCrispChat` will throw an `ArgumentError` if the email is invalid.
@@ -71,26 +71,26 @@ final company = Company(
 
 ### Company Fields
 
-| Field | Type | Description |
-|---|---|---|
-| `name` | `String?` | Company name |
-| `url` | `String?` | Company website URL (validated format) |
-| `companyDescription` | `String?` | Short description of the company |
-| `employment` | `Employment?` | User's role within the company |
-| `geoLocation` | `GeoLocation?` | Company location |
+| Field                | Type           | Description                            |
+|----------------------|----------------|----------------------------------------|
+| `name`               | `String?`      | Company name                           |
+| `url`                | `String?`      | Company website URL (validated format) |
+| `companyDescription` | `String?`      | Short description of the company       |
+| `employment`         | `Employment?`  | User's role within the company         |
+| `geoLocation`        | `GeoLocation?` | Company location                       |
 
 ### Employment
 
-| Field | Type | Description |
-|---|---|---|
+| Field   | Type      | Description                                |
+|---------|-----------|--------------------------------------------|
 | `title` | `String?` | Job title (e.g., "Software Engineer L-II") |
-| `role` | `String?` | Department or role (e.g., "Engineering") |
+| `role`  | `String?` | Department or role (e.g., "Engineering")   |
 
 ### GeoLocation
 
-| Field | Type | Description |
-|---|---|---|
-| `city` | `String?` | City name |
+| Field     | Type      | Description  |
+|-----------|-----------|--------------|
+| `city`    | `String?` | City name    |
 | `country` | `String?` | Country name |
 
 ## Full Example

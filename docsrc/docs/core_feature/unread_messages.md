@@ -37,11 +37,11 @@ if (unreadCount != null && unreadCount > 0) {
 
 ### Parameters
 
-| Parameter | Type | Description |
-|---|---|---|
-| `websiteId` | `String` | Your Crisp Website ID |
+| Parameter    | Type     | Description                    |
+|--------------|----------|--------------------------------|
+| `websiteId`  | `String` | Your Crisp Website ID          |
 | `identifier` | `String` | Your Crisp REST API Identifier |
-| `key` | `String` | Your Crisp REST API Key |
+| `key`        | `String` | Your Crisp REST API Key        |
 
 ### Return Value
 
