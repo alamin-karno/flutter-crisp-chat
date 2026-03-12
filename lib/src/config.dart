@@ -33,6 +33,15 @@ class CrispConfig {
   /// context to your support agents.
   User? user;
 
+  /// iOS modal presentation style for the chat view controller.
+  ///
+  /// Defaults to [ModalPresentationStyle.fullScreen] to prevent touch events
+  /// from passing through to the underlying Flutter UI.
+  /// Available options: [ModalPresentationStyle.fullScreen], [ModalPresentationStyle.pageSheet],
+  /// [ModalPresentationStyle.formSheet], [ModalPresentationStyle.overFullScreen],
+  /// [ModalPresentationStyle.overCurrentContext], [ModalPresentationStyle.popover].
+  ModalPresentationStyle? modalPresentationStyle;
+
   /// Creates a new [CrispConfig] instance.
   ///
   /// @param websiteID The Crisp website ID.
@@ -40,12 +49,14 @@ class CrispConfig {
   /// @param sessionSegment (Optional) A segment name for the session.
   /// @param enableNotifications (Optional) Whether to enable notifications. Defaults to `true`.
   /// @param user (Optional) User information.
+  /// @param modalPresentationStyle (Optional) iOS modal presentation style for the chat view controller.
   CrispConfig({
     required this.websiteID,
     this.tokenId,
     this.sessionSegment,
     this.enableNotifications = true,
     this.user,
+    this.modalPresentationStyle,
   });
 
   /// Converts this [CrispConfig] object to a JSON map.
@@ -60,6 +71,7 @@ class CrispConfig {
       "sessionSegment": sessionSegment,
       "enableNotifications": enableNotifications,
       "user": user?.toJson(),
+      "modalPresentationStyle": modalPresentationStyle?.name,
     };
   }
 }
@@ -251,4 +263,27 @@ enum SessionEventColor {
   purple,
   red,
   yellow,
+}
+
+/// Represents iOS modal presentation styles for the chat view controller.
+/// These styles determine how the chat modal is presented on iOS devices.
+/// {@category Configuration}
+enum ModalPresentationStyle {
+  /// The view controller covers the entire screen.
+  fullScreen,
+
+  /// The view controller is displayed as a page sheet.
+  pageSheet,
+
+  /// The view controller is displayed as a form sheet.
+  formSheet,
+
+  /// The view controller covers the screen but allows underlying content to show through.
+  overFullScreen,
+
+  /// The view controller is displayed over the parent view controller's content.
+  overCurrentContext,
+
+  /// The view controller is displayed in a popover.
+  popover,
 }

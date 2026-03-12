@@ -122,6 +122,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Configuration', link: '/core_feature/configuration' },
+          { text: 'iOS Features', link: '/core_feature/ios_features' },
           { text: 'User & Company', link: '/core_feature/user_and_company' },
           { text: 'Session Management', link: '/core_feature/session_management' },
           { text: 'Unread Messages', link: '/core_feature/unread_messages' },

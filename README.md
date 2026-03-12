@@ -404,6 +404,7 @@ class _CrispChatPageState extends State<CrispChatPage> {
       sessionSegment: "beta_testers", // Optional: Assign a segment to categorize users (e.g., "premium", "trial").
       user: crispUser, // Optional: Provide user details.
       enableNotifications: true, // Optional: Enable or disable push notifications. Defaults to true.
+      modalPresentationStyle: ModalPresentationStyle.fullScreen, // Optional: iOS modal presentation style. Defaults to fullScreen.
     );
 
     // 2. Optionally, set additional session data *before* opening the chat.
@@ -499,6 +500,37 @@ class _CrispChatPageState extends State<CrispChatPage> {
 ```
 
 To use this code, replace `YOUR_WEBSITE_ID` with your own website ID from the Crisp dashboard. The example demonstrates initializing `CrispConfig` with detailed user and company information, setting additional session data, opening the chat interface, retrieving the session ID, and resetting the session. Adjust the configuration and data according to your application's needs.
+
+### iOS Modal Presentation Styles
+
+The `modalPresentationStyle` parameter in `CrispConfig` allows you to control how the Crisp chat view is presented on iOS devices. This is particularly important for preventing touch events from passing through to the underlying Flutter UI.
+
+#### Available Modal Presentation Styles:
+
+- **`ModalPresentationStyle.fullScreen`** (Default) - The view controller covers the entire screen. This prevents touch events from passing through to the underlying UI.
+- **`ModalPresentationStyle.pageSheet`** - The view controller is displayed as a page sheet with a dimmed background.
+- **`ModalPresentationStyle.formSheet`** - The view controller is displayed as a form sheet, centered on the screen.
+- **`ModalPresentationStyle.overFullScreen`** - The view controller covers the screen but allows underlying content to show through.
+- **`ModalPresentationStyle.overCurrentContext`** - The view controller is displayed over the parent view controller's content.
+- **`ModalPresentationStyle.popover`** - The view controller is displayed in a popover (iPad only).
+
+#### Example Usage:
+
+```dart
+// Using pageSheet presentation style
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  modalPresentationStyle: ModalPresentationStyle.pageSheet,
+);
+
+// Using formSheet presentation style
+final formSheetConfig = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  modalPresentationStyle: ModalPresentationStyle.formSheet,
+);
+```
+
+**Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior.
 
 For every request that you make to `getUnreadMessageCount`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`. 
 
