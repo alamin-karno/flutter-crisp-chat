@@ -71,6 +71,8 @@ class _MyAppState extends State<MyApp> {
   static const String identifier = String.fromEnvironment('identifier');
   static const String crispApiKey = String.fromEnvironment('crispApiKey');
 
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   int count = 0;
   late CrispConfig config;
 
@@ -141,6 +143,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Crisp Chat'),
@@ -197,7 +200,19 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: const Text('Open Crisp Chat'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+                ElevatedButton.icon(
+                  onPressed: () => _showModalStyleSelection(),
+                  icon: const Icon(Icons.style),
+                  label: const Text('iOS Modal Style Demo'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
               Badge.count(
                 count: count,
                 isLabelVisible: count != 0,
@@ -212,5 +227,152 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void _showModalStyleSelection() {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select iOS Modal Presentation Style'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Choose how the Crisp chat modal should appear on iOS:',
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+              _buildStyleOption(
+                context,
+                'Full Screen',
+                ModalPresentationStyle.fullScreen,
+                'Covers entire screen (Default)',
+              ),
+              _buildStyleOption(
+                context,
+                'Page Sheet',
+                ModalPresentationStyle.pageSheet,
+                'Standard page sheet style',
+              ),
+              _buildStyleOption(
+                context,
+                'Form Sheet',
+                ModalPresentationStyle.formSheet,
+                'Centered form style',
+              ),
+              _buildStyleOption(
+                context,
+                'Over Full Screen',
+                ModalPresentationStyle.overFullScreen,
+                'Transparent overlay',
+              ),
+              _buildStyleOption(
+                context,
+                'Over Current Context',
+                ModalPresentationStyle.overCurrentContext,
+                'Over current content',
+              ),
+              _buildStyleOption(
+                context,
+                'Popover',
+                ModalPresentationStyle.popover,
+                'Popover style (iPad only)',
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildStyleOption(
+    BuildContext context,
+    String title,
+    ModalPresentationStyle style,
+    String description,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pop();
+          _openCrispChatWithStyle(style);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                description,
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openCrispChatWithStyle(ModalPresentationStyle style) async {
+    // Create a new config with the selected modal presentation style
+    final styleConfig = CrispConfig(
+      websiteID: websiteID,
+      tokenId: "Token Id",
+      sessionSegment: 'modal_style_demo',
+      modalPresentationStyle: style, // Set the modal presentation style
+      user: User(
+        avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
+        email: "alamin.karno@gmail.com",
+        nickName: "Md. Al-Amin",
+        phone: "5555555555",
+        company: Company(
+          companyDescription: "Unlock superior software solutions"
+              " with Vivasoft, a leading offshore development firm"
+              " delivering creativity and expertise.",
+          name: "Vivasoft Limited",
+          url: "https://vivasoftltd.com/",
+          employment: Employment(
+            role: "Mobile Application Developer",
+            title: "Software Engineer L-II",
+          ),
+          geoLocation: GeoLocation(
+            city: "Dhaka",
+            country: "Bangladesh",
+          ),
+        ),
+      ),
+    );
+
+    try {
+      await FlutterCrispChat.openCrispChat(config: styleConfig);
+
+      if (kDebugMode) {
+        print('Opened Crisp Chat with modal style: ${style.name}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error opening Crisp chat: $e');
+      }
+    }
   }
 }

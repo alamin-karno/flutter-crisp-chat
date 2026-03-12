@@ -25,31 +25,31 @@ next:
 
 ## What This Plugin Provides
 
-| Feature | Description |
-|---|---|
-| **Open Chat** | Launch the native Crisp chat UI with one method call |
-| **User Identification** | Set user email, name, phone, avatar, and company details |
-| **Push Notifications** | Full FCM (Android) and APNs (iOS) support with two handling modes |
-| **Session Management** | Set custom session data, segments, and events |
-| **Unread Messages** | Query unread message count via the Crisp REST API |
-| **Session Control** | Get session identifiers and reset sessions on logout |
+| Feature                 | Description                                                       |
+|-------------------------|-------------------------------------------------------------------|
+| **Open Chat**           | Launch the native Crisp chat UI with one method call              |
+| **User Identification** | Set user email, name, phone, avatar, and company details          |
+| **Push Notifications**  | Full FCM (Android) and APNs (iOS) support with two handling modes |
+| **Session Management**  | Set custom session data, segments, and events                     |
+| **Unread Messages**     | Query unread message count via the Crisp REST API                 |
+| **Session Control**     | Get session identifiers and reset sessions on logout              |
 
 ## Supported SDK Versions
 
-| Platform | SDK | Version |
-|---|---|---|
-| Android | Crisp Android SDK | `2.0.16` |
-| iOS | Crisp iOS SDK | `~> 2.13.0` |
+| Platform | SDK               | Version     |
+|----------|-------------------|-------------|
+| Android  | Crisp Android SDK | `2.0.18`    |
+| iOS      | Crisp iOS SDK     | `~> 2.13.0` |
 
 ## Requirements
 
-| Platform | Minimum Version |
-|---|---|
-| Flutter | 3.0+ |
-| Dart | 2.15.0+ |
-| Android | API 23 (Android 6.0) |
-| iOS | 13.0+ |
-| compileSdkVersion | 36 |
+| Platform          | Minimum Version      |
+|-------------------|----------------------|
+| Flutter           | 3.0+                 |
+| Dart              | 2.15.0+              |
+| Android           | API 23 (Android 6.0) |
+| iOS               | 13.0+                |
+| compileSdkVersion | 36                   |
 
 ## Quick Links
 

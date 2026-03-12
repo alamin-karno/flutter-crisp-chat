@@ -1,5 +1,21 @@
+# [Unreleased]
 
-# [2.4.5]
+Added
+---
+* Added `modalPresentationStyle` parameter to `CrispConfig` for iOS modal presentation style configuration.
+* Added `ModalPresentationStyle` enum with options: `fullScreen`, `pageSheet`, `formSheet`, `overFullScreen`, `overCurrentContext`, and `popover`.
+* Default modal presentation style is set to `fullScreen` to prevent touch events from passing through to the underlying Flutter UI.
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.17` to `2.0.18`.
+  - Fixed crash on message deserialization when origin is null.
+
+Fixed
+---
+* Fixed issue where `enableNotifications: false` in `CrispConfig` was being ignored on iOS, causing the Crisp SDK to still prompt for push notification permissions after sending the first message.
+
+# 2.4.5
 
 Changed
 ---

@@ -54,6 +54,9 @@ class MyApp extends StatelessWidget {
             onPressed: () {
               final config = CrispConfig(
                 websiteID: 'YOUR_WEBSITE_ID', // Replace with your Website ID
+                enableNotifications: true, // Optional: Control notification prompts
+                // iOS only: Control how the chat is presented
+                modalPresentationStyle: ModalPresentationStyle.fullScreen,
               );
               FlutterCrispChat.openCrispChat(config: config);
             },
