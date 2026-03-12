@@ -4,7 +4,7 @@ import Crisp
 
 /// [SwiftFlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
-public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate {
+public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     private var channel: FlutterMethodChannel?
     private var crispConfig: CrispConfig?
@@ -19,6 +19,11 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         registrar.addApplicationDelegate(instance)
 
         UNUserNotificationCenter.current().delegate = instance
+        
+        // Register for remote notifications as required by Crisp SDK
+        DispatchQueue.main.async {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
     }
 
     /// Handles method calls from Flutter to native iOS.
@@ -162,6 +167,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     /// Handles registration of device token for push notifications.
     public func application(_ application: UIApplication,
                             didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        #if DEBUG
+        print("[CrispPlugin] Device token registered")
+        #endif
         CrispSDK.setDeviceToken(deviceToken)
     }
 
@@ -170,7 +178,13 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        #if DEBUG
+        print("[CrispPlugin] willPresent notification called")
+        #endif
         if CrispSDK.isCrispPushNotification(notification) {
+            #if DEBUG
+            print("[CrispPlugin] Crisp notification detected in willPresent")
+            #endif
             CrispSDK.handlePushNotification(notification)
             if #available(iOS 14.0, *) {
                 completionHandler([.banner, .sound])
@@ -178,6 +192,9 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 completionHandler([.alert, .sound])
             }
         } else {
+            #if DEBUG
+            print("[CrispPlugin] Non-Crisp notification in willPresent")
+            #endif
             completionHandler([])
         }
     }
@@ -186,9 +203,30 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
+        #if DEBUG
+        print("[CrispPlugin] didReceive notification response called")
+        #endif
         let notification = response.notification
         if CrispSDK.isCrispPushNotification(notification) {
+            #if DEBUG
+            print("[CrispPlugin] Crisp notification tapped - opening chat")
+            #endif
+            // Currently does nothing, but call it anyway for future compatibility
             CrispSDK.handlePushNotification(notification)
+            
+            // Manually open the chat since SDK doesn't do it yet
+            DispatchQueue.main.async {
+                if let viewController = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .flatMap({ $0.windows })
+                    .first(where: { $0.isKeyWindow })?.rootViewController {
+                    viewController.present(ChatViewController(), animated: true)
+                }
+            }
+        } else {
+            #if DEBUG
+            print("[CrispPlugin] Non-Crisp notification tapped")
+            #endif
         }
         completionHandler()
     }
