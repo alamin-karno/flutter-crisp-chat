@@ -182,6 +182,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         chatVC.modalPresentationStyle = modalPresentationStyle
 
         let hostVC = CrispChatHostViewController(chatViewController: chatVC) { [weak self] in
+            self?.chatWindow?.isHidden = true
             self?.chatWindow = nil
         }
 
