@@ -263,6 +263,7 @@ private class CrispChatHostViewController: UIViewController {
     private let chatViewController: ChatViewController
     private let onDismissed: () -> Void
     private var hasPresentedChat = false
+    private var pendingDismissalCheck: DispatchWorkItem?
 
     init(chatViewController: ChatViewController, onDismissed: @escaping () -> Void) {
         self.chatViewController = chatViewController
@@ -283,26 +284,49 @@ private class CrispChatHostViewController: UIViewController {
         super.viewDidAppear(animated)
         guard !hasPresentedChat else { return }
         hasPresentedChat = true
+        attachSentinelAndPresent(chatViewController)
+    }
 
-        // Attach sentinel before presenting: fires onDismissed when chatVC's
-        // view leaves the window hierarchy, regardless of modalPresentationStyle.
-        // viewDidAppear on hostVC is NOT reliable for overlay styles
-        // (overFullScreen / overCurrentContext) because UIKit never calls
-        // viewWillDisappear on the presenting VC for those styles.
+    private func attachSentinelAndPresent(_ viewController: UIViewController) {
         let sentinel = CrispDismissalSentinel { [weak self] in
-            self?.onDismissed()
+            self?.scheduleDismissalCheck()
         }
-        sentinel.attach(to: chatViewController.view)
+        sentinel.attach(to: viewController.view)
+        present(viewController, animated: true)
+    }
 
-        present(chatViewController, animated: true)
+    /// Called whenever a sentinel detects that its host view left the window hierarchy.
+    ///
+    /// Defers the actual decision to the next main-queue cycle. This gives the Crisp SDK
+    /// a chance to synchronously re-present another VC (e.g. a camera picker after a
+    /// camera-permission grant) before we decide whether the dismissal was user-initiated.
+    ///
+    /// - If Crisp re-presented something: attach a new sentinel to track that VC.
+    /// - If nothing was re-presented: treat as a real user dismissal and tear down the window.
+    private func scheduleDismissalCheck() {
+        pendingDismissalCheck?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            if let newVC = self.presentedViewController {
+                // Crisp SDK re-presented a VC (e.g. camera picker). Track its dismissal.
+                let newSentinel = CrispDismissalSentinel { [weak self] in
+                    self?.scheduleDismissalCheck()
+                }
+                newSentinel.attach(to: newVC.view)
+            } else {
+                self.onDismissed()
+            }
+        }
+        pendingDismissalCheck = workItem
+        DispatchQueue.main.async(execute: workItem)
     }
 }
 
-/// Invisible zero-size view embedded in ChatViewController's view hierarchy.
+/// Invisible zero-size view embedded in a view controller's view hierarchy.
 ///
-/// UIKit removes the view from its window after any dismissal animation
-/// completes, regardless of modalPresentationStyle. `didMoveToWindow` with
-/// `window == nil` is therefore a reliable cross-style dismissal signal.
+/// UIKit removes the view from its window after any dismissal animation completes,
+/// regardless of modalPresentationStyle. `didMoveToWindow` with `window == nil` is
+/// therefore a reliable cross-style dismissal signal.
 private class CrispDismissalSentinel: UIView {
     private let onDismissed: () -> Void
     private var hasBeenInWindow = false
