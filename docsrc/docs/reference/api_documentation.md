@@ -212,6 +212,7 @@ CrispConfig({
 ```dart
 User({
   String? email,
+  String? signature,
   String? nickName,
   String? phone,
   String? avatar,

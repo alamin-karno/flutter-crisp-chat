@@ -385,6 +385,7 @@ class _CrispChatPageState extends State<CrispChatPage> {
     // All user fields are optional. Only provide what you have.
     final crispUser = User(
       email: "user@example.com",
+      signature: "USER_EMAIL_HMAC_SHA256_SIGNATURE",
       nickName: "John Doe",
       phone: "1234567890", 
       avatar: "https://example.com/avatar.png", 
