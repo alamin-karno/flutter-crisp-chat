@@ -8,7 +8,7 @@
       "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*ifOwY9pZ8TbmulqtL1jKog.png",
       "date": "June 26, 2024",
       "author": "Md. Al-Amin",
-      "tags": ["Flutter", "Crisp Chat", "Packags"],
+      "tags": ["Flutter", "Crisp Chat", "packages"],
       "readTime": "3 min read"
     },
     {
@@ -21,6 +21,17 @@
       "author": "Md. Al-Amin",
       "tags": ["Flutter", "FCM", "Notifications"],
       "readTime": "4 min read"
+    },
+    {
+      "id": "how-a-bug-report-led-me-to-give-flutter-developers-full-control-of-crisp-chat-modals-on-ios",
+      "title": "How a Bug Report Led Me to Give Flutter Developers Full Control of Crisp Chat Modals on iOS",
+      "description": "One of the things I enjoy most about maintaining open-source software is that sometimes the best improvements start with something very small.",
+      "url": "https://medium.com/@alaminkarno/how-a-bug-report-led-me-to-give-flutter-developers-full-control-of-crisp-chat-modals-on-ios-da13fa0fa2db",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:720/format:webp/1*JD6aD6abpvP4UPaqk7EKdA.png",
+      "date": "March 13, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Crisp Chat", "iOS", "Plugin"],
+      "readTime": "5 min read"
     }
   ]
 }

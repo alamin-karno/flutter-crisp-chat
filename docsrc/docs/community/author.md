@@ -45,10 +45,10 @@ Al-Amin is an active open source contributor. The Flutter Crisp Chat plugin is o
 ### Flutter Crisp Chat Stats
 
 - **First published:** 2023
-- **Current version:** 2.4.6
+- **Current version:** 2.4.7
 - **Platform:** pub.dev ([crisp_chat](https://pub.dev/packages/crisp_chat))
 - **License:** MIT
-- **Native SDKs:** Crisp Android SDK `2.0.18` · Crisp iOS SDK `~> 2.13.0`
+- **Native SDKs:** Crisp Android SDK `2.0.20` · Crisp iOS SDK `~> 2.13.0`
 
 ## Support My Work
 

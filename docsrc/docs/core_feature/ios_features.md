@@ -191,6 +191,5 @@ Remember that `modalPresentationStyle` is iOS-only. On Android, Crisp always ope
 
 ## Next Steps
 
-- [Configuration](/core_feature/configuration) - General configuration options
 - [User & Company](/core_feature/user_and_company) - Setting user information
-- [iOS Notifications](/notifications/ios) - Full notification setup guide
+- [Session Management](/core_feature/session_management) — Set custom session data, segments, and events

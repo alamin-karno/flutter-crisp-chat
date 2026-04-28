@@ -50,7 +50,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.4.6
+  crisp_chat: ^2.4.7
 ```
 
 ### 2. Setup platform specific settings
@@ -385,6 +385,7 @@ class _CrispChatPageState extends State<CrispChatPage> {
     // All user fields are optional. Only provide what you have.
     final crispUser = User(
       email: "user@example.com",
+      signature: "USER_EMAIL_HMAC_SHA256_SIGNATURE",
       nickName: "John Doe",
       phone: "1234567890", 
       avatar: "https://example.com/avatar.png", 
@@ -570,7 +571,7 @@ Before using your development token, you now need to associate your marketplace 
 ## Supported SDK Versions
 This plugin aims to stay compatible with the latest versions of the native Crisp SDKs. As of the latest update, it has been tested with:
 
-- Crisp Android SDK version: `2.0.18`
+- Crisp Android SDK version: `2.0.20`
 - Crisp iOS SDK version: ~> `2.13.0`
 
 While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current native SDK details.

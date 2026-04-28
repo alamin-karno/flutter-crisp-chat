@@ -86,13 +86,15 @@ struct Company {
 
 struct User {
     let email: String?
+    let signature: String?
     let nickName: String?
     let phone: String?
     let avatar: String?
     let company: Company?
     
-    init(email: String?, nickName: String?, phone: String?, avatar: String?, company: Company?) {
+    init(email: String?, signature: String?, nickName: String?, phone: String?, avatar: String?, company: Company?) {
         self.email = email
+        self.signature = signature
         self.nickName = nickName
         self.phone = phone
         self.avatar = avatar
@@ -102,6 +104,7 @@ struct User {
     static func fromJson(_ json: [String: Any]) -> User {
         return User(
             email: json["email"] as? String,
+            signature: json["signature"] as? String,
             nickName: json["nickName"] as? String,
             phone: json["phone"] as? String,
             avatar: json["avatar"] as? String,
