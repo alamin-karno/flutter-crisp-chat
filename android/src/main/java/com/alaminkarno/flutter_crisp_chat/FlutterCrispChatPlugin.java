@@ -204,7 +204,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 Crisp.setUserNickname(config.user.nickName);
             }
             if (config.user.email != null) {
-                boolean result =  Crisp.setUserEmail(config.user.email);
+                boolean result = config.user.signature != null
+                        ? Crisp.setUserEmail(config.user.email, config.user.signature)
+                        : Crisp.setUserEmail(config.user.email);
                 if(!result){
                     Log.d("CRSIP_CHAT","Email not set");
                 }

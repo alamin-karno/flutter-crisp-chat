@@ -89,6 +89,18 @@ void main() {
     await FlutterCrispChat.openCrispChat(config: config);
   });
 
+  test('User.toJson includes identity verification signature', () {
+    final user = User(
+      email: 'user@example.com',
+      signature: '0123456789abcdef',
+    );
+
+    expect(
+      user.toJson(),
+      containsPair('signature', '0123456789abcdef'),
+    );
+  });
+
   test('resetCrispChatSession', () async {
     MockFlutterCrispChatPlatform fakePlatform = MockFlutterCrispChatPlatform();
     FlutterCrispChatPlatform.instance = fakePlatform;
@@ -159,8 +171,10 @@ void main() {
       'returns null if platform throws error',
       () async {
         final fakePlatform = MockFlutterCrispChatPlatform();
-        fakePlatform.getSessionIdentifierShouldThrowError = true;
         FlutterCrispChatPlatform.instance = fakePlatform;
+        await FlutterCrispChat.resetCrispChatSession();
+
+        fakePlatform.getSessionIdentifierShouldThrowError = true;
 
         final sessionId = await FlutterCrispChat.getSessionIdentifier();
         expect(sessionId, isNull);

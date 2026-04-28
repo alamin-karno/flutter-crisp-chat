@@ -70,6 +70,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             }
 
             CrispSDK.user.email = crispConfig.user?.email
+            CrispSDK.user.signature = crispConfig.user?.signature
             CrispSDK.user.nickname = crispConfig.user?.nickName
             CrispSDK.user.phone = crispConfig.user?.phone
             if let avatarURLString = crispConfig.user?.avatar, let avatarURL = URL(string: avatarURLString) {

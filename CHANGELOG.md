@@ -11,6 +11,7 @@ Added
 * Added `modalPresentationStyle` parameter to `CrispConfig` for iOS modal presentation style configuration.
 * Added `ModalPresentationStyle` enum with options: `fullScreen`, `pageSheet`, `formSheet`, `overFullScreen`, `overCurrentContext`, and `popover`.
 * Default modal presentation style is set to `fullScreen` to prevent touch events from passing through to the underlying Flutter UI.
+* Added `signature` parameter to `User` for Crisp Identity Verification on Android and iOS.
 
 Changed
 ---

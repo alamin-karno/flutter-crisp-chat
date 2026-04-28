@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class User {
     public String email = null;
+    public String signature = null;
     public String nickName = null;
     public String phone = null;
     public String avatar = null;
@@ -15,6 +16,12 @@ public class User {
             Object emailObj = json.get("email");
             if (emailObj != null) {
                 user.email = emailObj.toString();
+            }
+        }
+        if (json.containsKey("signature")) {
+            Object signatureObj = json.get("signature");
+            if (signatureObj != null) {
+                user.signature = signatureObj.toString();
             }
         }
         if (json.containsKey("nickName")) {
