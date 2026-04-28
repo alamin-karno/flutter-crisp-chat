@@ -155,5 +155,6 @@ The `modalPresentationStyle` parameter only affects iOS devices. On Android, Cri
 
 ## Next Steps
 
-- [User & Company](/core_feature/user_and_company) — Detailed guide on setting user and company information
 - [Session Management](/core_feature/session_management) — Set custom session data, segments, and events
+- [iOS Features](/core_feature/ios_features) — Detailed guide on iOS specific feature configuration
+

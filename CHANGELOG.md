@@ -1,3 +1,9 @@
+# Unreleased
+
+Fixed
+---
+* Fixed issue: [#132](https://github.com/alamin-karno/flutter-crisp-chat/issues/132) - [iOS] Black screen after closing chat (fullScreen) / tap-through when open (overFullScreen)
+
 # 2.4.6
 
 Added
