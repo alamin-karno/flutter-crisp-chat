@@ -35,7 +35,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Or a newer LTS version
+          node-version: '20' # Updated to meet VitePress 2.x requirements (^20.19.0 || >=22.12.0)
           cache: 'npm'
           cache-dependency-path: 'docsrc/package-lock.json'
 

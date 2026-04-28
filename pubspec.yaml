@@ -1,11 +1,11 @@
 name: crisp_chat
 description: A flutter plugin package for using crisp chat natively on Android & iOS.
-version: 2.4.6
+version: 2.4.7
 
 readme: README.md
 license: MIT
 
-homepage: https://github.com/alamin-karno/flutter-crisp-chat
+homepage: https://alamin-karno.github.io/flutter-crisp-chat/
 issue_tracker: https://github.com/alamin-karno/flutter-crisp-chat/issues
 repository: https://github.com/alamin-karno/flutter-crisp-chat
 documentation: https://pub.dev/documentation/crisp_chat/latest/

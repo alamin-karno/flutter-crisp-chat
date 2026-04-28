@@ -19,6 +19,19 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## 2.4.7
+
+### Added
+* Added `signature` parameter to `User` for Crisp Identity Verification on Android and iOS.
+
+### Changed
+* Upgraded Crisp Android SDK from `2.0.18` to `2.0.20`.
+    - Added mobile SDK specific strings localization.
+    - [#232](https://github.com/crisp-im/crisp-sdk-android/issues/232) Added missing mobile SDK specific strings localization.
+
+### Fixed
+* Fixed issue: [#132](https://github.com/alamin-karno/flutter-crisp-chat/issues/132) - [iOS] Black screen after closing chat (fullScreen) / tap-through when open (overFullScreen)
+
 ## 2.4.6
 
 ### Added

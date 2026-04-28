@@ -1,4 +1,4 @@
-# Unreleased
+# 2.4.7
 
 Added
 ---

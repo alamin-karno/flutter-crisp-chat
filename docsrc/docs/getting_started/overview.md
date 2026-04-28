@@ -38,7 +38,7 @@ next:
 
 | Platform | SDK               | Version     |
 |----------|-------------------|-------------|
-| Android  | Crisp Android SDK | `2.0.18`    |
+| Android  | Crisp Android SDK | `2.0.20`    |
 | iOS      | Crisp iOS SDK     | `~> 2.13.0` |
 
 ## Requirements

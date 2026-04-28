@@ -23,7 +23,7 @@ next:
 
 ### What platforms does this plugin support?
 
-Android and iOS. The plugin wraps the official Crisp Android SDK (`2.0.18`) and Crisp iOS SDK (`~> 2.13.0`).
+Android and iOS. The plugin wraps the official Crisp Android SDK (`2.0.20`) and Crisp iOS SDK (`~> 2.13.0`).
 
 ### What is the minimum Flutter version required?
 
