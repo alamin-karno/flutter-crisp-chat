@@ -16,6 +16,9 @@
     "vue": "^3.5.0"
   },
   "overrides": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "@vitejs/plugin-vue": {
+      "rollup": "^4.0.0"
+    }
   }
 }
