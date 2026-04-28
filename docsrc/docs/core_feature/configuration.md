@@ -106,6 +106,7 @@ final config = CrispConfig(
   sessionSegment: 'premium',
   user: User(
     email: 'john@example.com',
+    signature: 'USER_EMAIL_HMAC_SHA256_SIGNATURE',
     nickName: 'John Doe',
     phone: '+1234567890',
     avatar: 'https://example.com/avatar.png',

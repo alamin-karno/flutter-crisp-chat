@@ -101,6 +101,7 @@ class _MyAppState extends State<MyApp> {
       user: User(
         avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
         email: "alamin.karno@gmail.com",
+        signature: "USER_EMAIL_HMAC_SHA256_SIGNATURE",
         nickName: "Md. Al-Amin",
         phone: "5555555555",
         company: Company(
@@ -343,6 +344,7 @@ class _MyAppState extends State<MyApp> {
       user: User(
         avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
         email: "alamin.karno@gmail.com",
+        signature: "USER_EMAIL_HMAC_SHA256_SIGNATURE",
         nickName: "Md. Al-Amin",
         phone: "5555555555",
         company: Company(

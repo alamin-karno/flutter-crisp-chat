@@ -88,6 +88,11 @@ class User {
   /// Providing an email helps in identifying the user across sessions.
   final String? email;
 
+  /// HMAC-SHA256 signature used to verify the user's email.
+  ///
+  /// Provide this together with [email] when Crisp Identity Verification is enabled.
+  final String? signature;
+
   /// The user's nickname or display name.
   final String? nickName;
 
@@ -105,12 +110,14 @@ class User {
   /// Creates a new [User] instance.
   ///
   /// @param email (Optional) The user's email.
+  /// @param signature (Optional) HMAC-SHA256 signature for email verification.
   /// @param nickName (Optional) The user's nickname.
   /// @param phone (Optional) The user's phone number.
   /// @param avatar (Optional) URL to the user's avatar.
   /// @param company (Optional) The user's company details.
   User({
     this.email,
+    this.signature,
     this.nickName,
     this.phone,
     this.avatar,
@@ -125,6 +132,7 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       "email": email,
+      "signature": signature,
       "nickName": nickName,
       "phone": phone,
       "avatar": avatar,
