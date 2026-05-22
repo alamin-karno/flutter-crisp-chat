@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'crisp_chat'
-  s.version          = '2.4.7'
+  s.version          = '2.4.8'
   s.summary          = 'Flutter plugin for Crisp Chat'
   s.description      = 'A Flutter plugin for Crisp Chat SDK on iOS.'
   s.homepage         = 'https://github.com/alamin-karno/flutter-crisp-chat'
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.platform         = :ios, '13.0'
   s.swift_version    = '5.0'
 
-  s.source_files     = 'Classes/**/*'
+  s.source_files     = 'crisp_chat/Sources/crisp_chat/**/*.swift'
 
   s.dependency 'Flutter'
   s.dependency 'Crisp', '~> 2.13.0'

@@ -2,12 +2,13 @@ import Flutter
 import UIKit
 import Crisp
 
-/// [SwiftFlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
+/// [FlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
-public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     private var channel: FlutterMethodChannel?
     private var crispConfig: CrispConfig?
+    private weak var previousNotificationDelegate: UNUserNotificationCenterDelegate?
 
     /// Dedicated window used to present the Crisp chat.
     ///
@@ -22,12 +23,14 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     /// This sets up the method channel and adds the plugin as a delegate for method calls.
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_crisp_chat", binaryMessenger: registrar.messenger())
-        let instance = SwiftFlutterCrispChatPlugin()
+        let instance = FlutterCrispChatPlugin()
         instance.channel = channel
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.addApplicationDelegate(instance)
 
-        UNUserNotificationCenter.current().delegate = instance
+        let notificationCenter = UNUserNotificationCenter.current()
+        instance.previousNotificationDelegate = notificationCenter.delegate
+        notificationCenter.delegate = instance
 
         // Register for remote notifications as required by Crisp SDK
         DispatchQueue.main.async {
@@ -46,7 +49,16 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
                 return
             }
 
-            let crispConfig = CrispConfig.fromJson(args)
+            guard let crispConfig = CrispConfig.fromJson(args) else {
+                result(
+                    FlutterError(
+                        code: "INVALID_ARGUMENTS",
+                        message: "Crisp website ID not found.",
+                        details: nil
+                    )
+                )
+                return
+            }
             let websiteID = crispConfig.websiteID.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !websiteID.isEmpty else {
                 result(
@@ -81,9 +93,17 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
 
             CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany()
 
-            openChat(modalPresentationStyle: crispConfig.modalPresentationStyle)
-
-            result(nil)
+            if openChat(modalPresentationStyle: crispConfig.modalPresentationStyle) {
+                result(nil)
+            } else {
+                result(
+                    FlutterError(
+                        code: "NO_ACTIVE_SCENE",
+                        message: "No active iOS scene is available to present Crisp chat.",
+                        details: nil
+                    )
+                )
+            }
 
         case "resetCrispChatSession":
             CrispSDK.session.reset()
@@ -173,11 +193,11 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
     /// Flutter's window is never covered, so its rendering engine never pauses —
     /// no black screen on dismiss. The chat window intercepts all touches while
     /// visible — no tap-through to Flutter.
-    private func openChat(modalPresentationStyle: UIModalPresentationStyle = .fullScreen) {
-        guard chatWindow == nil,
-              let windowScene = UIApplication.shared.connectedScenes
+    private func openChat(modalPresentationStyle: UIModalPresentationStyle = .fullScreen) -> Bool {
+        guard chatWindow == nil else { return true }
+        guard let windowScene = UIApplication.shared.connectedScenes
                 .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
-        else { return }
+        else { return false }
 
         let chatVC = ChatViewController()
         chatVC.modalPresentationStyle = modalPresentationStyle
@@ -192,6 +212,7 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
         window.windowLevel = .alert
         window.makeKeyAndVisible()
         chatWindow = window
+        return true
     }
 
     /// Handles registration of device token for push notifications.
@@ -225,7 +246,17 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             #if DEBUG
             print("[CrispPlugin] Non-Crisp notification in willPresent")
             #endif
-            completionHandler([])
+            if let previousNotificationDelegate = previousNotificationDelegate,
+               previousNotificationDelegate !== self,
+               previousNotificationDelegate.responds(to: #selector(userNotificationCenter(_:willPresent:withCompletionHandler:))) {
+                previousNotificationDelegate.userNotificationCenter?(
+                    center,
+                    willPresent: notification,
+                    withCompletionHandler: completionHandler
+                )
+            } else {
+                completionHandler([])
+            }
         }
     }
 
@@ -250,6 +281,16 @@ public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplication
             #if DEBUG
             print("[CrispPlugin] Non-Crisp notification tapped")
             #endif
+            if let previousNotificationDelegate = previousNotificationDelegate,
+               previousNotificationDelegate !== self,
+               previousNotificationDelegate.responds(to: #selector(userNotificationCenter(_:didReceive:withCompletionHandler:))) {
+                previousNotificationDelegate.userNotificationCenter?(
+                    center,
+                    didReceive: response,
+                    withCompletionHandler: completionHandler
+                )
+                return
+            }
         }
         completionHandler()
     }
@@ -289,11 +330,30 @@ private class CrispChatHostViewController: UIViewController {
     }
 
     private func attachSentinelAndPresent(_ viewController: UIViewController) {
+        configurePopoverPresentationIfNeeded(for: viewController)
         let sentinel = CrispDismissalSentinel { [weak self] in
             self?.scheduleDismissalCheck()
         }
         sentinel.attach(to: viewController.view)
         present(viewController, animated: true)
+    }
+
+    /// Configures `popoverPresentationController` when presenting on iPad.
+    /// On iPhone, UIKit adapts `.popover` to a full-screen sheet automatically.
+    private func configurePopoverPresentationIfNeeded(for viewController: UIViewController) {
+        guard viewController.modalPresentationStyle == .popover,
+              let popover = viewController.popoverPresentationController else {
+            return
+        }
+        popover.sourceView = view
+        let bounds = view.bounds
+        popover.sourceRect = CGRect(
+            x: bounds.midX,
+            y: bounds.midY,
+            width: 1,
+            height: 1
+        )
+        popover.permittedArrowDirections = []
     }
 
     /// Called whenever a sentinel detects that its host view left the window hierarchy.

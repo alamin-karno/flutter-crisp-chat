@@ -19,6 +19,13 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## 2.4.8
+
+### Fixed
+* Fixed iOS **Swift Package Manager** integration (broken since `2.4.2`): package resolution, product name `crisp-chat`, and Swift-only SPM target.
+* Consolidated iOS Swift sources under `ios/crisp_chat/Sources/crisp_chat/` for SPM and CocoaPods.
+* Restored `ModalPresentationStyle.popover` mapping to `UIModalPresentationStyle.popover` with iPad popover anchor configuration.
+
 ## 2.4.7
 
 ### Added
