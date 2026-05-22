@@ -1,3 +1,17 @@
+# 2.4.8
+
+Fixed
+---
+* Fixed iOS **Swift Package Manager** integration introduced in `2.4.2` that failed during Xcode package resolution with `target 'crisp_chat' in package 'crisp_chat' is outside the package root`.
+* Fixed SPM product name to `crisp-chat` (required by Flutter's generated `FlutterGeneratedPluginSwiftPackage`).
+* Fixed SPM target to be Swift-only; CocoaPods continues to use a thin Objective-C registration shim in `ios/Classes/`.
+
+Changed
+---
+* Consolidated iOS Swift sources under `ios/crisp_chat/Sources/crisp_chat/` for both SPM and CocoaPods.
+* Restored `ModalPresentationStyle.popover` on iOS (`UIModalPresentationStyle.popover`) with `popoverPresentationController` configuration for iPad.
+* Fixed CocoaPods duplicate `FlutterCrispChatPlugin` interface (removed redundant ObjC shim; Swift-only registration).
+
 # 2.4.7
 
 Added

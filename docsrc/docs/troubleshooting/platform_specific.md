@@ -113,7 +113,7 @@ If `resetCrispChatSession` crashes on iOS, ensure you're using version `2.0.9` o
 The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS dependency management. If you encounter issues with one, try the other:
 
 - **CocoaPods:** Default for most Flutter projects. Uses `ios/crisp_chat.podspec`.
-- **SPM:** Available since version `2.4.2`. Uses `ios/crisp_chat/Package.swift`.
+- **SPM:** Available since version `2.4.2` (fixed in `2.4.8`). Uses `ios/crisp_chat/Package.swift` with sources in `ios/crisp_chat/Sources/crisp_chat/`. Enable with `flutter config --enable-swift-package-manager`.
 
 ## Need More Help?
 

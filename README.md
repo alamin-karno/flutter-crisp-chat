@@ -513,7 +513,7 @@ The `modalPresentationStyle` parameter in `CrispConfig` allows you to control ho
 - **`ModalPresentationStyle.formSheet`** - The view controller is displayed as a form sheet, centered on the screen.
 - **`ModalPresentationStyle.overFullScreen`** - The view controller covers the screen but allows underlying content to show through.
 - **`ModalPresentationStyle.overCurrentContext`** - The view controller is displayed over the parent view controller's content.
-- **`ModalPresentationStyle.popover`** - The view controller is displayed in a popover (iPad only).
+- **`ModalPresentationStyle.popover`** - Popover on iPad (centered); on iPhone UIKit adapts to full screen.
 
 #### Example Usage:
 

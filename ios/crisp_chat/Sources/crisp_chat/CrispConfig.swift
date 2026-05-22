@@ -148,7 +148,7 @@ struct CrispConfig {
         case "overCurrentContext":
             modalPresentationStyle = .overCurrentContext
         case "popover":
-            modalPresentationStyle = .fullScreen
+            modalPresentationStyle = .popover
         default:
             modalPresentationStyle = .fullScreen
         }

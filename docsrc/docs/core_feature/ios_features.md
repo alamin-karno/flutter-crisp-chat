@@ -35,14 +35,14 @@ By default, iOS 13+ uses `.pageSheet` presentation style, which can allow touch 
 
 ### Available Presentation Styles
 
-| Style                | UIModalPresentationStyle | Best For                               |
-|----------------------|--------------------------|----------------------------------------|
-| `fullScreen`         | .fullScreen              | Preventing touch-through (recommended) |
-| `pageSheet`          | .pageSheet               | Standard iOS modal appearance          |
-| `formSheet`          | .formSheet               | Smaller, centered dialogs              |
-| `overFullScreen`     | .overFullScreen          | Transparent overlay needs              |
-| `overCurrentContext` | .overCurrentContext      | Custom transition animations           |
-| `popover`            | .popover                 | iPad-only popover presentations        |
+| Style                | UIModalPresentationStyle | Best For                                    |
+|----------------------|--------------------------|---------------------------------------------|
+| `fullScreen`         | .fullScreen              | Preventing touch-through (recommended)      |
+| `pageSheet`          | .pageSheet               | Standard iOS modal appearance               |
+| `formSheet`          | .formSheet               | Smaller, centered dialogs                   |
+| `overFullScreen`     | .overFullScreen          | Transparent overlay needs                   |
+| `overCurrentContext` | .overCurrentContext      | Custom transition animations                |
+| `popover`            | .popover                 | iPad popover (iPhone adapts to full screen) |
 
 ### Implementation
 
@@ -139,7 +139,7 @@ The plugin handles several iOS-specific integrations automatically:
 ### Device Token Registration
 
 ```swift
-// Handled automatically in SwiftFlutterCrispChatPlugin.swift
+// Handled automatically in FlutterCrispChatPlugin.swift (ios/crisp_chat/Sources/crisp_chat/)
 CrispSDK.setDeviceToken(deviceToken)
 ```
 
@@ -162,7 +162,7 @@ CrispSDK.setShouldPromptForNotificationPermission(false)
 1. **Use `fullScreen` for production apps** to prevent touch-through issues
 2. **Test notification behavior** on both development and production builds
 3. **Consider user experience** when deciding on notification prompts
-4. **Handle iPad differently** - popover style only works on iPad
+4. **Use `popover` on iPad** — requires a popover anchor; the plugin centers it on screen. On iPhone, UIKit adapts `.popover` to full screen.
 5. **Test on different iOS versions** - modal behaviors vary between iOS 13, 14, 15+
 
 ## Troubleshooting

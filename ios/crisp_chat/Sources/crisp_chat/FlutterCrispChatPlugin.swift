@@ -330,11 +330,30 @@ private class CrispChatHostViewController: UIViewController {
     }
 
     private func attachSentinelAndPresent(_ viewController: UIViewController) {
+        configurePopoverPresentationIfNeeded(for: viewController)
         let sentinel = CrispDismissalSentinel { [weak self] in
             self?.scheduleDismissalCheck()
         }
         sentinel.attach(to: viewController.view)
         present(viewController, animated: true)
+    }
+
+    /// Configures `popoverPresentationController` when presenting on iPad.
+    /// On iPhone, UIKit adapts `.popover` to a full-screen sheet automatically.
+    private func configurePopoverPresentationIfNeeded(for viewController: UIViewController) {
+        guard viewController.modalPresentationStyle == .popover,
+              let popover = viewController.popoverPresentationController else {
+            return
+        }
+        popover.sourceView = view
+        let bounds = view.bounds
+        popover.sourceRect = CGRect(
+            x: bounds.midX,
+            y: bounds.midY,
+            width: 1,
+            height: 1
+        )
+        popover.permittedArrowDirections = []
     }
 
     /// Called whenever a sentinel detects that its host view left the window hierarchy.
