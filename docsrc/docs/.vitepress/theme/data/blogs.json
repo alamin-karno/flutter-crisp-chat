@@ -32,6 +32,17 @@
       "author": "Md. Al-Amin",
       "tags": ["Flutter", "Crisp Chat", "iOS", "Plugin"],
       "readTime": "5 min read"
+    },
+    {
+      "id": "swift-package-manager-and-flutter-ios-plugins-crisp-chat-fix-story",
+      "title": "Swift Package Manager and Flutter iOS Plugins: The crisp_chat 2.4.8 Fix Story",
+      "description": "In this article, I share the story of how I fixed a critical issue in the crisp_chat Flutter plugin related to Swift Package Manager and iOS plugins, ensuring a smoother experience for developers.",
+      "url": "https://medium.com/@alaminkarno/swift-package-manager-and-flutter-ios-plugins-the-crisp-chat-2-4-8-fix-story-490316b3089c",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*FYp66Xb13lkpv2BIKce6cg.png",
+      "date": "May 25, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Swift Package Manager", "iOS", "Plugin", "Open Source"],
+      "readTime": "4 min read"
     }
   ]
 }
