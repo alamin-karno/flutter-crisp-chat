@@ -130,14 +130,14 @@ The `modalPresentationStyle` parameter controls how the Crisp chat view is prese
 
 ### Available Styles
 
-| Style | Description |
-|---|---|
-| `fullScreen` | Covers the entire screen (default) |
-| `pageSheet` | Standard page sheet with dimmed background |
-| `formSheet` | Centered form sheet |
-| `overFullScreen` | Full screen with transparent overlay |
-| `overCurrentContext` | Over current context |
-| `popover` | Popover style (iPad only) |
+| Style                | Description                                                        |
+|----------------------|--------------------------------------------------------------------|
+| `fullScreen`         | Covers the entire screen (default)                                 |
+| `pageSheet`          | Standard page sheet with dimmed background                         |
+| `formSheet`          | Centered form sheet                                                |
+| `overFullScreen`     | Full screen with transparent overlay                               |
+| `overCurrentContext` | Over current context                                               |
+| `popover`            | Popover on iPad (centered anchor); adapts to full screen on iPhone |
 
 ### Example Usage
 

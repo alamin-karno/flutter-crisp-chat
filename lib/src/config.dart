@@ -292,6 +292,7 @@ enum ModalPresentationStyle {
   /// The view controller is displayed over the parent view controller's content.
   overCurrentContext,
 
-  /// The view controller is displayed in a popover.
+  /// The view controller is displayed in a popover on iPad.
+  /// On iPhone, UIKit adapts this to a full-screen presentation.
   popover,
 }

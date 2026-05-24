@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import Crisp
 
 struct Geolocation {
@@ -68,15 +69,15 @@ struct Company {
             name: json["name"] as? String,
             url: json["url"] as? String,
             companyDescription: json["companyDescription"] as? String,
-            employment: Employment.fromJson(json["employment"] as? [String: Any] ?? [:]),
-            geolocation: Geolocation.fromJson(json["geoLocation"] as? [String: Any] ?? [:])
+            employment: (json["employment"] as? [String: Any]).map(Employment.fromJson),
+            geolocation: (json["geoLocation"] as? [String: Any]).map(Geolocation.fromJson)
         )
     }
     
     func toCrispCompany() -> Crisp.Company {
         return Crisp.Company(
             name: name,
-            url: url == nil ? nil : URL(string: url!),
+            url: url.flatMap { URL(string: $0) },
             companyDescription: companyDescription,
             employment: employment?.toCrispEmployment(),
             geolocation: geolocation?.toCrispGeolocation()
@@ -108,7 +109,7 @@ struct User {
             nickName: json["nickName"] as? String,
             phone: json["phone"] as? String,
             avatar: json["avatar"] as? String,
-            company: Company.fromJson(json["company"] as? [String: Any] ?? [:])
+            company: (json["company"] as? [String: Any]).map(Company.fromJson)
         )
     }
     
@@ -131,7 +132,7 @@ struct CrispConfig {
         self.modalPresentationStyle = modalPresentationStyle
     }
     
-    static func fromJson(_ json: [String: Any]) -> CrispConfig {
+    static func fromJson(_ json: [String: Any]) -> CrispConfig? {
         let modalPresentationStyleString = json["modalPresentationStyle"] as? String
         let modalPresentationStyle: UIModalPresentationStyle
         
@@ -151,12 +152,16 @@ struct CrispConfig {
         default:
             modalPresentationStyle = .fullScreen
         }
+
+        guard let websiteID = json["websiteId"] as? String else {
+            return nil
+        }
         
         return CrispConfig(
-            websiteID: json["websiteId"] as! String,
+            websiteID: websiteID,
             tokenId: json["tokenId"] as? String,
             sessionSegment: json["sessionSegment"] as? String,
-            user: User.fromJson(json["user"] as? [String: Any] ?? [:]),
+            user: (json["user"] as? [String: Any]).map(User.fromJson),
             enableNotifications: json["enableNotifications"] as? Bool ?? true,
             modalPresentationStyle: modalPresentationStyle
         )
