@@ -43,6 +43,17 @@
       "author": "Md. Al-Amin",
       "tags": ["Flutter", "Swift Package Manager", "iOS", "Plugin", "Open Source"],
       "readTime": "4 min read"
+    },
+    {
+      "id": "flutter-promised-write-once-run-anywhere-my-plugin-didnt-until-now",
+      "title": "Flutter Promised “Write Once, Run Anywhere.” My Plugin Didn’t, Until Now.",
+      "description": "How a single GitHub issue pushed crisp_chat from mobile-only to Android, iOS, Web, macOS, Windows, and Linux — with one Dart API.",
+      "url": "https://alaminkarno.medium.com/flutter-promised-write-once-run-anywhere-my-plugin-didnt-until-now-b18ebf709f87",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*ANTPYgFLT07_g97bwLpoGg.png",
+      "date": "June 01, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Crisp Chat", "Multi-platform", "Open Source", "Plugin"],
+      "readTime": "5 min read"
     }
   ]
 }
