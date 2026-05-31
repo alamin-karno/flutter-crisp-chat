@@ -64,6 +64,20 @@ The `tokenId` identifies returning users. When a user opens the chat with the sa
 
 No. All fields in `User` and `Company` are optional. If you don't set them, the user appears as anonymous in the Crisp dashboard.
 
+### Does this support video or audio calls?
+
+**Platform summary:**
+
+| Platform          | Video/audio calls                                                                                                                                                                          |
+|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **iOS**           | Yes, when you opt in at build time — **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`; **SPM:** `CRISP_CHAT_WEBRTC=true` before `flutter build ios` (~10 MB larger). Default builds use the standard `Crisp` SDK without calls. |
+| **Android**       | Not yet — [Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181).                                                                                              |
+| **Web / desktop** | Yes, via the web chatbox when enabled in your Crisp dashboard.                                                                                                                             |
+
+There is **no** `CrispConfig` runtime flag for video. On iOS, the SDK variant is selected at compile time. Check your build with `FlutterCrispChat.isVideoCallsSupported()`.
+
+Setup guide: [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
+
 ### When should I call `resetCrispChatSession`?
 
 Call it when your app user **logs out**. This clears the chat session so the next user doesn't see the previous user's conversation history.

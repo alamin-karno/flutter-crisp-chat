@@ -60,4 +60,7 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
 
   @override
   void setOnNotificationTappedCallback(VoidCallback? callback) {}
+
+  @override
+  Future<bool> isVideoCallsSupported() async => true;
 }

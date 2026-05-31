@@ -40,6 +40,11 @@ For **Web and desktop** targets:
 - No extra native Crisp SDK install
 - See [Platform Setup](/getting_started/platform_setup#web) and [Supported Platforms](/getting_started/supported_platforms) for WebView2, WebKitGTK, and macOS entitlements
 
+For **optional iOS video/audio calls** (CrispWebRTC SDK, build-time opt-in):
+
+- See [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only)
+- Not required for standard chat; Android native video is not supported yet by Crisp
+
 Then run:
 
 ```shell

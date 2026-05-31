@@ -2,7 +2,7 @@
 head:
   - - meta
     - name: description
-      content: iOS-specific features in Flutter Crisp Chat — modal presentation styles, notification control, and native iOS integrations.
+      content: iOS-specific features in Flutter Crisp Chat — modal presentation styles, optional video calls, notification control, and native iOS integrations.
 
   - - meta
     - name: keywords
@@ -188,6 +188,41 @@ final config = CrispConfig(
 ### Modal Not Working on Android
 
 Remember that `modalPresentationStyle` is iOS-only. On Android, Crisp always opens as a full-screen activity.
+
+## Video and audio calls (optional)
+
+Crisp supports **video and audio calls on iOS** when you opt in at **build time** by linking the `CrispWebRTC` SDK variant instead of the standard `Crisp` SDK. There is **no** `CrispConfig.enableVideo` — calls are initiated from the Crisp chat UI when your Crisp workspace supports them.
+
+| Platform          | Native calls    | How to enable                                                                         |
+|-------------------|-----------------|---------------------------------------------------------------------------------------|
+| **iOS**           | Yes (opt-in)    | See [Enable video calls](/getting_started/platform_setup#enable-video-calls-ios-only) |
+| **Android**       | Not yet         | [Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181)    |
+| **Web / desktop** | Via web chatbox | Enable in Crisp dashboard                                                             |
+
+### Check support at runtime
+
+```dart
+final hasVideo = await FlutterCrispChat.isVideoCallsSupported();
+if (hasVideo) {
+  // iOS WebRTC build, or Web/desktop
+}
+```
+
+On **default iOS builds** (without `$CrispChatWebRTC` / `CRISP_CHAT_WEBRTC`), this returns `false`. On **Android**, always `false` until Crisp ships native video.
+
+### CocoaPods vs SPM
+
+| Build system  | Enable video                                                                     |
+|---------------|----------------------------------------------------------------------------------|
+| **CocoaPods** | `$CrispChatWebRTC = true` in `ios/Podfile` before `flutter_install_all_ios_pods` |
+| **SPM**       | `CRISP_CHAT_WEBRTC=true flutter build ios` or Xcode scheme env var               |
+
+### Limitations
+
+- Adds ~**10 MB** to the iOS app binary.
+- **Mac Catalyst:** Crisp calls are not supported.
+- **WebRTC conflicts:** another WebRTC library in your app may conflict ([crisp-sdk-ios#103](https://github.com/crisp-im/crisp-sdk-ios/issues/103)).
+- Update `NSMicrophoneUsageDescription` in `Info.plist` when using the WebRTC variant.
 
 ## Next Steps
 

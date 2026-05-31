@@ -24,7 +24,7 @@ Open your first Crisp chat in under 5 minutes.
 ## Prerequisites
 
 1. You have [installed](/getting_started/install) the `crisp_chat` package
-2. You have completed [platform setup](/getting_started/platform_setup) for the targets you use (Android/iOS permissions, Web CSP if needed, desktop `main()` + entitlements)
+2. You have completed [platform setup](/getting_started/platform_setup) for the targets you use (Android/iOS permissions, Web CSP if needed, desktop `main()` + entitlements). For **iOS video calls**, see [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only) — optional and build-time only.
 3. You have a Crisp Website ID from your [Crisp Dashboard](https://app.crisp.chat/)
 
 ### Get Your Website ID

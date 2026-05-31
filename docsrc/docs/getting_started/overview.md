@@ -25,23 +25,24 @@ next:
 
 ## What This Plugin Provides
 
-| Feature                 | Description                                                                              |
-|-------------------------|------------------------------------------------------------------------------------------|
-| **Open Chat**           | Launch Crisp chat with one method call (native UI on mobile, web chatbox on web/desktop) |
-| **User Identification** | Set user email, name, phone, avatar, and company details                                 |
-| **Push Notifications**  | FCM (Android) and APNs (iOS); not available on Web/desktop                               |
-| **Session Management**  | Set custom session data, segments, and events                                            |
-| **Unread Messages**     | Query unread message count via the Crisp REST API                                        |
-| **Session Control**     | Get session identifiers and reset sessions on logout                                     |
+| Feature                 | Description                                                                                      |
+|-------------------------|--------------------------------------------------------------------------------------------------|
+| **Open Chat**           | Launch Crisp chat with one method call (native UI on mobile, web chatbox on web/desktop)         |
+| **User Identification** | Set user email, name, phone, avatar, and company details                                         |
+| **Push Notifications**  | FCM (Android) and APNs (iOS); not available on Web/desktop                                       |
+| **Session Management**  | Set custom session data, segments, and events                                                    |
+| **Unread Messages**     | Query unread message count via the Crisp REST API                                                |
+| **Session Control**     | Get session identifiers and reset sessions on logout                                             |
+| **Video / audio calls** | Optional on **iOS** (build-time `CrispWebRTC` SDK); Web/desktop via web chatbox; Android not yet |
 
 ## Supported SDK Versions
 
-| Platform | SDK                            | Version / source                             |
-|----------|--------------------------------|----------------------------------------------|
-| Android  | Crisp Android SDK              | `2.0.20`                                     |
-| iOS      | Crisp iOS SDK                  | `~> 2.13.0`                                  |
-| Web      | Crisp Web Chat SDK (`$crisp`)  | Loaded from `https://client.crisp.chat/l.js` |
-| Desktop  | Same as Web (embedded WebView) | `desktop_webview_window` + browser fallback  |
+| Platform | SDK                                      | Version / source                                                                                    |
+|----------|------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| Android  | Crisp Android SDK                        | `2.0.20`                                                                                            |
+| iOS      | Crisp iOS SDK (`Crisp` or `CrispWebRTC`) | `~> 2.13.0` — see [Enable video calls](/getting_started/platform_setup#enable-video-calls-ios-only) |
+| Web      | Crisp Web Chat SDK (`$crisp`)            | Loaded from `https://client.crisp.chat/l.js`                                                        |
+| Desktop  | Same as Web (embedded WebView)           | `desktop_webview_window` + browser fallback                                                         |
 
 ## Requirements
 
@@ -57,7 +58,7 @@ next:
 ## Quick Links
 
 - [Installation](/getting_started/install) — Add the package to your project
-- [Platform Setup](/getting_started/platform_setup) — Android, iOS, Web, and desktop
+- [Platform Setup](/getting_started/platform_setup) — Android, iOS, Web, and desktop (includes [optional iOS video calls](/getting_started/platform_setup#enable-video-calls-ios-only))
 - [Supported Platforms](/getting_started/supported_platforms) — Web and desktop support matrix
 - [Quick Start](/getting_started/quick_start) — Open your first chat in 5 minutes
 - [Push Notifications](/notifications/firebase_setup) — Set up FCM and APNs

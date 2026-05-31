@@ -21,11 +21,11 @@ next:
 
 This is the working example app from the plugin's `example/` directory.
 
-| Target            | What the example demonstrates                                             |
-|-------------------|---------------------------------------------------------------------------|
-| **Android / iOS** | Firebase, push notification hooks, user config, sessions, unread REST API |
-| **Web**           | Web Chat SDK, sessions, events (no Firebase)                              |
-| **Desktop**       | `runWebViewTitleBarWidget` in `main`, embedded WebView chat (no Firebase) |
+| Target            | What the example demonstrates                                                                                                                 |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Android / iOS** | Firebase, push notification hooks, user config, sessions, unread REST API; optional iOS video via `$CrispChatWebRTC` in `example/ios/Podfile` |
+| **Web**           | Web Chat SDK, sessions, events (no Firebase)                                                                                                  |
+| **Desktop**       | `runWebViewTitleBarWidget` in `main`, embedded WebView chat (no Firebase)                                                                     |
 
 ### Run without Firebase (Web / desktop)
 

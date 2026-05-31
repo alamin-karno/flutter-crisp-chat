@@ -165,6 +165,8 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.success(false);
             }
+        } else if (call.method.equals("isVideoCallsSupported")) {
+            result.success(false);
         } else if (call.method.equals("pushSessionEvent")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
 

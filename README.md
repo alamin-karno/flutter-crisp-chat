@@ -27,16 +27,17 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - Customizable
 - User configuration with company and geoLocation
 - Send user notification about missing messages
+- Optional **iOS video/audio calls** (build-time opt-in via `CrispWebRTC` SDK)
 - Android, iOS, Web, macOS, Windows, and Linux
 
 ## Platform overview
 
-| Platform                    | How chat opens                  | Extra setup                                                              |
-|-----------------------------|---------------------------------|--------------------------------------------------------------------------|
-| **Android**                 | Native Crisp SDK                | Internet permission, `compileSdk` / `minSdk`                             |
-| **iOS**                     | Native Crisp SDK                | Privacy keys in `Info.plist`                                             |
-| **Web**                     | Crisp Web Chat SDK (`$crisp`)   | Valid `websiteID`; optional CSP for `client.crisp.chat`                  |
-| **macOS / Windows / Linux** | Web SDK in WebView (or browser) | Desktop `main()` helper; macOS network entitlement; WebView2 / WebKitGTK |
+| Platform                    | How chat opens                  | Extra setup                                                                                                  |
+|-----------------------------|---------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **Android**                 | Native Crisp SDK                | Internet permission, `compileSdk` / `minSdk`                                                                 |
+| **iOS**                     | Native Crisp SDK                | Privacy keys in `Info.plist`; optional video via `$CrispChatWebRTC` (CocoaPods) or `CRISP_CHAT_WEBRTC` (SPM) |
+| **Web**                     | Crisp Web Chat SDK (`$crisp`)   | Valid `websiteID`; optional CSP for `client.crisp.chat`                                                      |
+| **macOS / Windows / Linux** | Web SDK in WebView (or browser) | Desktop `main()` helper; macOS network entitlement; WebView2 / WebKitGTK                                     |
 
 Full API differences: [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
 
@@ -91,6 +92,8 @@ If editing `Info.plist` as text, add:
 <key>NSMicrophoneUsageDescription</key>
 <string>your usage description here</string>
 ```
+
+**Optional — video/audio calls (iOS only):** **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`, then `pod install`. **SPM (Flutter 3.44+ default):** `CRISP_CHAT_WEBRTC=true flutter build ios`. Adds ~10 MB. Android native video is not supported yet by Crisp. See [Platform setup — Enable video calls](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
 
 #### Android
 
@@ -606,6 +609,24 @@ final formSheetConfig = CrispConfig(
 ```
 
 **Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior. On **Web and desktop**, it is ignored.
+
+### iOS video and audio calls (optional)
+
+Crisp video/audio calls are **iOS-only** and **opt-in at build time** (not a `CrispConfig` flag). Default builds use the standard `Crisp` SDK without calls.
+
+| Build system  | Enable video                                                   |
+|---------------|----------------------------------------------------------------|
+| **CocoaPods** | `$CrispChatWebRTC = true` in `ios/Podfile`, then `pod install` |
+| **SPM**       | `CRISP_CHAT_WEBRTC=true flutter build ios`                     |
+
+Check at runtime:
+
+```dart
+final supported = await FlutterCrispChat.isVideoCallsSupported();
+// true on iOS WebRTC builds, Web, and desktop; false on Android and default iOS builds
+```
+
+Adds ~10 MB to the iOS binary. Android native video is [not supported yet by Crisp](https://github.com/crisp-im/crisp-sdk-android/issues/181). Full setup: [Enable video calls (iOS only)](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
 
 For every request that you make to `getUnreadMessageCount` or `markMessagesAsRead`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`.
 
