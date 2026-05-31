@@ -2,7 +2,7 @@
 head:
   - - meta
     - name: description
-      content: Flutter Crisp Chat — a Flutter plugin for integrating Crisp live chat natively on Android & iOS with push notifications, user management, and session control.
+      content: Flutter Crisp Chat — Crisp live chat for Android, iOS, Web, and desktop with push notifications on mobile, user management, and session control.
 
   - - meta
     - name: keywords
@@ -17,44 +17,48 @@ next:
 
 # Overview
 
-**Flutter Crisp Chat** (`crisp_chat`) is a Flutter plugin that integrates the [Crisp](https://crisp.chat) live chat platform natively into your Android and iOS apps. It wraps the official Crisp Android SDK and Crisp iOS SDK, giving you a fully native chat experience with push notifications, user identification, session management, and more.
+**Flutter Crisp Chat** (`crisp_chat`) is a Flutter plugin that integrates the [Crisp](https://crisp.chat) live chat platform into your app on **Android, iOS, Web, and desktop** (macOS, Windows, Linux). Mobile targets use the official Crisp Android and iOS SDKs; Web and desktop use the official Crisp Web Chat SDK, with the same Dart API for opening chat, sessions, and REST helpers.
 
 ## Why Crisp Chat?
 
-[Crisp](https://crisp.chat) is a customer messaging platform used by thousands of companies worldwide. It provides live chat, a shared inbox, knowledge base, and CRM — all in one place. This Flutter plugin lets you bring that experience directly into your mobile app.
+[Crisp](https://crisp.chat) is a customer messaging platform used by thousands of companies worldwide. It provides live chat, a shared inbox, knowledge base, and CRM — all in one place. This Flutter plugin brings that experience into your app on **mobile, web, and desktop**.
 
 ## What This Plugin Provides
 
-| Feature                 | Description                                                       |
-|-------------------------|-------------------------------------------------------------------|
-| **Open Chat**           | Launch the native Crisp chat UI with one method call              |
-| **User Identification** | Set user email, name, phone, avatar, and company details          |
-| **Push Notifications**  | Full FCM (Android) and APNs (iOS) support with two handling modes |
-| **Session Management**  | Set custom session data, segments, and events                     |
-| **Unread Messages**     | Query unread message count via the Crisp REST API                 |
-| **Session Control**     | Get session identifiers and reset sessions on logout              |
+| Feature                 | Description                                                                              |
+|-------------------------|------------------------------------------------------------------------------------------|
+| **Open Chat**           | Launch Crisp chat with one method call (native UI on mobile, web chatbox on web/desktop) |
+| **User Identification** | Set user email, name, phone, avatar, and company details                                 |
+| **Push Notifications**  | FCM (Android) and APNs (iOS); not available on Web/desktop                               |
+| **Session Management**  | Set custom session data, segments, and events                                            |
+| **Unread Messages**     | Query unread message count via the Crisp REST API                                        |
+| **Session Control**     | Get session identifiers and reset sessions on logout                                     |
 
 ## Supported SDK Versions
 
-| Platform | SDK               | Version     |
-|----------|-------------------|-------------|
-| Android  | Crisp Android SDK | `2.0.20`    |
-| iOS      | Crisp iOS SDK     | `~> 2.13.0` |
+| Platform | SDK                            | Version / source                             |
+|----------|--------------------------------|----------------------------------------------|
+| Android  | Crisp Android SDK              | `2.0.20`                                     |
+| iOS      | Crisp iOS SDK                  | `~> 2.13.0`                                  |
+| Web      | Crisp Web Chat SDK (`$crisp`)  | Loaded from `https://client.crisp.chat/l.js` |
+| Desktop  | Same as Web (embedded WebView) | `desktop_webview_window` + browser fallback  |
 
 ## Requirements
 
-| Platform          | Minimum Version      |
-|-------------------|----------------------|
-| Flutter           | 3.0+                 |
-| Dart              | 2.15.0+              |
-| Android           | API 23 (Android 6.0) |
-| iOS               | 13.0+                |
-| compileSdkVersion | 36                   |
+| Platform          | Minimum Version                                                 |
+|-------------------|-----------------------------------------------------------------|
+| Flutter           | 3.24.0+ (3.0+ for mobile-only usage)                            |
+| Dart              | 3.5.0+ (2.15.0+ for mobile-only usage)                          |
+| Android           | API 23 (Android 6.0)                                            |
+| iOS               | 13.0+                                                           |
+| compileSdkVersion | 36                                                              |
+| Web / desktop     | See [Supported Platforms](/getting_started/supported_platforms) |
 
 ## Quick Links
 
 - [Installation](/getting_started/install) — Add the package to your project
-- [Platform Setup](/getting_started/platform_setup) — Configure Android and iOS
+- [Platform Setup](/getting_started/platform_setup) — Android, iOS, Web, and desktop
+- [Supported Platforms](/getting_started/supported_platforms) — Web and desktop support matrix
 - [Quick Start](/getting_started/quick_start) — Open your first chat in 5 minutes
 - [Push Notifications](/notifications/firebase_setup) — Set up FCM and APNs
 - [API Reference](/reference/api_documentation) — Complete method documentation

@@ -24,7 +24,7 @@ Open your first Crisp chat in under 5 minutes.
 ## Prerequisites
 
 1. You have [installed](/getting_started/install) the `crisp_chat` package
-2. You have completed [platform setup](/getting_started/platform_setup)
+2. You have completed [platform setup](/getting_started/platform_setup) for the targets you use (Android/iOS permissions, Web CSP if needed, desktop `main()` + entitlements)
 3. You have a Crisp Website ID from your [Crisp Dashboard](https://app.crisp.chat/)
 
 ### Get Your Website ID
@@ -69,7 +69,27 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Replace `YOUR_WEBSITE_ID` with your actual Website ID from the Crisp dashboard. That's it — tap the button and the native Crisp chat UI will open.
+Replace `YOUR_WEBSITE_ID` with your actual Website ID from the Crisp dashboard. Tap the button:
+
+- **Android / iOS** — opens the native Crisp chat UI
+- **Web** — opens the Crisp chatbox overlay on the page
+- **Desktop** — opens an embedded WebView window (or the system browser if WebView is unavailable)
+
+### Run on Web or desktop
+
+```bash
+# Web (Chrome)
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+
+# macOS (after platform setup + entitlements)
+flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
+```
+
+Use the same `openCrispChat` call; no separate Web API. See [Supported Platforms](/getting_started/supported_platforms) for the full API matrix.
+
+::: tip Mobile-only options
+`enableNotifications` and `modalPresentationStyle` apply to Android/iOS only. On Web and desktop they are ignored.
+:::
 
 ## What's Next?
 

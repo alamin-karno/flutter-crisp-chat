@@ -1,6 +1,6 @@
 name: crisp_chat
-description: A flutter plugin package for using crisp chat natively on Android & iOS.
-version: 2.4.8
+description: Flutter plugin for Crisp live chat on Android, iOS, Web, and desktop.
+version: 2.5.0
 
 readme: README.md
 license: MIT
@@ -13,14 +13,19 @@ documentation: https://pub.dev/documentation/crisp_chat/latest/
 
 
 environment:
-  sdk: '>=2.15.0 <4.0.0'
-  flutter: ">=2.5.0"
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: ">=3.24.0"
 
 dependencies:
+  desktop_webview_window: ^0.3.0
   flutter:
+    sdk: flutter
+  flutter_web_plugins:
     sdk: flutter
   http: ^1.6.0
   plugin_platform_interface: ^2.1.8
+  url_launcher: ^6.3.2
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +40,18 @@ flutter:
         pluginClass: FlutterCrispChatPlugin
       ios:
         pluginClass: FlutterCrispChatPlugin
+      web:
+        pluginClass: CrispChatWeb
+        fileName: crisp_chat_web.dart
+      macos:
+        dartPluginClass: CrispChatDesktopPlugin
+        fileName: crisp_chat_desktop.dart
+      windows:
+        dartPluginClass: CrispChatDesktopPlugin
+        fileName: crisp_chat_desktop.dart
+      linux:
+        dartPluginClass: CrispChatDesktopPlugin
+        fileName: crisp_chat_desktop.dart
 
 topics:
   - crisp

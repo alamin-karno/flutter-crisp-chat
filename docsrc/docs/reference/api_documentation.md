@@ -21,6 +21,21 @@ next:
 
 Complete reference for all public methods in the `FlutterCrispChat` class.
 
+## Platform support
+
+| API                                                         | Android / iOS       | Web         | Desktop            |
+|-------------------------------------------------------------|---------------------|-------------|--------------------|
+| `openCrispChat`                                             | Native SDK UI       | Web chatbox | WebView or browser |
+| `resetCrispChatSession`                                     | Yes                 | Yes         | WebView only       |
+| `setSessionString` / `setSessionInt` / `setSessionSegments` | Yes                 | Yes         | WebView only       |
+| `pushSessionEvent`                                          | Yes                 | Yes         | WebView only       |
+| `getSessionIdentifier`                                      | Yes                 | Yes         | WebView only       |
+| `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*        | Yes*               |
+| `openChatboxFromNotification`                               | Android (primarily) | No-op       | No-op              |
+| `setOnNotificationTappedCallback`                           | Android             | No-op       | No-op              |
+
+\* Prefer a backend proxy for REST credentials on Web. See [Supported Platforms](/getting_started/supported_platforms).
+
 ## FlutterCrispChat
 
 All methods are `static` on the `FlutterCrispChat` class.
@@ -33,7 +48,7 @@ import 'package:crisp_chat/crisp_chat.dart';
 
 ### openCrispChat
 
-Opens the native Crisp chat UI.
+Opens Crisp chat: **native UI** on Android/iOS, **web chatbox** on Web, **embedded WebView** (or browser fallback) on desktop.
 
 ```dart
 static Future<void> openCrispChat({required CrispConfig config})

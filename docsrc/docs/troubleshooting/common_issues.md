@@ -19,6 +19,8 @@ next:
 
 # Common Issues
 
+For **Web and desktop** (blank WebView, loading skeleton, CSP, WebView2, macOS sandbox), see [Platform-Specific Troubleshooting](/troubleshooting/platform_specific#web).
+
 ## Build Errors
 
 ### `compileSdkVersion` too low
