@@ -33,6 +33,10 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/), navigate to **Settings** 
 
 ![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
 
+::: warning Android and iOS
+Before testing on Android or iOS, disable **Lock the chatbox to website domain (and subdomains)** in the Crisp dashboard (**Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**). With domain lock enabled, chat fails with **"Error starting chat"** even when the Website ID is valid. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
+:::
+
 ## Minimal Example
 
 ```dart

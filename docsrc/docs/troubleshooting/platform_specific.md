@@ -145,6 +145,16 @@ The gray/blue placeholder bars mean the chat **shell** opened but the **session*
 4. Check DevTools → **Network** for failed requests to `client.crisp.chat` or `storage.crisp.chat`.
 5. Hard-refresh the page (`Cmd+Shift+R`) after upgrading the plugin so `l.js` is not cached from an old run.
 
+### Domain lock enabled
+
+If **Lock the chatbox to website domain** is enabled in the Crisp dashboard:
+
+- **Symptom:** skeleton UI / session never connects
+- **Check:** run `window.location.origin` in DevTools and compare with allowed domains in the dashboard
+- **Fix:** add the origin to the lock list, disable domain lock, or deploy to an allowed host
+
+See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
+
 ### Chat does not appear
 
 1. Confirm `openCrispChat` was called with a valid `websiteID`.
@@ -156,6 +166,15 @@ The gray/blue placeholder bars mean the chat **shell** opened but the **session*
 `getUnreadMessageCount` and `markMessagesAsRead` use your Crisp REST credentials from Dart. On Web, those values are visible to users — prefer a backend proxy for production.
 
 ## Desktop (macOS, Windows, Linux)
+
+### Domain lock enabled
+
+If **Lock the chatbox to website domain** is enabled in the Crisp dashboard:
+
+- **Embedded WebView** loads chat from a temporary `file://` page — disable domain lock (same as mobile).
+- **Browser fallback** opens `https://app.crisp.chat/website/{id}/`, which is also incompatible with domain lock — install WebView2 (Windows) or WebKitGTK (Linux) for embedded chat instead.
+
+See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
 
 ### Embedded WebView does not open
 

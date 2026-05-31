@@ -102,6 +102,16 @@ No extra native setup. The plugin loads `https://client.crisp.chat/l.js` when yo
 
 If you use a strict Content-Security-Policy, allow scripts and connections to `https://client.crisp.chat` and `https://*.crisp.chat`.
 
+## Crisp dashboard: domain lock
+
+**Lock the chatbox to website domain (and subdomains)** is under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**. Behavior by platform:
+
+- **Android / iOS** — disable domain lock (native SDK has no browser origin).
+- **Web** — can stay enabled if your app is served from an allowed domain or subdomain.
+- **Desktop** — disable domain lock (embedded WebView uses `file://`; browser fallback opens `app.crisp.chat`).
+
+Full details: [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
+
 ## Minimum versions
 
 - **Dart SDK**: 3.5.0+

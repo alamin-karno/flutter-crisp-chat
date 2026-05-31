@@ -55,6 +55,27 @@ Your Website ID is found in the [Crisp Dashboard](https://app.crisp.chat/) under
 
 ![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
 
+## Crisp dashboard: Chatbox Security
+
+In the [Crisp Dashboard](https://app.crisp.chat/), go to **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security** and find **Lock the chatbox to website domain (and subdomains)**.
+
+::: warning Android and iOS (native SDK)
+This setting must be **disabled** when using the native Crisp SDK on **Android and iOS**. Domain lock validates browser page origins; mobile apps have no matching website domain, so the SDK session is rejected. You may see **"Error starting chat"** or a misleading `invalid_website_id` WebSocket error even when your Website ID is valid — `GET https://api.crisp.chat/v1/website/{websiteId}` can still return 200.
+
+See [Crisp Android SDK](https://docs.crisp.chat/guides/chatbox-sdks/android-sdk/) and [Crisp iOS SDK](https://docs.crisp.chat/guides/chatbox-sdks/ios-sdk/) for the same requirement. Reported in [#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148).
+:::
+
+### Domain lock by platform
+
+| Platform                       | Domain lock            | Guidance                                                                                                                                                                                                                                                                                        |
+|--------------------------------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Android / iOS**              | Must be **disabled**   | Native SDK has no browser origin; session is rejected → `Error starting chat` / misleading `invalid_website_id` ([#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148))                                                                                                         |
+| **Web**                        | Can stay **enabled**   | Crisp validates the **page origin**. Host your Flutter web app on a domain (or subdomain) allowed in the dashboard lock list — e.g. if lock allows `example.com`, deploy at `https://app.example.com` or `https://example.com`. Local dev (`localhost`) may fail unless that origin is allowed. |
+| **Desktop (embedded WebView)** | Should be **disabled** | Chat loads from a temporary `file://` page; there is no website origin to match, similar to mobile.                                                                                                                                                                                             |
+| **Desktop (browser fallback)** | Should be **disabled** | Opens `https://app.crisp.chat/website/{id}/`, which is not your locked domain. Prefer disabling domain lock or use embedded WebView after fixing WebView2/WebKitGTK.                                                                                                                            |
+
+If chat fails to connect on Web with domain lock enabled, check `window.location.origin` in DevTools against your allowed domains. See [Platform-Specific — Web](/troubleshooting/platform_specific#domain-lock-enabled) and [Platform-Specific — Desktop](/troubleshooting/platform_specific#domain-lock-enabled-1).
+
 ## Token ID
 
 The `tokenId` is used to identify returning users. When a user opens the chat with the same `tokenId`, Crisp will restore their previous conversation history. This is useful for:
