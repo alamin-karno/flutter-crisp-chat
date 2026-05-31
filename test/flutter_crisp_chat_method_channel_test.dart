@@ -27,4 +27,18 @@ void main() {
     await platform.openCrispChat(config: config);
     // Basic check to ensure no MissingPluginException is thrown
   });
+
+  test('isVideoCallsSupported', () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'isVideoCallsSupported') {
+          return true;
+        }
+        return null;
+      },
+    );
+    expect(await platform.isVideoCallsSupported(), isTrue);
+  });
 }

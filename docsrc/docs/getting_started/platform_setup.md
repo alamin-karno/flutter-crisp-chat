@@ -106,6 +106,69 @@ The Crisp iOS SDK requires iOS 13.0+. Ensure your `ios/Podfile` has:
 platform :ios, '13.0'
 ```
 
+### 3. Enable video calls (iOS only)
+
+Video and audio calls require the **`Crisp/CrispWebRTC`** CocoaPods subspec instead of the default **`Crisp/Crisp`** library. Both expose the same Swift API (`import CrispWebRTC` vs `import Crisp`); the WebRTC variant adds roughly **10 MB** to your iOS binary.
+
+This is a **build-time** choice — there is no Dart runtime flag. Add the following to your `ios/Podfile` **before** `flutter_install_all_ios_pods`:
+
+```ruby
+$CrispChatWebRTC = true
+```
+
+Then reinstall pods:
+
+```bash
+cd ios && rm -f Podfile.lock && pod install --repo-update && cd ..
+```
+
+When enabled, update the microphone usage description in `ios/Runner/Info.plist` to cover calls (camera and photo keys from step 1 are still required):
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>Used for video and audio calls in chat</string>
+```
+
+Check support at runtime with `FlutterCrispChat.isVideoCallsSupported()` — it returns `true` only on iOS builds compiled with video support enabled.
+
+#### CocoaPods (Podfile)
+
+Add the following to your `ios/Podfile` **before** `flutter_install_all_ios_pods`:
+
+```ruby
+$CrispChatWebRTC = true
+```
+
+Then reinstall pods:
+
+```bash
+cd ios && rm -f Podfile.lock && pod install --repo-update && cd ..
+```
+
+#### Swift Package Manager (Flutter 3.24+, default in Flutter 3.44+)
+
+When your app uses SPM (`flutter config --enable-swift-package-manager`, or enabled by default on newer Flutter), set an environment variable **before** building:
+
+```bash
+CRISP_CHAT_WEBRTC=true flutter build ios
+# or
+CRISP_CHAT_WEBRTC=true flutter run
+```
+
+Alternatively, add `CRISP_CHAT_WEBRTC` = `true` under **Product → Scheme → Edit Scheme → Run → Arguments → Environment Variables** in Xcode.
+
+The plugin's [`ios/crisp_chat/Package.swift`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat/Package.swift) selects the `CrispWebRTC` product and defines `CRISP_WEBRTC` automatically when this variable is set. No manual edit of `Package.swift` is required.
+
+After changing the video setting, run a clean build (`flutter clean && flutter pub get`) so SPM/CocoaPods re-resolve dependencies.
+
+**Limitations:**
+
+- **Android:** native video/audio calls are [not supported yet](https://github.com/crisp-im/crisp-sdk-android/issues/181) by the Crisp Android SDK.
+- **Mac Catalyst:** Crisp calls are not supported.
+- **WebRTC conflicts:** if your app embeds another WebRTC library, you may hit symbol or module conflicts ([crisp-sdk-ios#103](https://github.com/crisp-im/crisp-sdk-ios/issues/103)).
+
+**Web / desktop:** video calls work through the web chatbox when enabled in your Crisp dashboard — no extra native setup.
+
 ## Crisp dashboard (Android & iOS)
 
 Before opening chat on native mobile targets:

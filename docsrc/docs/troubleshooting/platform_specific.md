@@ -128,10 +128,45 @@ Compare with Android using the same REST GET steps — if Android clears `unread
 
 ### CocoaPods vs Swift Package Manager
 
-The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS dependency management. If you encounter issues with one, try the other:
+The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS dependency management.
 
-- **CocoaPods:** Default for most Flutter projects. Uses `ios/crisp_chat.podspec`.
-- **SPM:** Available since version `2.4.2` (fixed in `2.4.8`). Uses `ios/crisp_chat/Package.swift` with sources in `ios/crisp_chat/Sources/crisp_chat/`. Enable with `flutter config --enable-swift-package-manager`.
+- **CocoaPods:** Uses [`ios/crisp_chat.podspec`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat.podspec). Still used when SPM is off, or when Flutter falls back for plugins without SPM support.
+- **SPM:** Uses [`ios/crisp_chat/Package.swift`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat/Package.swift) and sources in `ios/crisp_chat/Sources/crisp_chat/`.
+
+**Enabling SPM**
+
+- Flutter **3.24+:** `flutter config --enable-swift-package-manager`, then `flutter run` / `flutter build ios` (Flutter migrates the Xcode project automatically).
+- Flutter **3.44+:** SPM is the **default** for iOS/macOS. Flutter uses SPM for plugins that ship a `Package.swift`; others fall back to CocoaPods with a warning.
+- Disable per project: `flutter: config: enable-swift-package-manager: false` in `pubspec.yaml`.
+
+**Video calls with SPM**
+
+Set `CRISP_CHAT_WEBRTC=true` before building (or in the Xcode scheme). See [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
+
+**Flutter framework dependency**
+
+Flutter injects the Flutter framework when building through the CLI (pre-action script + local package overrides). Plugin `Package.swift` files do not hardcode a FlutterFramework path — same pattern as first-party Flutter plugins.
+
+If SPM resolution fails, try `flutter clean`, delete `ios/Flutter/ephemeral`, and rebuild. See [Flutter SPM docs for app developers](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers).
+
+### Target Integrity: Firebase requires iOS 15.0 but target supports 13.0
+
+**Symptom:** Xcode error when using SPM:
+
+```text
+The package product 'firebase-core' requires minimum platform version 15.0 for the iOS platform, but this target supports 13.0
+```
+
+**Cause:** `firebase_core` / `firebase_messaging` (and recent Firebase iOS SDKs) require **iOS 15.0+** when resolved via Swift Package Manager. The app or Xcode project may still declare **13.0** (the minimum for Crisp alone).
+
+**Fix:**
+
+1. Set **iOS Deployment Target** to **15.0** or higher in Xcode (**Runner** target → **General** → **Minimum Deployments**).
+2. Update `ios/Podfile`: `platform :ios, '15.0'`
+3. In `ios/Runner.xcodeproj/project.pbxproj`, set `IPHONEOS_DEPLOYMENT_TARGET = 15.0` for Debug, Release, and Profile.
+4. Regenerate config: `flutter clean && flutter pub get && cd ios && pod install && cd ..`
+
+`crisp_chat` itself still supports iOS **13.0+** when you do not use Firebase. If your app includes Firebase push notifications, use **iOS 15.0+** as the app minimum.
 
 ## Web
 

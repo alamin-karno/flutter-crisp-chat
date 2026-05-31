@@ -91,4 +91,15 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     throw UnimplementedError(
         'setOnNotificationTappedCallback() has not been implemented.');
   }
+
+  /// Returns whether video/audio calls are supported on this build.
+  ///
+  /// On iOS, `true` only when compiled with the `CrispWebRTC` SDK variant
+  /// (CocoaPods: `$CrispChatWebRTC = true` in the Podfile; SPM: `CRISP_CHAT_WEBRTC=true`
+  /// before build). On Android, always `false` until Crisp ships native video support.
+  /// On Web and desktop, `true` when the web chatbox handles calls via browser WebRTC.
+  Future<bool> isVideoCallsSupported() {
+    throw UnimplementedError(
+        'isVideoCallsSupported() has not been implemented.');
+  }
 }

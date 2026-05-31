@@ -1,6 +1,10 @@
 import Flutter
 import UIKit
+#if CRISP_WEBRTC
+import CrispWebRTC
+#else
 import Crisp
+#endif
 
 /// [FlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
@@ -181,6 +185,13 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
 
         case "openChatboxFromNotification":
             result(false)
+
+        case "isVideoCallsSupported":
+            #if CRISP_WEBRTC
+            result(true)
+            #else
+            result(false)
+            #endif
 
         default:
             result(FlutterMethodNotImplemented)

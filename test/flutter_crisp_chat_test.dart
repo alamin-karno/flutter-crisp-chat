@@ -71,6 +71,10 @@ class MockFlutterCrispChatPlatform
   void setOnNotificationTappedCallback(VoidCallback? callback) {
     // No-op for testing
   }
+
+  bool mockVideoCallsSupported = false;
+  @override
+  Future<bool> isVideoCallsSupported() async => mockVideoCallsSupported;
 }
 
 void main() {

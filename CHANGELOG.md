@@ -5,6 +5,8 @@ Added
 * **Web** support via the official Crisp Web Chat SDK (`$crisp` / `client.crisp.chat`).
 * **Desktop** support for **macOS**, **Windows**, and **Linux** using `desktop_webview_window`, with browser fallback when WebView is unavailable.
 * [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms) documentation and platform API matrix.
+* Optional **iOS video/audio calls** via `$CrispChatWebRTC = true` in `ios/Podfile` (CocoaPods: `Crisp/CrispWebRTC`) or `CRISP_CHAT_WEBRTC=true` when building with Swift Package Manager (SPM).
+* `FlutterCrispChat.isVideoCallsSupported()` to detect whether the current build supports Crisp calls (iOS WebRTC variant, or Web/desktop).
 
 Changed
 ---

@@ -13,33 +13,45 @@ head:
 
 `crisp_chat` supports the following Flutter targets:
 
-| Platform | Integration | Notes |
-|----------|-------------|--------|
-| **Android** | Official Crisp Android SDK (method channel) | Push notifications, native chat UI |
-| **iOS** | Official Crisp iOS SDK (method channel) | Push notifications, modal presentation styles |
-| **Web** | Official Crisp Web Chat SDK (`$crisp` via JS) | Same Dart API; no mobile push helpers |
-| **macOS** | Crisp Web SDK in a desktop WebView window | Requires [WebKit](https://developer.apple.com/documentation/webkit) (system) |
-| **Windows** | WebView2 window, or browser fallback | Install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) for embedded chat |
-| **Linux** | WebKitGTK WebView window, or browser fallback | Install `libwebkit2gtk-4.1-dev` (or 4.0) for embedded chat |
+| Platform    | Integration                                   | Notes                                                                                                  |
+|-------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| **Android** | Official Crisp Android SDK (method channel)   | Push notifications, native chat UI                                                                     |
+| **iOS**     | Official Crisp iOS SDK (method channel)       | Push notifications, modal presentation styles                                                          |
+| **Web**     | Official Crisp Web Chat SDK (`$crisp` via JS) | Same Dart API; no mobile push helpers                                                                  |
+| **macOS**   | Crisp Web SDK in a desktop WebView window     | Requires [WebKit](https://developer.apple.com/documentation/webkit) (system)                           |
+| **Windows** | WebView2 window, or browser fallback          | Install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) for embedded chat |
+| **Linux**   | WebKitGTK WebView window, or browser fallback | Install `libwebkit2gtk-4.1-dev` (or 4.0) for embedded chat                                             |
 
 ## API availability by platform
 
-| API | Mobile | Web | Desktop |
-|-----|--------|-----|---------|
-| `openCrispChat` | Yes | Yes | Yes (WebView or browser) |
-| `resetCrispChatSession` | Yes | Yes | Yes (WebView only) |
-| `setSessionString` / `setSessionInt` | Yes | Yes | Yes (WebView only) |
-| `setSessionSegments` | Yes | Yes | Yes (WebView only) |
-| `pushSessionEvent` | Yes | Yes | Yes (WebView only) |
-| `getSessionIdentifier` | Yes | Yes | Yes (WebView only) |
-| `getUnreadMessageCount` | Yes | Yes* | Yes* |
-| `markMessagesAsRead` | Yes | Yes* | Yes* |
-| `openChatboxFromNotification` | Android (primarily) | No-op (`false`) | No-op (`false`) |
-| `setOnNotificationTappedCallback` | Android | No-op | No-op |
-| `CrispConfig.modalPresentationStyle` | iOS only | Ignored | Ignored |
-| `CrispConfig.enableNotifications` | Android/iOS native | Ignored | Ignored |
+| API                                  | Mobile                    | Web             | Desktop                  |
+|--------------------------------------|---------------------------|-----------------|--------------------------|
+| `openCrispChat`                      | Yes                       | Yes             | Yes (WebView or browser) |
+| `resetCrispChatSession`              | Yes                       | Yes             | Yes (WebView only)       |
+| `setSessionString` / `setSessionInt` | Yes                       | Yes             | Yes (WebView only)       |
+| `setSessionSegments`                 | Yes                       | Yes             | Yes (WebView only)       |
+| `pushSessionEvent`                   | Yes                       | Yes             | Yes (WebView only)       |
+| `getSessionIdentifier`               | Yes                       | Yes             | Yes (WebView only)       |
+| `getUnreadMessageCount`              | Yes                       | Yes*            | Yes*                     |
+| `markMessagesAsRead`                 | Yes                       | Yes*            | Yes*                     |
+| `openChatboxFromNotification`        | Android (primarily)       | No-op (`false`) | No-op (`false`)          |
+| `setOnNotificationTappedCallback`    | Android                   | No-op           | No-op                    |
+| `CrispConfig.modalPresentationStyle` | iOS only                  | Ignored         | Ignored                  |
+| `CrispConfig.enableNotifications`    | Android/iOS native        | Ignored         | Ignored                  |
+| `isVideoCallsSupported()`            | iOS (opt-in WebRTC build) | No (upstream)   | Yes (web widget)         |
 
 \* REST helpers need a session id from `getSessionIdentifier()`. Do not embed Crisp REST API secrets in client-side web builds; use a backend proxy in production.
+
+## Video and audio calls
+
+| Platform    | Native video/audio calls | How to enable                                                                                                                                                                                              |
+|-------------|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **iOS**     | Yes (opt-in)             | **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`. **SPM:** `CRISP_CHAT_WEBRTC=true flutter build ios`. Adds ~10 MB. See [Platform setup — Enable video calls](/getting_started/platform_setup#enable-video-calls-ios-only). |
+| **Android** | Not yet                  | [Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181) — no WebRTC variant exists today.                                                                                       |
+| **Web**     | Via web chatbox          | Enable in Crisp dashboard; browser WebRTC handles calls.                                                                                                                                                   |
+| **Desktop** | Via web chatbox          | Same as Web when using embedded WebView.                                                                                                                                                                   |
+
+Use `FlutterCrispChat.isVideoCallsSupported()` to check whether the **current build** supports calls (iOS WebRTC variant, or Web/desktop).
 
 ## Desktop setup
 

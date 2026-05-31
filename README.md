@@ -31,12 +31,12 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 
 ## Platform overview
 
-| Platform                    | How chat opens                  | Extra setup                                                              |
-|-----------------------------|---------------------------------|--------------------------------------------------------------------------|
-| **Android**                 | Native Crisp SDK                | Internet permission, `compileSdk` / `minSdk`                             |
-| **iOS**                     | Native Crisp SDK                | Privacy keys in `Info.plist`                                             |
-| **Web**                     | Crisp Web Chat SDK (`$crisp`)   | Valid `websiteID`; optional CSP for `client.crisp.chat`                  |
-| **macOS / Windows / Linux** | Web SDK in WebView (or browser) | Desktop `main()` helper; macOS network entitlement; WebView2 / WebKitGTK |
+| Platform                    | How chat opens                  | Extra setup                                                               |
+|-----------------------------|---------------------------------|---------------------------------------------------------------------------|
+| **Android**                 | Native Crisp SDK                | Internet permission, `compileSdk` / `minSdk`                              |
+| **iOS**                     | Native Crisp SDK                | Privacy keys in `Info.plist`; optional video via `$CrispChatWebRTC` (CocoaPods) or `CRISP_CHAT_WEBRTC` (SPM) |
+| **Web**                     | Crisp Web Chat SDK (`$crisp`)   | Valid `websiteID`; optional CSP for `client.crisp.chat`                   |
+| **macOS / Windows / Linux** | Web SDK in WebView (or browser) | Desktop `main()` helper; macOS network entitlement; WebView2 / WebKitGTK  |
 
 Full API differences: [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
 
@@ -91,6 +91,8 @@ If editing `Info.plist` as text, add:
 <key>NSMicrophoneUsageDescription</key>
 <string>your usage description here</string>
 ```
+
+**Optional — video/audio calls (iOS only):** **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`, then `pod install`. **SPM (Flutter 3.44+ default):** `CRISP_CHAT_WEBRTC=true flutter build ios`. Adds ~10 MB. Android native video is not supported yet by Crisp. See [Platform setup — Enable video calls](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
 
 #### Android
 

@@ -25,6 +25,8 @@ All notable changes to the `crisp_chat` package are documented here. For the ful
 * Web support (Crisp Web Chat SDK).
 * Desktop support for macOS, Windows, and Linux (`desktop_webview_window` + browser fallback).
 * [Supported platforms](/getting_started/supported_platforms) guide.
+* Optional **iOS video/audio calls** via `$CrispChatWebRTC` (CocoaPods) or `CRISP_CHAT_WEBRTC` env var (SPM); `Package.swift` selects `CrispWebRTC` automatically.
+* `FlutterCrispChat.isVideoCallsSupported()` to detect whether the current build supports Crisp calls.
 
 ### Changed
 * Minimum Dart SDK 3.5.0 and Flutter 3.24.0.
