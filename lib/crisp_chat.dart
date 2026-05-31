@@ -181,10 +181,26 @@ class FlutterCrispChat {
     );
   }
 
+  static Map<String, String> _crispApiHeaders({
+    required String identifier,
+    required String key,
+    bool jsonBody = false,
+  }) {
+    return {
+      'Authorization': 'Basic ${base64Encode(utf8.encode('$identifier:$key'))}',
+      'X-Crisp-Tier': 'plugin',
+      if (jsonBody) 'Content-Type': 'application/json',
+    };
+  }
+
   /// Fetches the unread message count for the current visitor session.
   ///
   /// This method makes a REST API call to Crisp to get conversation details,
   /// including the number of unread messages for the visitor.
+  ///
+  /// On iOS, the native Crisp SDK may not send read receipts to the server
+  /// when the visitor reads messages. In that case, [unread.visitor](https://docs.crisp.chat/references/rest-api/v1/#get-a-conversation)
+  /// stays non-zero until you call [markMessagesAsRead].
   ///
   /// {@category General}
   /// @param websiteId Your Crisp Website ID.
@@ -210,15 +226,11 @@ class FlutterCrispChat {
     final uri = Uri.parse(
       'https://api.crisp.chat/v1/website/$websiteId/conversation/$sessionId',
     );
-    final credentials = base64Encode(utf8.encode('$identifier:$key'));
 
     try {
       final response = await http.get(
         uri,
-        headers: {
-          'Authorization': 'Basic $credentials',
-          'X-Crisp-Tier': 'plugin',
-        },
+        headers: _crispApiHeaders(identifier: identifier, key: key),
       );
 
       if (kDebugMode) {
@@ -246,6 +258,75 @@ class FlutterCrispChat {
       );
 
       return null;
+    }
+  }
+
+  /// Marks all operator messages as read for the current visitor session.
+  ///
+  /// Calls the Crisp REST API [Mark Messages As Read In Conversation](https://docs.crisp.chat/references/rest-api/v1/#mark-messages-as-read-in-conversation)
+  /// endpoint. Use this as a workaround on iOS when the native SDK does not
+  /// reset [unread.visitor](https://docs.crisp.chat/references/rest-api/v1/#get-a-conversation)
+  /// after the visitor reads messages in chat.
+  ///
+  /// {@category General}
+  /// @param websiteId Your Crisp Website ID.
+  /// @param identifier Your Crisp REST API Identifier.
+  /// @param key Your Crisp REST API Key.
+  /// @return `true` if the request was accepted (HTTP 202), `false` on API
+  ///         error, or `null` if no active session exists.
+  static Future<bool?> markMessagesAsRead({
+    required String websiteId,
+    required String identifier,
+    required String key,
+  }) async {
+    final sessionId = await getSessionIdentifier();
+    if (sessionId == null) {
+      log(
+        'No active session, cannot mark messages as read.',
+        name: 'FlutterCrispChat',
+      );
+      return null;
+    }
+
+    final uri = Uri.parse(
+      'https://api.crisp.chat/v1/website/$websiteId/conversation/$sessionId/read',
+    );
+
+    try {
+      final response = await http.patch(
+        uri,
+        headers: _crispApiHeaders(
+          identifier: identifier,
+          key: key,
+          jsonBody: true,
+        ),
+        body: jsonEncode({
+          'from': 'operator',
+          'origin': 'chat',
+        }),
+      );
+
+      if (kDebugMode) {
+        log('URL: $uri - STATUS: ${response.statusCode}', name: 'API');
+        log('BODY: ${response.body}', name: 'API');
+      }
+
+      if (response.statusCode == 202) {
+        return true;
+      }
+
+      log(
+        'Failed to mark messages as read. Status: ${response.statusCode}, Body: ${response.body}',
+        name: 'FlutterCrispChat',
+      );
+      return false;
+    } catch (e, stackTrace) {
+      log(
+        'An error occurred while marking messages as read: $e',
+        stackTrace: stackTrace,
+        name: 'FlutterCrispChat',
+      );
+      return false;
     }
   }
 

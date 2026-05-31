@@ -108,6 +108,24 @@ If the app crashes when the user tries to take a photo or access the camera in c
 
 If `resetCrispChatSession` crashes on iOS, ensure you're using version `2.0.9` or later, which fixed this issue ([#20](https://github.com/alamin-karno/flutter-crisp-chat/issues/20)).
 
+### iOS unread count not clearing
+
+After opening chat, reading all operator messages, and closing the UI, `getUnreadMessageCount()` may still return a non-zero value. A direct `GET /v1/website/{website_id}/conversation/{session_id}` shows the same stale `unread.visitor` — this is a **Crisp iOS SDK limitation** (read receipts not synced to the server).
+
+**Workaround:**
+
+```dart
+await FlutterCrispChat.markMessagesAsRead(
+  websiteId: websiteId,
+  identifier: identifier,
+  key: key,
+);
+```
+
+**Verify:** Run `./scripts/verify_unread_read_receipts.sh full` with your REST credentials. If manual `PATCH /read` clears the count but reading in chat does not, file an issue using [docs/crisp-sdk-ios-unread-issue.md](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/docs/crisp-sdk-ios-unread-issue.md).
+
+Compare with Android using the same REST GET steps — if Android clears `unread.visitor` after reading but iOS does not, the bug is iOS-specific.
+
 ### CocoaPods vs Swift Package Manager
 
 The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS dependency management. If you encounter issues with one, try the other:

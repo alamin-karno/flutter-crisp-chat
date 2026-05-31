@@ -39,9 +39,9 @@ Opens the native Crisp chat UI.
 static Future<void> openCrispChat({required CrispConfig config})
 ```
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `config` | `CrispConfig` | Yes | Configuration object with website ID, user details, etc. |
+| Parameter | Type          | Required | Description                                              |
+|-----------|---------------|----------|----------------------------------------------------------|
+| `config`  | `CrispConfig` | Yes      | Configuration object with website ID, user details, etc. |
 
 **Throws:**
 - `ArgumentError` if `config.user.email` is provided but invalid
@@ -71,10 +71,10 @@ Sets a custom string value in the current session.
 static void setSessionString({required String key, required String value})
 ```
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `key` | `String` | Yes | Data key (must not be empty) |
-| `value` | `String` | Yes | String value (must not be empty) |
+| Parameter | Type     | Required | Description                      |
+|-----------|----------|----------|----------------------------------|
+| `key`     | `String` | Yes      | Data key (must not be empty)     |
+| `value`   | `String` | Yes      | String value (must not be empty) |
 
 **Throws:** `ArgumentError` if `key` or `value` is empty.
 
@@ -88,10 +88,10 @@ Sets a custom integer value in the current session.
 static void setSessionInt({required String key, required int value})
 ```
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `key` | `String` | Yes | Data key (must not be empty) |
-| `value` | `int` | Yes | Integer value |
+| Parameter | Type     | Required | Description                  |
+|-----------|----------|----------|------------------------------|
+| `key`     | `String` | Yes      | Data key (must not be empty) |
+| `value`   | `int`    | Yes      | Integer value                |
 
 **Throws:** `ArgumentError` if `key` is empty.
 
@@ -120,10 +120,10 @@ static void setSessionSegments({
 })
 ```
 
-| Parameter | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `segments` | `List<String>` | Yes | — | Segment strings |
-| `overwrite` | `bool` | No | `false` | Replace existing segments if `true` |
+| Parameter   | Type           | Required | Default | Description                         |
+|-------------|----------------|----------|---------|-------------------------------------|
+| `segments`  | `List<String>` | Yes      | —       | Segment strings                     |
+| `overwrite` | `bool`         | No       | `false` | Replace existing segments if `true` |
 
 ---
 
@@ -138,10 +138,10 @@ static Future<void> pushSessionEvent({
 })
 ```
 
-| Parameter | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `name` | `String` | Yes | — | Event name |
-| `color` | `SessionEventColor` | No | `blue` | Event color in the dashboard |
+| Parameter | Type                | Required | Default | Description                  |
+|-----------|---------------------|----------|---------|------------------------------|
+| `name`    | `String`            | Yes      | —       | Event name                   |
+| `color`   | `SessionEventColor` | No       | `blue`  | Event color in the dashboard |
 
 ---
 
@@ -157,13 +157,39 @@ static Future<int?> getUnreadMessageCount({
 })
 ```
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `websiteId` | `String` | Yes | Your Crisp Website ID |
-| `identifier` | `String` | Yes | Crisp REST API Identifier |
-| `key` | `String` | Yes | Crisp REST API Key |
+| Parameter    | Type     | Required | Description               |
+|--------------|----------|----------|---------------------------|
+| `websiteId`  | `String` | Yes      | Your Crisp Website ID     |
+| `identifier` | `String` | Yes      | Crisp REST API Identifier |
+| `key`        | `String` | Yes      | Crisp REST API Key        |
 
 **Returns:** Unread count as `int`, or `null` if no session or error.
+
+::: warning iOS
+On iOS, `unread.visitor` may not reset after reading chat in the native SDK. Use [markMessagesAsRead](#markmessagesasread) as a workaround.
+:::
+
+---
+
+### markMessagesAsRead
+
+Marks all operator messages as read via the Crisp REST API. Workaround for iOS when the native SDK does not sync read receipts.
+
+```dart
+static Future<bool?> markMessagesAsRead({
+  required String websiteId,
+  required String identifier,
+  required String key,
+})
+```
+
+| Parameter    | Type     | Required | Description               |
+|--------------|----------|----------|---------------------------|
+| `websiteId`  | `String` | Yes      | Your Crisp Website ID     |
+| `identifier` | `String` | Yes      | Crisp REST API Identifier |
+| `key`        | `String` | Yes      | Crisp REST API Key        |
+
+**Returns:** `true` if accepted (HTTP 202), `false` on error, `null` if no session.
 
 ---
 
@@ -187,9 +213,9 @@ Sets a callback for when a Crisp notification is tapped while the app is in the 
 static void setOnNotificationTappedCallback(VoidCallback? callback)
 ```
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `callback` | `VoidCallback?` | Yes | Callback function, or `null` to remove |
+| Parameter  | Type            | Required | Description                            |
+|------------|-----------------|----------|----------------------------------------|
+| `callback` | `VoidCallback?` | Yes      | Callback function, or `null` to remove |
 
 **Note:** Requires `import 'dart:ui';` for `VoidCallback`. Only fires on Android.
 

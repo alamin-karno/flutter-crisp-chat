@@ -533,7 +533,11 @@ final formSheetConfig = CrispConfig(
 
 **Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior.
 
-For every request that you make to `getUnreadMessageCount`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`. 
+For every request that you make to `getUnreadMessageCount` or `markMessagesAsRead`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`.
+
+::: tip iOS unread count
+On iOS, `unread.visitor` may not reset after reading chat in the native SDK. Call `FlutterCrispChat.markMessagesAsRead()` after the visitor closes chat. See [docs/unread-count-verification.md](docs/unread-count-verification.md).
+:::
 
 **Obtaining `Identifier` & `Key`:**
 

@@ -103,6 +103,14 @@ Possible causes:
 - Network error
 - The `websiteId` doesn't match your Crisp workspace
 
+### `getUnreadMessageCount` stays non-zero on iOS after reading chat
+
+On iOS, the Crisp native SDK may not send read receipts to the server when the visitor reads operator messages. The REST field `unread.visitor` reflects **server-side** state — if it stays non-zero after closing chat, the iOS SDK did not update it.
+
+**Workaround:** Call `FlutterCrispChat.markMessagesAsRead()` after the visitor closes chat, then re-fetch the count. See [Unread Messages — iOS limitation](/core_feature/unread_messages#ios-limitation-unread-count-not-clearing-after-reading-chat).
+
+**Report upstream:** Use [docs/crisp-sdk-ios-unread-issue.md](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/docs/crisp-sdk-ios-unread-issue.md) to file an issue on [crisp-im/crisp-sdk-ios](https://github.com/crisp-im/crisp-sdk-ios).
+
 ### `ArgumentError` when opening chat
 
 The plugin validates `email` and `company URL` formats. Ensure:

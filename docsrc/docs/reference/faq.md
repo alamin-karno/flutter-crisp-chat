@@ -90,6 +90,10 @@ It returns `null` if:
 - The API credentials are invalid
 - A network error occurred
 
+### Why does `getUnreadMessageCount` stay non-zero on iOS after reading chat?
+
+The Crisp iOS SDK may not send read receipts to the server. Call `markMessagesAsRead()` after the visitor closes chat. See [Unread Messages — iOS limitation](/core_feature/unread_messages#ios-limitation-unread-count-not-clearing-after-reading-chat).
+
 ## Sessions
 
 ### Why does `getSessionIdentifier` return null?
