@@ -22,18 +22,25 @@ All notable changes to the `crisp_chat` package are documented here. For the ful
 ## 2.5.0
 
 ### Added
-* Web support (Crisp Web Chat SDK).
+* Web support (Crisp Web Chat SDK via `client.crisp.chat`).
 * Desktop support for macOS, Windows, and Linux (`desktop_webview_window` + browser fallback).
-* [Supported platforms](/getting_started/supported_platforms) guide.
+* `FlutterCrispChat.markMessagesAsRead()` — REST `PATCH` to clear `unread.visitor` (iOS read-receipt workaround; also on Android/Web/desktop with REST credentials).
+* `FlutterCrispChat.isVideoCallsSupported()` — check whether the current build supports Crisp calls (iOS WebRTC variant, or Web/desktop).
 * Optional **iOS video/audio calls** (build-time opt-in):
   * **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile` (`Crisp/CrispWebRTC`, ~10 MB larger).
   * **SPM:** `CRISP_CHAT_WEBRTC=true` before build; [`Package.swift`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat/Package.swift) selects `CrispWebRTC` automatically.
   * Android native video not supported yet ([Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181)).
-* `FlutterCrispChat.isVideoCallsSupported()` — check whether the current build supports Crisp calls (iOS WebRTC variant, or Web/desktop).
+* Documentation: [Supported platforms](/getting_started/supported_platforms) guide; Crisp dashboard **domain lock** guidance ([#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148)); iOS unread-count limitation (troubleshooting and [unread messages](/core_feature/unread_messages)).
 
 ### Changed
 * Minimum Dart SDK 3.5.0 and Flutter 3.24.0.
-* Notification helpers are no-ops on Web/desktop.
+* `openChatboxFromNotification` and `setOnNotificationTappedCallback` are no-ops on Web/desktop.
+* Example app extended with **linux**, **macos**, and **windows** runners.
+* GitHub Actions **CI** (analyze + test on Ubuntu).
+
+### Breaking
+* Apps on **Flutter < 3.24** or **Dart < 3.5** must stay on **2.4.8** for mobile-only usage.
+* New dependencies: `desktop_webview_window`, `http`, `url_launcher`, `web`.
 
 ## 2.4.8
 
