@@ -106,21 +106,11 @@ The Crisp iOS SDK requires iOS 13.0+. Ensure your `ios/Podfile` has:
 platform :ios, '13.0'
 ```
 
-### 3. Enable video calls (iOS only)
+### Enable video calls (iOS only) {#enable-video-calls-ios-only}
 
-Video and audio calls require the **`Crisp/CrispWebRTC`** CocoaPods subspec instead of the default **`Crisp/Crisp`** library. Both expose the same Swift API (`import CrispWebRTC` vs `import Crisp`); the WebRTC variant adds roughly **10 MB** to your iOS binary.
+Video and audio calls require the **`Crisp/CrispWebRTC`** CocoaPods subspec (or SPM product **`CrispWebRTC`**) instead of the default **`Crisp/Crisp`** / **`Crisp`** library. Both expose the same Swift API (`import CrispWebRTC` vs `import Crisp`); the WebRTC variant adds roughly **10 MB** to your iOS binary.
 
-This is a **build-time** choice — there is no Dart runtime flag. Add the following to your `ios/Podfile` **before** `flutter_install_all_ios_pods`:
-
-```ruby
-$CrispChatWebRTC = true
-```
-
-Then reinstall pods:
-
-```bash
-cd ios && rm -f Podfile.lock && pod install --repo-update && cd ..
-```
+This is a **build-time** choice — there is no `CrispConfig` runtime flag. Check support with `FlutterCrispChat.isVideoCallsSupported()`.
 
 When enabled, update the microphone usage description in `ios/Runner/Info.plist` to cover calls (camera and photo keys from step 1 are still required):
 
@@ -128,8 +118,6 @@ When enabled, update the microphone usage description in `ios/Runner/Info.plist`
 <key>NSMicrophoneUsageDescription</key>
 <string>Used for video and audio calls in chat</string>
 ```
-
-Check support at runtime with `FlutterCrispChat.isVideoCallsSupported()` — it returns `true` only on iOS builds compiled with video support enabled.
 
 #### CocoaPods (Podfile)
 

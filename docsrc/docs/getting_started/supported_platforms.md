@@ -2,7 +2,7 @@
 head:
   - - meta
     - name: description
-      content: Platform support matrix for flutter-crisp-chat — Android, iOS, Web, macOS, Windows, and Linux.
+      content: Platform support matrix for flutter-crisp-chat — Android, iOS, Web, macOS, Windows, Linux, and optional iOS video calls.
 
   - - meta
     - name: keywords
@@ -13,14 +13,14 @@ head:
 
 `crisp_chat` supports the following Flutter targets:
 
-| Platform    | Integration                                   | Notes                                                                                                  |
-|-------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------|
-| **Android** | Official Crisp Android SDK (method channel)   | Push notifications, native chat UI                                                                     |
-| **iOS**     | Official Crisp iOS SDK (method channel)       | Push notifications, modal presentation styles                                                          |
-| **Web**     | Official Crisp Web Chat SDK (`$crisp` via JS) | Same Dart API; no mobile push helpers                                                                  |
-| **macOS**   | Crisp Web SDK in a desktop WebView window     | Requires [WebKit](https://developer.apple.com/documentation/webkit) (system)                           |
-| **Windows** | WebView2 window, or browser fallback          | Install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) for embedded chat |
-| **Linux**   | WebKitGTK WebView window, or browser fallback | Install `libwebkit2gtk-4.1-dev` (or 4.0) for embedded chat                                             |
+| Platform    | Integration                                   | Notes                                                                                                                                                  |
+|-------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Android** | Official Crisp Android SDK (method channel)   | Push notifications, native chat UI                                                                                                                     |
+| **iOS**     | Official Crisp iOS SDK (method channel)       | Push notifications, modal presentation styles; optional video via `CrispWebRTC` ([setup](/getting_started/platform_setup#enable-video-calls-ios-only)) |
+| **Web**     | Official Crisp Web Chat SDK (`$crisp` via JS) | Same Dart API; no mobile push helpers                                                                                                                  |
+| **macOS**   | Crisp Web SDK in a desktop WebView window     | Requires [WebKit](https://developer.apple.com/documentation/webkit) (system)                                                                           |
+| **Windows** | WebView2 window, or browser fallback          | Install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) for embedded chat                                                 |
+| **Linux**   | WebKitGTK WebView window, or browser fallback | Install `libwebkit2gtk-4.1-dev` (or 4.0) for embedded chat                                                                                             |
 
 ## API availability by platform
 

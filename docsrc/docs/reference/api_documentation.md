@@ -23,16 +23,17 @@ Complete reference for all public methods in the `FlutterCrispChat` class.
 
 ## Platform support
 
-| API                                                         | Android / iOS       | Web         | Desktop            |
-|-------------------------------------------------------------|---------------------|-------------|--------------------|
-| `openCrispChat`                                             | Native SDK UI       | Web chatbox | WebView or browser |
-| `resetCrispChatSession`                                     | Yes                 | Yes         | WebView only       |
-| `setSessionString` / `setSessionInt` / `setSessionSegments` | Yes                 | Yes         | WebView only       |
-| `pushSessionEvent`                                          | Yes                 | Yes         | WebView only       |
-| `getSessionIdentifier`                                      | Yes                 | Yes         | WebView only       |
-| `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*        | Yes*               |
-| `openChatboxFromNotification`                               | Android (primarily) | No-op       | No-op              |
-| `setOnNotificationTappedCallback`                           | Android             | No-op       | No-op              |
+| API                                                         | Android / iOS       | Web           | Desktop            |
+|-------------------------------------------------------------|---------------------|---------------|--------------------|
+| `openCrispChat`                                             | Native SDK UI       | Web chatbox   | WebView or browser |
+| `resetCrispChatSession`                                     | Yes                 | Yes           | WebView only       |
+| `setSessionString` / `setSessionInt` / `setSessionSegments` | Yes                 | Yes           | WebView only       |
+| `pushSessionEvent`                                          | Yes                 | Yes           | WebView only       |
+| `getSessionIdentifier`                                      | Yes                 | Yes           | WebView only       |
+| `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*          | Yes*               |
+| `openChatboxFromNotification`                               | Android (primarily) | No-op         | No-op              |
+| `setOnNotificationTappedCallback`                           | Android             | No-op         | No-op              |
+| `isVideoCallsSupported`                                     | iOS (opt-in WebRTC) | No (upstream) | Yes (web widget)   |
 
 \* Prefer a backend proxy for REST credentials on Web. See [Supported Platforms](/getting_started/supported_platforms).
 
@@ -233,6 +234,32 @@ static void setOnNotificationTappedCallback(VoidCallback? callback)
 | `callback` | `VoidCallback?` | Yes      | Callback function, or `null` to remove |
 
 **Note:** Requires `import 'dart:ui';` for `VoidCallback`. Only fires on Android.
+
+---
+
+### isVideoCallsSupported
+
+Returns whether the **current build** supports Crisp video/audio calls.
+
+```dart
+static Future<bool> isVideoCallsSupported()
+```
+
+| Platform          | Returns `true` when                                                                                       |
+|-------------------|-----------------------------------------------------------------------------------------------------------|
+| **iOS**           | App was built with video enabled: `$CrispChatWebRTC = true` (CocoaPods) or `CRISP_CHAT_WEBRTC=true` (SPM) |
+| **Android**       | Never (native video not supported yet by Crisp)                                                           |
+| **Web / desktop** | Web chatbox handles calls via browser WebRTC when enabled in your Crisp dashboard                         |
+
+**Important:** This is a **build-time** capability check, not a runtime toggle. There is no `CrispConfig` flag for video. Setup: [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
+
+**Example:**
+
+```dart
+if (await FlutterCrispChat.isVideoCallsSupported()) {
+  // iOS WebRTC build, or Web/desktop
+}
+```
 
 ---
 

@@ -41,7 +41,11 @@ features:
 
   - icon: "\U0001F4F1"
     title: Cross-Platform
-    details: Android and iOS use the official native Crisp SDKs. Web and desktop (macOS, Windows, Linux) use the official Crisp Web Chat SDK — one Dart API across all targets.
+    details: Android and iOS use the official native Crisp SDKs. Web and desktop use the Crisp Web Chat SDK. Optional iOS video/audio calls via build-time CrispWebRTC SDK opt-in.
+
+  - icon: "\U0001F3A5"
+    title: Video Calls (iOS)
+    details: Opt-in Crisp video and audio calls on iOS via CrispWebRTC (~10 MB). Check support with isVideoCallsSupported(). Web and desktop use the web chatbox.
 
   - icon: "\U0001F514"
     title: Push Notifications
