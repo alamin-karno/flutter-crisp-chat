@@ -178,3 +178,7 @@ All notable changes to the `crisp_chat` package are documented here. For the ful
 
 ## 0.0.1
 - Initial release — Crisp Chat for native Android & iOS platforms
+
+## Next Steps
+
+- [Common Issues](/troubleshooting/common_issues) — Troubleshooting guide

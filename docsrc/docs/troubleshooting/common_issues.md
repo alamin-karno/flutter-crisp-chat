@@ -163,3 +163,8 @@ If domain lock is already disabled, also check:
 - Check [Platform-Specific Issues](/troubleshooting/platform_specific)
 - [Open an issue on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/issues)
 - See the [Crisp Help Center](https://help.crisp.chat/en/) for Crisp-specific questions
+
+## Next Steps
+
+- [Platform-Specific](/troubleshooting/platform_specific) — Android, iOS, Web, and desktop troubleshooting
+- [Contributing](/community/contributing) — How to contribute to the project

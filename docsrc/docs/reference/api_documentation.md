@@ -325,3 +325,9 @@ enum SessionEventColor {
   black, blue, brown, green, grey,
   orange, pink, purple, red, yellow,
 }
+```
+
+## Next Steps
+
+- [Full Example](/reference/examples) — Working example app code
+- [FAQ](/reference/faq) — Frequently asked questions

@@ -179,3 +179,8 @@ Sets a callback that fires when a Crisp notification is tapped while the app is 
 3. The plugin's `NewIntentListener` detects the new intent and invokes `onCrispNotificationTapped` on the Flutter method channel
 4. Your Dart callback fires, and you call `openChatboxFromNotification()`
 5. The plugin calls `CrispNotificationClient.openChatbox(activity, intent)` to open the chat
+
+## Next Steps
+
+- [API Documentation](/reference/api_documentation) — Complete method documentation
+- [Full Example](/reference/examples) — Working example app code

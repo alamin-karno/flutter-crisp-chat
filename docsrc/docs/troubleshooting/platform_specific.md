@@ -231,3 +231,8 @@ When using `desktop_webview_window`, add the title-bar helper to your app `main`
 - [Crisp Help Center](https://help.crisp.chat/en/)
 - [Crisp Android SDK docs](https://docs.crisp.chat/guides/chatbox-sdks/android-sdk/)
 - [Crisp iOS SDK docs](https://docs.crisp.chat/guides/chatbox-sdks/ios-sdk/)
+
+## Next Steps
+
+- [Contributing](/community/contributing) — How to contribute to the project
+- [Author & Maintainer](/community/author) — About the maintainer

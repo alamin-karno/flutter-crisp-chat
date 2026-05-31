@@ -71,3 +71,8 @@ next:
 - [GitHub Repository](https://github.com/alamin-karno/flutter-crisp-chat)
 - [Issue Tracker](https://github.com/alamin-karno/flutter-crisp-chat/issues)
 - [Changelog](/reference/changelog)
+
+## Next Steps
+
+- [Installation](/getting_started/install) — Add the package to your project
+- [Platform Setup](/getting_started/platform_setup) — Android, iOS, Web, and desktop configuration

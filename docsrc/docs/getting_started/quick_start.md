@@ -9,8 +9,8 @@ head:
       content: "flutter crisp chat quick start, crisp chat hello world, flutter crisp chat example, open crisp chat flutter"
 
 prev:
-  text: 'Platform Setup'
-  link: '/getting_started/platform_setup'
+  text: 'Supported Platforms'
+  link: '/getting_started/supported_platforms'
 
 next:
   text: 'Configuration'
@@ -95,12 +95,9 @@ Use the same `openCrispChat` call; no separate Web API. See [Supported Platforms
 `enableNotifications` and `modalPresentationStyle` apply to Android/iOS only. On Web and desktop they are ignored.
 :::
 
-## What's Next?
+## Next Steps
 
 Now that you have a basic chat working, explore the full capabilities:
 
 - [Configuration](/core_feature/configuration) — Customize `CrispConfig` with user details, tokens, and segments
-- [User & Company](/core_feature/user_and_company) — Identify users with email, name, phone, avatar, and company info
-- [Session Management](/core_feature/session_management) — Set custom session data, segments, events, and reset sessions
-- [Push Notifications](/notifications/firebase_setup) — Enable FCM and APNs notifications
-- [Unread Messages](/core_feature/unread_messages) — Query unread message count via REST API
+- [iOS Features](/core_feature/ios_features) — iOS-specific modal presentation and notification settings

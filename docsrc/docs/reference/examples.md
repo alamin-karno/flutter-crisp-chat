@@ -255,3 +255,8 @@ flutter run --dart-define-from-file=config.json
 ## Screenshot
 
 ![Crisp Chat SDK Demo](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
+
+## Next Steps
+
+- [FAQ](/reference/faq) — Frequently asked questions
+- [Changelog](/reference/changelog) — Version history and release notes

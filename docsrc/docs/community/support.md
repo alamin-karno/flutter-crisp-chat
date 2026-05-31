@@ -91,3 +91,7 @@ These companies use the Flutter Crisp Chat plugin:
 - [L'Algo de Paulo](https://lalgodepaulo.com/)
 
 *Using this plugin in your app? [Let us know](https://github.com/alamin-karno/flutter-crisp-chat/issues) and we'll add you to the list!*
+
+## Next Steps
+
+- [Contributing](/community/contributing) — How to contribute to the project

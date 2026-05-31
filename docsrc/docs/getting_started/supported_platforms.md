@@ -7,6 +7,14 @@ head:
   - - meta
     - name: keywords
       content: "flutter crisp chat web, crisp chat desktop, flutter crisp platforms"
+
+prev:
+  text: 'Platform Setup'
+  link: '/getting_started/platform_setup'
+
+next:
+  text: 'Quick Start'
+  link: '/getting_started/quick_start'
 ---
 
 # Supported platforms
@@ -130,3 +138,8 @@ Full details: [Configuration — Chatbox Security](/core_feature/configuration#c
 - **Flutter**: 3.24.0+
 - **Android**: API 23+ (unchanged)
 - **iOS**: 13.0+ (unchanged)
+
+## Next Steps
+
+- [Quick Start](/getting_started/quick_start) — Open your first chat in 5 minutes
+- [Configuration](/core_feature/configuration) — Customize `CrispConfig` with user details, tokens, and segments

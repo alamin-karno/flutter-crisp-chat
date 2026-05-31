@@ -13,8 +13,8 @@ prev:
   link: '/getting_started/install'
 
 next:
-  text: 'Quick Start'
-  link: '/getting_started/quick_start'
+  text: 'Supported Platforms'
+  link: '/getting_started/supported_platforms'
 ---
 
 # Platform Setup
@@ -247,6 +247,7 @@ More detail: [Supported Platforms — Desktop](/getting_started/supported_platfo
 
 ## Next Steps
 
-With platform setup complete, you're ready to open your first chat. See [Quick Start](/getting_started/quick_start).
+- [Supported Platforms](/getting_started/supported_platforms) — Platform support matrix for Android, iOS, Web, and desktop
+- [Quick Start](/getting_started/quick_start) — Open your first chat in 5 minutes
 
 For push notification setup (Firebase, APNs) on **Android and iOS only**, see [Firebase Setup](/notifications/firebase_setup).
