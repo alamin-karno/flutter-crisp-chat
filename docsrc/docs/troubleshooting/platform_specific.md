@@ -133,6 +133,44 @@ The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS depen
 - **CocoaPods:** Default for most Flutter projects. Uses `ios/crisp_chat.podspec`.
 - **SPM:** Available since version `2.4.2` (fixed in `2.4.8`). Uses `ios/crisp_chat/Package.swift` with sources in `ios/crisp_chat/Sources/crisp_chat/`. Enable with `flutter config --enable-swift-package-manager`.
 
+## Web
+
+### Chat stuck on loading spinner (skeleton UI)
+
+The gray/blue placeholder bars mean the chat **shell** opened but the **session** did not connect.
+
+1. Confirm `websiteID` is correct.
+2. **Identity verification:** only pass `User.signature` when it is a real HMAC-SHA256 hex string from your server (at least 32 hex characters). Placeholder values are ignored by the plugin; if you set a fake signature manually, Crisp may stay on the skeleton screen.
+3. Allow **third-party cookies** for `crisp.chat` in Chrome (Settings → Privacy → third-party cookies). Crisp needs cookies for the visitor session.
+4. Check DevTools → **Network** for failed requests to `client.crisp.chat` or `storage.crisp.chat`.
+5. Hard-refresh the page (`Cmd+Shift+R`) after upgrading the plugin so `l.js` is not cached from an old run.
+
+### Chat does not appear
+
+1. Confirm `openCrispChat` was called with a valid `websiteID`.
+2. If you use a Content-Security-Policy, allow `https://client.crisp.chat` and Crisp API hosts.
+3. Check the browser console for blocked scripts.
+
+### REST API keys in web builds
+
+`getUnreadMessageCount` and `markMessagesAsRead` use your Crisp REST credentials from Dart. On Web, those values are visible to users — prefer a backend proxy for production.
+
+## Desktop (macOS, Windows, Linux)
+
+### Embedded WebView does not open
+
+- **Windows:** Install the [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/).
+- **Linux:** Install WebKitGTK (`libwebkit2gtk-4.1-dev` or `libwebkit2gtk-4.0-dev`).
+- If WebView is unavailable, the plugin opens Crisp in the system browser instead.
+
+### Session APIs return null after browser fallback
+
+`resetCrispChatSession`, `setSessionString`, and `getSessionIdentifier` require an active desktop WebView. They are no-ops (or return `null`) when chat was opened in an external browser.
+
+### `runWebViewTitleBarWidget` in `main`
+
+When using `desktop_webview_window`, add the title-bar helper to your app `main` — see [Supported platforms](/getting_started/supported_platforms).
+
 ## Need More Help?
 
 - [Open an issue on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/issues)

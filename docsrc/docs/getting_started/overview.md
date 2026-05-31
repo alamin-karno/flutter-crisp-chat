@@ -17,7 +17,7 @@ next:
 
 # Overview
 
-**Flutter Crisp Chat** (`crisp_chat`) is a Flutter plugin that integrates the [Crisp](https://crisp.chat) live chat platform natively into your Android and iOS apps. It wraps the official Crisp Android SDK and Crisp iOS SDK, giving you a fully native chat experience with push notifications, user identification, session management, and more.
+**Flutter Crisp Chat** (`crisp_chat`) is a Flutter plugin that integrates the [Crisp](https://crisp.chat) live chat platform into your app on **Android, iOS, Web, and desktop** (macOS, Windows, Linux). Mobile targets use the official Crisp Android and iOS SDKs; Web and desktop use the official Crisp Web Chat SDK, with the same Dart API for opening chat, sessions, and REST helpers.
 
 ## Why Crisp Chat?
 
@@ -55,6 +55,7 @@ next:
 
 - [Installation](/getting_started/install) — Add the package to your project
 - [Platform Setup](/getting_started/platform_setup) — Configure Android and iOS
+- [Supported Platforms](/getting_started/supported_platforms) — Web and desktop support matrix
 - [Quick Start](/getting_started/quick_start) — Open your first chat in 5 minutes
 - [Push Notifications](/notifications/firebase_setup) — Set up FCM and APNs
 - [API Reference](/reference/api_documentation) — Complete method documentation

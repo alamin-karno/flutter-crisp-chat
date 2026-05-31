@@ -1,6 +1,6 @@
 # Crisp Chat
 
-A flutter plugin package for using crisp chat natively on Android & iOS.
+A Flutter plugin for Crisp live chat on **Android, iOS, Web, and desktop** (macOS, Windows, Linux).
 
 ![Crisp Chat](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_banner.png?raw=true)
 
@@ -13,7 +13,7 @@ A flutter plugin package for using crisp chat natively on Android & iOS.
 [![Sponsors](https://img.shields.io/github/sponsors/alamin-karno)](https://patreon.com/alamin_karno)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://buymeacoffee.com/alaminkarno)
 
-Chat with website visitors, integrate your favorite tools, and deliver a great customer experience. - Crisp. The `Crisp Chat` is a package that provides a simple way to open chat window using native channel. Connect with Crisp Chat, register a user to chat (or not) and render a chat widget. Tested on Android and iOS. 
+Chat with website visitors, integrate your favorite tools, and deliver a great customer experience. On **mobile**, the plugin uses the official Crisp Android and iOS SDKs. On **Web and desktop**, it uses the official Crisp Web Chat SDK (embedded chatbox or desktop WebView). The same Dart API covers session data, events, and REST helpers where supported.
 
 📖 **[Full Documentation](https://alamin-karno.github.io/flutter-crisp-chat/)** — Comprehensive guides, API reference, and examples.
 
@@ -27,7 +27,7 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - Customizable
 - User configuration with company and geoLocation
 - Send user notification about missing messages
-- Supports for iOS & Android
+- Android, iOS, Web, macOS, Windows, and Linux
 
 ## Installation
 
@@ -50,11 +50,17 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.4.8
+  crisp_chat: ^2.5.0
 ```
+
+**Web / desktop:** No native Crisp SDK install. Web loads `client.crisp.chat` at runtime. Desktop uses an embedded WebView (`desktop_webview_window`) or opens your browser if WebView is unavailable. See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
 
 ### 2. Setup platform specific settings
 ---
+
+#### iOS and Android
+
+Configure permissions and push as below. **Web and desktop** only need a valid `websiteID` unless you use REST unread helpers (prefer a backend proxy on web).
 
 #### iOS
 

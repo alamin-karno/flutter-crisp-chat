@@ -23,7 +23,9 @@ next:
 
 ### What platforms does this plugin support?
 
-Android and iOS. The plugin wraps the official Crisp Android SDK (`2.0.20`) and Crisp iOS SDK (`~> 2.13.0`).
+**Android and iOS** use the official native Crisp SDKs (method channel). **Web** uses the official Crisp Web Chat SDK (`$crisp`). **macOS, Windows, and Linux** embed the same web chatbox in a desktop WebView (with a browser fallback when WebView is unavailable).
+
+See [Supported platforms](/getting_started/supported_platforms) for the full API matrix, desktop dependencies, and security notes for REST helpers on web.
 
 ### What is the minimum Flutter version required?
 

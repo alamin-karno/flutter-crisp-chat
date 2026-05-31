@@ -31,8 +31,10 @@ Or manually add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  crisp_chat: ^2.4.8
+  crisp_chat: ^2.5.0
 ```
+
+For **Web and desktop** targets, see [Supported Platforms](/getting_started/supported_platforms) (no extra native SDK install; desktop may need WebView2 or WebKitGTK).
 
 Then run:
 

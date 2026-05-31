@@ -7,11 +7,18 @@ import 'package:http/http.dart' as http;
 import 'src/config.dart';
 import 'src/flutter_crisp_chat_platform_interface.dart';
 import 'src/helper.dart';
+import 'src/platform_register.dart';
 
 export 'src/config.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
+  // Ensures Web/desktop platform implementations are registered before use.
+  // ignore: unused_field
+  static final bool _initialized = () {
+    registerCrispChatPlatform();
+    return true;
+  }();
   /// The cached session identifier.
   static String? _sessionIdentifier;
 
@@ -357,5 +364,18 @@ class FlutterCrispChat {
   /// @param callback The callback to invoke, or `null` to remove it.
   static void setOnNotificationTappedCallback(VoidCallback? callback) {
     FlutterCrispChatPlatform.instance.setOnNotificationTappedCallback(callback);
+  }
+}
+
+/// Entry point for the macOS, Windows, and Linux Flutter plugin registrant.
+///
+/// The generated `dart_plugin_registrant` imports `package:crisp_chat/crisp_chat.dart`
+/// and calls [registerWith] on desktop targets.
+class CrispChatDesktopPlugin {
+  CrispChatDesktopPlugin._();
+
+  /// Registers the desktop [FlutterCrispChatPlatform] implementation.
+  static void registerWith() {
+    registerCrispChatPlatform();
   }
 }

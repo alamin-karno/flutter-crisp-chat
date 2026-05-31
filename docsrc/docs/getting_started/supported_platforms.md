@@ -1,0 +1,92 @@
+---
+head:
+  - - meta
+    - name: description
+      content: Platform support matrix for flutter-crisp-chat — Android, iOS, Web, macOS, Windows, and Linux.
+
+  - - meta
+    - name: keywords
+      content: "flutter crisp chat web, crisp chat desktop, flutter crisp platforms"
+---
+
+# Supported platforms
+
+`crisp_chat` supports the following Flutter targets:
+
+| Platform | Integration | Notes |
+|----------|-------------|--------|
+| **Android** | Official Crisp Android SDK (method channel) | Push notifications, native chat UI |
+| **iOS** | Official Crisp iOS SDK (method channel) | Push notifications, modal presentation styles |
+| **Web** | Official Crisp Web Chat SDK (`$crisp` via JS) | Same Dart API; no mobile push helpers |
+| **macOS** | Crisp Web SDK in a desktop WebView window | Requires [WebKit](https://developer.apple.com/documentation/webkit) (system) |
+| **Windows** | WebView2 window, or browser fallback | Install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) for embedded chat |
+| **Linux** | WebKitGTK WebView window, or browser fallback | Install `libwebkit2gtk-4.1-dev` (or 4.0) for embedded chat |
+
+## API availability by platform
+
+| API | Mobile | Web | Desktop |
+|-----|--------|-----|---------|
+| `openCrispChat` | Yes | Yes | Yes (WebView or browser) |
+| `resetCrispChatSession` | Yes | Yes | Yes (WebView only) |
+| `setSessionString` / `setSessionInt` | Yes | Yes | Yes (WebView only) |
+| `setSessionSegments` | Yes | Yes | Yes (WebView only) |
+| `pushSessionEvent` | Yes | Yes | Yes (WebView only) |
+| `getSessionIdentifier` | Yes | Yes | Yes (WebView only) |
+| `getUnreadMessageCount` | Yes | Yes* | Yes* |
+| `markMessagesAsRead` | Yes | Yes* | Yes* |
+| `openChatboxFromNotification` | Android (primarily) | No-op (`false`) | No-op (`false`) |
+| `setOnNotificationTappedCallback` | Android | No-op | No-op |
+| `CrispConfig.modalPresentationStyle` | iOS only | Ignored | Ignored |
+| `CrispConfig.enableNotifications` | Android/iOS native | Ignored | Ignored |
+
+\* REST helpers need a session id from `getSessionIdentifier()`. Do not embed Crisp REST API secrets in client-side web builds; use a backend proxy in production.
+
+## Desktop setup
+
+### macOS sandbox (required for embedded chat)
+
+If your app uses the **App Sandbox**, enable **Outgoing Connections (Client)** so the WebView can load `https://client.crisp.chat/l.js`:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true/>
+```
+
+Add this to `macos/Runner/DebugProfile.entitlements` and `Release.entitlements`. Without it, the chat window stays blank.
+
+The plugin loads embed HTML from a temporary `file://` page (not `data:`), because WKWebView blocks external scripts on `data:` URLs.
+
+### Example app (`desktop_webview_window`)
+
+If you use embedded chat on desktop, add this to your app `main` (see the [example app](https://github.com/alamin-karno/flutter-crisp-chat/tree/main/example)):
+
+```dart
+import 'package:desktop_webview_window/desktop_webview_window.dart';
+
+Future<void> main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (runWebViewTitleBarWidget(args)) {
+    return;
+  }
+  runApp(const MyApp());
+}
+```
+
+### Linux system packages
+
+```bash
+sudo apt install libwebkit2gtk-4.1-dev
+```
+
+## Web setup
+
+No extra native setup. The plugin loads `https://client.crisp.chat/l.js` when you call `openCrispChat`.
+
+If you use a strict Content-Security-Policy, allow scripts and connections to `https://client.crisp.chat` and `https://*.crisp.chat`.
+
+## Minimum versions
+
+- **Dart SDK**: 3.5.0+
+- **Flutter**: 3.24.0+
+- **Android**: API 23+ (unchanged)
+- **iOS**: 13.0+ (unchanged)

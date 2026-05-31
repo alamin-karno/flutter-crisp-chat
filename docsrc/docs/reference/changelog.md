@@ -19,6 +19,17 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## 2.5.0
+
+### Added
+* Web support (Crisp Web Chat SDK).
+* Desktop support for macOS, Windows, and Linux (`desktop_webview_window` + browser fallback).
+* [Supported platforms](/getting_started/supported_platforms) guide.
+
+### Changed
+* Minimum Dart SDK 3.5.0 and Flutter 3.24.0.
+* Notification helpers are no-ops on Web/desktop.
+
 ## 2.4.8
 
 ### Fixed

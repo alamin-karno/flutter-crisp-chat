@@ -1,3 +1,16 @@
+# 2.5.0
+
+Added
+---
+* **Web** support via the official Crisp Web Chat SDK (`$crisp` / `client.crisp.chat`).
+* **Desktop** support for **macOS**, **Windows**, and **Linux** using `desktop_webview_window`, with browser fallback when WebView is unavailable.
+* [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms) documentation and platform API matrix.
+
+Changed
+---
+* Minimum **Dart SDK 3.5.0** and **Flutter 3.24.0** (required by desktop WebView dependency).
+* `openChatboxFromNotification` and `setOnNotificationTappedCallback` are no-ops on Web/desktop.
+
 # 2.4.8
 
 Fixed
