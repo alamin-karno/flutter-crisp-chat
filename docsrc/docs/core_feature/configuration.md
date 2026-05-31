@@ -13,8 +13,8 @@ prev:
   link: '/getting_started/quick_start'
 
 next:
-  text: 'User & Company'
-  link: '/core_feature/user_and_company'
+  text: 'iOS Features'
+  link: '/core_feature/ios_features'
 ---
 
 # Configuration
@@ -181,6 +181,6 @@ The `modalPresentationStyle` parameter only affects iOS devices. On Android, Cri
 
 ## Next Steps
 
-- [Session Management](/core_feature/session_management) — Set custom session data, segments, and events
 - [iOS Features](/core_feature/ios_features) — Detailed guide on iOS specific feature configuration
+- [User & Company](/core_feature/user_and_company) — Set user and company details in CrispConfig
 

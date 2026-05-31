@@ -146,3 +146,8 @@ flutter-crisp-chat/
 - Message the [maintainer](/community/author) for clarification
 
 Thank you for contributing!
+
+## Next Steps
+
+- [Author & Maintainer](/community/author) — About the maintainer
+- [Support](/community/support) — Support the project

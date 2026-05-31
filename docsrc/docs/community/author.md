@@ -87,3 +87,7 @@ This plugin wouldn't be where it is without the help of the community. Thank you
 [![Contributors](https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors)
 
 Want to contribute? See the [Contributing Guide](/community/contributing).
+
+## Next Steps
+
+- [Support](/community/support) — Support the project

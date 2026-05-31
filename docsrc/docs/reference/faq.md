@@ -140,3 +140,8 @@ Yes. Call `setSessionString`, `setSessionInt`, and `setSessionSegments` before `
 - [Open an issue on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/issues)
 - Check the [Troubleshooting](/troubleshooting/common_issues) page
 - See the [Crisp Help Center](https://help.crisp.chat/en/) for Crisp-specific questions
+
+## Next Steps
+
+- [Changelog](/reference/changelog) — Version history and release notes
+- [Common Issues](/troubleshooting/common_issues) — Troubleshooting guide
