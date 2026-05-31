@@ -35,7 +35,9 @@ cd flutter-crisp-chat
 
 The `example/` folder contains a Flutter project to test the plugin.
 
-#### Add Firebase Configuration
+#### Firebase (Android / iOS only)
+
+Push notification testing needs Firebase. **Web and desktop do not require Firebase.**
 
 Create a Firebase project at [Firebase Console](https://console.firebase.google.com/) and add:
 
@@ -60,8 +62,17 @@ Create `example/lib/config.json`:
 
 ```bash
 cd example
-flutter run --dart-define-from-file=config.json
+flutter pub get
+
+# Web or desktop — Website ID only
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
+
+# Android / iOS — full config + Firebase files
+flutter run --dart-define-from-file=lib/config.json
 ```
+
+When changing Web or desktop code, verify with `flutter build web` in `example/` and a desktop build on at least one OS you have available.
 
 ## Making Changes
 

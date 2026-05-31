@@ -21,11 +21,24 @@ cd flutter_crisp_chat
 ### 2. Set Up the Example App
 The `example` folder contains a Flutter project to test the Crisp Chat plugin.
 
-You’ll need to add some secrets and configurations to run it properly:
+You’ll need different setup depending on the platform you test:
 
-### 3. Add Firebase Support
+### 3a. Web and desktop (no Firebase)
 
-To run this project, you need to add your Firebase configuration files:
+For **Web** or **desktop** (macOS, Windows, Linux), you only need a Crisp Website ID:
+
+```bash
+cd example
+flutter pub get
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
+```
+
+See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) for desktop entitlements and WebView dependencies.
+
+### 3b. Add Firebase Support (Android / iOS only)
+
+To test **mobile push notifications**, add your Firebase configuration files:
 
 - `android/app/google-services.json`
 - `ios/Runner/GoogleService-Info.plist`
@@ -47,7 +60,7 @@ example/android/app/google-services.json
 
 _You may also need to enable Firebase Cloud Messaging if you want to test push notifications._
 
-### 4. Add Crisp Website ID
+### 4. Add Crisp Website ID (mobile + REST example)
 
 - First, you need to create a Crisp account and set up a website.
 

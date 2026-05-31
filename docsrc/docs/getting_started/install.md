@@ -34,7 +34,11 @@ dependencies:
   crisp_chat: ^2.5.0
 ```
 
-For **Web and desktop** targets, see [Supported Platforms](/getting_started/supported_platforms) (no extra native SDK install; desktop may need WebView2 or WebKitGTK).
+For **Web and desktop** targets:
+
+- Enable platforms if needed: `flutter create . --platforms=web,macos,windows,linux`
+- No extra native Crisp SDK install
+- See [Platform Setup](/getting_started/platform_setup#web) and [Supported Platforms](/getting_started/supported_platforms) for WebView2, WebKitGTK, and macOS entitlements
 
 Then run:
 
@@ -68,4 +72,4 @@ After removing the plugin, make sure to remove all `import 'package:crisp_chat/c
 
 ## Next Steps
 
-After installing the package, you need to configure platform-specific settings for Android and iOS. See [Platform Setup](/getting_started/platform_setup).
+After installing the package, configure settings for your targets (Android, iOS, Web, desktop). See [Platform Setup](/getting_started/platform_setup).

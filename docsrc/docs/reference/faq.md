@@ -29,11 +29,20 @@ See [Supported platforms](/getting_started/supported_platforms) for the full API
 
 ### What is the minimum Flutter version required?
 
-Flutter 3.0+ with Dart 2.15.0+. Android requires API 23+ (Android 6.0) and iOS requires 13.0+.
+- **Web and desktop (2.5.0+):** Flutter **3.24.0+**, Dart **3.5.0+**
+- **Mobile-only usage:** Flutter 3.0+, Dart 2.15.0+ may still work; Android API 23+, iOS 13.0+
 
 ### Is this an official Crisp plugin?
 
-No. This is a community-maintained Flutter plugin created by [Md. Al-Amin](https://github.com/alamin-karno). It wraps the official native Crisp SDKs.
+No. This is a community-maintained Flutter plugin created by [Md. Al-Amin](https://github.com/alamin-karno). It wraps the official **native** Crisp SDKs on mobile and the official **Web Chat SDK** on Web/desktop.
+
+### Do push notifications work on Web or desktop?
+
+No. FCM/APNs setup in the docs applies to **Android and iOS** only. `openChatboxFromNotification` and `setOnNotificationTappedCallback` are no-ops on Web and desktop.
+
+### Do I need Firebase for Web or desktop?
+
+No. Firebase is only required if you test **mobile push notifications** in the example app. For Web/desktop, run with `--dart-define=websiteId=YOUR_ID` only.
 
 ### Where do I get my Website ID?
 
@@ -73,7 +82,7 @@ Currently, Crisp push notifications on iOS are only sent to **production APNs ch
 
 ### Do I need `firebase_messaging` in my app?
 
-Yes. Even though the Crisp SDK handles the notification display, you need `firebase_core` and `firebase_messaging` in your Flutter project for Firebase initialization and permission handling.
+Only if you use **Android/iOS push notifications** with Crisp. Web and desktop do not use Firebase for chat. Even on mobile, the Crisp SDK handles notification display; you still need `firebase_core` and `firebase_messaging` for initialization and permission handling.
 
 ## Unread Messages
 

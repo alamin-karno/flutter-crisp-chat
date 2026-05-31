@@ -78,6 +78,24 @@ Future<void> main(List<String> args) async {
 sudo apt install libwebkit2gtk-4.1-dev
 ```
 
+## Run the example
+
+```bash
+cd example
+flutter pub get
+
+# Web
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+
+# Desktop (after setup in this guide)
+flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
+flutter run -d windows --dart-define=websiteId=YOUR_WEBSITE_ID
+flutter run -d linux --dart-define=websiteId=YOUR_WEBSITE_ID
+
+# Mobile (requires Firebase config files — see Contributing)
+flutter run --dart-define-from-file=lib/config.json
+```
+
 ## Web setup
 
 No extra native setup. The plugin loads `https://client.crisp.chat/l.js` when you call `openCrispChat`.

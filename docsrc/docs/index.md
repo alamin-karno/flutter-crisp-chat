@@ -6,7 +6,7 @@ title: Home
 head:
   - - meta
     - name: description
-      content: Flutter Crisp Chat — a Flutter plugin for integrating Crisp live chat natively on Android & iOS. Push notifications, user management, session control, and more.
+      content: Flutter Crisp Chat — Crisp live chat for Flutter on Android, iOS, Web, and desktop (macOS, Windows, Linux). Push notifications on mobile, same Dart API everywhere.
 
   - - meta
     - name: keywords
@@ -18,8 +18,8 @@ head:
 
 hero:
   name: Flutter Crisp Chat
-  text: Native Crisp Live Chat for Flutter
-  tagline: Integrate Crisp customer messaging into your Flutter app with full push notification support, user management, and session control — on both Android & iOS.
+  text: Crisp Live Chat for Flutter
+  tagline: Integrate Crisp customer messaging on Android, iOS, Web, and desktop — native SDKs on mobile, official Web Chat SDK on web and desktop, with push notifications, sessions, and REST helpers.
   image:
     src: 'https://digitiz.fr/wp-content/uploads/2021/06/Crisp-1.jpg'
     alt: Flutter Crisp Chat
@@ -41,11 +41,11 @@ features:
 
   - icon: "\U0001F4F1"
     title: Cross-Platform
-    details: Native implementation for both Android and iOS using the official Crisp SDKs. Consistent experience across platforms.
+    details: Android and iOS use the official native Crisp SDKs. Web and desktop (macOS, Windows, Linux) use the official Crisp Web Chat SDK — one Dart API across all targets.
 
   - icon: "\U0001F514"
     title: Push Notifications
-    details: Full FCM (Android) and APNs (iOS) push notification support. Two notification handling approaches — auto-open or app-first.
+    details: Full FCM (Android) and APNs (iOS) push notification support with two handling modes. Web and desktop do not use mobile push helpers.
 
   - icon: "\U0001F464"
     title: User Management

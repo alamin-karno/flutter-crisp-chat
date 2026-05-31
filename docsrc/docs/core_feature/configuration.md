@@ -36,14 +36,18 @@ CrispConfig config = CrispConfig(
 
 ### Parameters
 
-| Parameter | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `websiteID` | `String` | Yes | — | Your Crisp Website ID from the [dashboard](https://app.crisp.chat/) |
-| `tokenId` | `String?` | No | `null` | A unique token to identify returning users across sessions |
-| `sessionSegment` | `String?` | No | `null` | A segment string to categorize users (e.g., `"premium"`, `"trial"`) |
-| `user` | `User?` | No | `null` | User details like email, name, phone, avatar, and company |
-| `enableNotifications` | `bool` | No | `true` | Whether to enable push notifications for this site |
-| `modalPresentationStyle` | `ModalPresentationStyle?` | No | `fullScreen` | iOS modal presentation style (iOS only) |
+| Parameter                | Type                      | Required | Default      | Description                                                              |
+|--------------------------|---------------------------|----------|--------------|--------------------------------------------------------------------------|
+| `websiteID`              | `String`                  | Yes      | —            | Your Crisp Website ID from the [dashboard](https://app.crisp.chat/)      |
+| `tokenId`                | `String?`                 | No       | `null`       | A unique token to identify returning users across sessions               |
+| `sessionSegment`         | `String?`                 | No       | `null`       | A segment string to categorize users (e.g., `"premium"`, `"trial"`)      |
+| `user`                   | `User?`                   | No       | `null`       | User details like email, name, phone, avatar, and company                |
+| `enableNotifications`    | `bool`                    | No       | `true`       | Push notifications (Android/iOS native SDK only; ignored on Web/desktop) |
+| `modalPresentationStyle` | `ModalPresentationStyle?` | No       | `fullScreen` | iOS modal presentation style (ignored on Android, Web, desktop)          |
+
+::: info Web and desktop
+`websiteID`, `tokenId`, `sessionSegment`, and `user` apply on all platforms. See [Supported Platforms](/getting_started/supported_platforms) for API differences.
+:::
 
 ## Website ID
 

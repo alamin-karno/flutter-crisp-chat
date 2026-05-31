@@ -29,6 +29,17 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - Send user notification about missing messages
 - Android, iOS, Web, macOS, Windows, and Linux
 
+## Platform overview
+
+| Platform                    | How chat opens                  | Extra setup                                                              |
+|-----------------------------|---------------------------------|--------------------------------------------------------------------------|
+| **Android**                 | Native Crisp SDK                | Internet permission, `compileSdk` / `minSdk`                             |
+| **iOS**                     | Native Crisp SDK                | Privacy keys in `Info.plist`                                             |
+| **Web**                     | Crisp Web Chat SDK (`$crisp`)   | Valid `websiteID`; optional CSP for `client.crisp.chat`                  |
+| **macOS / Windows / Linux** | Web SDK in WebView (or browser) | Desktop `main()` helper; macOS network entitlement; WebView2 / WebKitGTK |
+
+Full API differences: [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
+
 ## Installation
 
 ### 1. Add Crisp dependency
@@ -122,8 +133,63 @@ and `res/xml/file_paths.xml` add this
 <files-path name="crisp_sdk_attachments" path="im.crisp.client/attachments/" />
 ```
 
-### 3. Configure your app to receive Crisp notifications
+#### Web
+
+No native SDK install. The plugin loads `https://client.crisp.chat/l.js` when you call `openCrispChat`.
+
+1. Enable Web if needed: `flutter create . --platforms=web`
+2. Use your real **Website ID** from the [Crisp Dashboard](https://app.crisp.chat/)
+3. **Identity verification:** only pass `User.signature` when it is a real HMAC-SHA256 hex string from your server (32+ hex characters). Placeholder values can leave the chat stuck on the loading skeleton.
+4. If you use a **Content-Security-Policy**, allow `https://client.crisp.chat` and `https://*.crisp.chat`
+5. For REST unread helpers on Web, do not ship API secrets in the client — use a **backend proxy** in production
+
+Run the example:
+
+```bash
+cd example && flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+```
+
+#### Desktop (macOS, Windows, Linux)
+
+Uses the same Crisp Web Chat SDK in an embedded window (`desktop_webview_window`), or opens the system browser if WebView is unavailable.
+
+1. Enable desktop targets: `flutter create . --platforms=macos,windows,linux`
+2. Add the title-bar helper to `main()` **before** `runApp` (required for embedded WebView):
+
+```dart
+import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:flutter/foundation.dart';
+
+Future<void> main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux)) {
+    if (runWebViewTitleBarWidget(args)) return;
+  }
+  runApp(const MyApp());
+}
+```
+
+3. **macOS (sandbox):** add outgoing network client to `macos/Runner/DebugProfile.entitlements` and `Release.entitlements`:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true/>
+```
+
+4. **Windows:** install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/)
+5. **Linux:** `sudo apt install libwebkit2gtk-4.1-dev`
+
+`openChatboxFromNotification`, `setOnNotificationTappedCallback`, and `CrispConfig.enableNotifications` do **not** apply on Web/desktop.
+
+See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) for the API matrix and troubleshooting.
+
+### 3. Configure your app to receive Crisp notifications (Android & iOS only)
 ---
+
+> **Note:** Sections 3–ix below are for **mobile push notifications** only. Web and desktop do not use FCM/APNs through this plugin.
 
 #### i). Create a Firebase project and add it to your Flutter project
 
@@ -537,7 +603,7 @@ final formSheetConfig = CrispConfig(
 );
 ```
 
-**Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior.
+**Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior. On **Web and desktop**, it is ignored.
 
 For every request that you make to `getUnreadMessageCount` or `markMessagesAsRead`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`.
 
@@ -579,12 +645,15 @@ Before using your development token, you now need to associate your marketplace 
 - [Flutter Crisp Chat (GitHub)](https://github.com/alamin-karno/flutter-crisp-chat)
 
 ## Supported SDK Versions
-This plugin aims to stay compatible with the latest versions of the native Crisp SDKs. As of the latest update, it has been tested with:
+This plugin aims to stay compatible with the latest Crisp SDKs. As of the latest update, it has been tested with:
 
 - Crisp Android SDK version: `2.0.20`
 - Crisp iOS SDK version: ~> `2.13.0`
+- Crisp Web Chat SDK: loaded from `https://client.crisp.chat/l.js` at runtime (Web and desktop)
 
-While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current native SDK details.
+**Minimum for Web/desktop (v2.5.0+):** Flutter 3.24.0+, Dart 3.5.0+
+
+While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current SDK details.
 
 ### Project Maintainer ❤️
 
@@ -599,7 +668,7 @@ While the plugin may work with other versions, using versions close to these is 
 ### Happy Coding 👨‍💻
 
 ## Credits
-* Crisp Android and iOS SDK is owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
+* Crisp Android, iOS, and Web Chat SDKs are owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
 
  You can chat with them on [crisp](https://crisp.chat/) or follow them on Twitter at [Crisp_im](https://twitter.com/crisp_im).
 

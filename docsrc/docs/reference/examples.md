@@ -19,7 +19,27 @@ next:
 
 # Full Example
 
-This is the complete working example app from the plugin's `example/` directory. It demonstrates Firebase initialization, notification handling, user configuration, session management, and unread message checking.
+This is the working example app from the plugin's `example/` directory.
+
+| Target            | What the example demonstrates                                             |
+|-------------------|---------------------------------------------------------------------------|
+| **Android / iOS** | Firebase, push notification hooks, user config, sessions, unread REST API |
+| **Web**           | Web Chat SDK, sessions, events (no Firebase)                              |
+| **Desktop**       | `runWebViewTitleBarWidget` in `main`, embedded WebView chat (no Firebase) |
+
+### Run without Firebase (Web / desktop)
+
+```bash
+cd example
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
+```
+
+### Run with Firebase (Android / iOS)
+
+Use `--dart-define-from-file=config.json` as shown below. Firebase config files are gitignored.
+
+The snippet below shows the **mobile-oriented** `main()`; the repository example also gates Firebase and desktop `main()` for other platforms — see [Platform Setup](/getting_started/platform_setup).
 
 ## main.dart
 
