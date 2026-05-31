@@ -50,6 +50,12 @@ Go to your [Crisp Dashboard](https://app.crisp.chat/) > **Settings** > **Website
 
 ## Configuration
 
+### Why does chat show "Error starting chat" even with a valid Website ID?
+
+On **Android and iOS**, **Lock the chatbox to website domain (and subdomains)** must be **disabled** in the Crisp dashboard. Domain lock validates browser origins; the native mobile SDK has no matching origin, so the session is rejected. Logs may show a misleading `invalid_website_id` WebSocket error even though REST `GET /v1/website/{id}` still returns 200.
+
+Disable the setting under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**, restart the app, and try again. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security) and [Common Issues — Chat not opening](/troubleshooting/common_issues#chat-not-opening).
+
 ### What is `tokenId` used for?
 
 The `tokenId` identifies returning users. When a user opens the chat with the same `tokenId`, Crisp restores their previous conversation. Use a stable unique identifier like your app's user ID.

@@ -106,6 +106,12 @@ The Crisp iOS SDK requires iOS 13.0+. Ensure your `ios/Podfile` has:
 platform :ios, '13.0'
 ```
 
+## Crisp dashboard (Android & iOS)
+
+Before opening chat on native mobile targets:
+
+- Disable **Lock the chatbox to website domain (and subdomains)** under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
+
 ## Web
 
 No native Crisp SDK install. When you call `openCrispChat`, the plugin loads the official script from `https://client.crisp.chat/l.js` and opens the Crisp chatbox in the page.
@@ -115,6 +121,7 @@ No native Crisp SDK install. When you call `openCrispChat`, the plugin loads the
 3. **Identity verification:** only set `User.signature` when it is a real HMAC-SHA256 hex string from your server (32+ hex characters). Fake placeholders can leave the chat on the loading skeleton.
 4. **Content-Security-Policy (optional):** if your site uses CSP, allow scripts and connections to `https://client.crisp.chat` and `https://*.crisp.chat`.
 5. **REST API on web:** `getUnreadMessageCount` / `markMessagesAsRead` accept credentials in Dart; those values are visible in the browser — use a **backend proxy** in production.
+6. **Domain lock (optional):** if **Lock the chatbox to website domain** is enabled, host the app on an allowed domain or subdomain and verify the page origin if chat fails to connect. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
 
 `openChatboxFromNotification`, `setOnNotificationTappedCallback`, `CrispConfig.enableNotifications`, and `modalPresentationStyle` have no effect on Web.
 
@@ -171,6 +178,15 @@ sudo apt install libwebkit2gtk-4.1-dev
 ```
 
 (Or `libwebkit2gtk-4.0-dev` on older distributions.)
+
+### 5. Domain lock
+
+Disable **Lock the chatbox to website domain** for desktop chat:
+
+- **Embedded WebView** loads chat from a temporary `file://` page — there is no website origin to match (same constraint as mobile).
+- **Browser fallback** opens `https://app.crisp.chat/website/{id}/`, which also conflicts with domain lock.
+
+See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).
 
 ### Browser fallback
 

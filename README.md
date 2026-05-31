@@ -412,7 +412,9 @@ Future<void> main() async {
 ---
 Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
 
-![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)      
+![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
+
+- **Android / iOS:** disable **Lock the chatbox to website domain (and subdomains)** under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**. With domain lock enabled, chat fails with **"Error starting chat"** even when the Website ID is valid. See [docs — Chatbox Security](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html#crisp-dashboard-chatbox-security).
 
 ### 5. Setup your flutter app to use Crisp
 ---

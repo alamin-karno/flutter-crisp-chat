@@ -123,10 +123,34 @@ The plugin validates `email` and `company URL` formats. Ensure:
 
 ### Chat not opening
 
+#### "Error starting chat" / `invalid_website_id` in logs
+
+Primarily affects **Android and iOS**; see [Platform-Specific — Web](/troubleshooting/platform_specific#domain-lock-enabled) and [Platform-Specific — Desktop](/troubleshooting/platform_specific#domain-lock-enabled-1) for Web/desktop.
+
+| Item                | Detail                                                                                                                                            |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| Symptom             | Chat fails to load; native logs show `invalid_website_id` or `(Initialization Error) Error starting chat`                                         |
+| Common misdiagnosis | Website ID looks valid; REST website lookup succeeds                                                                                              |
+| Cause               | **Lock the chatbox to website domain** enabled in Crisp dashboard                                                                                 |
+| Fix                 | Disable domain lock under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**, fully restart the app, retry |
+
+Example log lines:
+
+```
+E/CrispSocket: A websocket error occured.
+E/CrispSocket: Name: session:created
+E/CrispSocket: Args: [ invalid_website_id ]
+E/CrispSocket: (Initialization Error) Error starting chat
+```
+
+Behavior can be **intermittent** — chat may work once, then fail until domain lock is disabled. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security) and [#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148).
+
+If domain lock is already disabled, also check:
+
 1. Verify your `websiteID` is correct (copy from Crisp dashboard)
 2. Check that `websiteID` is not empty
 3. Ensure the device has internet connectivity
-4. Check the debug console for error messages
+4. Check the debug console for other error messages
 
 ### Session data not appearing in Crisp dashboard
 
