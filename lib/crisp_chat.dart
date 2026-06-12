@@ -249,6 +249,86 @@ class FlutterCrispChat {
     }
   }
 
+  /// Opens the Crisp helpdesk search interface.
+  ///
+  /// Configures the Crisp SDK with the provided [websiteId] and then
+  /// opens the helpdesk search view, allowing users to browse and search
+  /// FAQ articles.
+  ///
+  /// {@category Helpdesk}
+  /// @param websiteId The Crisp website ID.
+  /// @return A [Future] that completes when the helpdesk is opened.
+  static Future<void> openHelpdesk({required String websiteId}) async {
+    if (websiteId.trim().isEmpty) {
+      throw ArgumentError.value(
+        websiteId,
+        'websiteId',
+        'Website ID must not be empty.',
+      );
+    }
+    await FlutterCrispChatPlatform.instance.openHelpdesk(
+      websiteId: websiteId,
+    );
+  }
+
+  /// Opens a specific helpdesk article.
+  ///
+  /// Configures the Crisp SDK with the provided [websiteId] and then
+  /// opens the helpdesk article identified by [locale] and [slug].
+  ///
+  /// The [locale] and [slug] can be found in the full URL of the article:
+  /// `https://help.example.com/<locale>/article/<slug>`
+  ///
+  /// Example:
+  /// ```dart
+  /// FlutterCrispChat.openHelpdeskArticle(
+  ///   websiteId: 'your-website-id',
+  ///   locale: 'en',
+  ///   slug: '10ud15y',
+  ///   title: 'Getting Started',
+  /// );
+  /// ```
+  ///
+  /// {@category Helpdesk}
+  /// @param websiteId The Crisp website ID.
+  /// @param locale The locale of the article (e.g. `'en'`, `'fr'`).
+  /// @param slug The slug (ID) of the article.
+  /// @param title (Optional) The title of the article.
+  /// @param category (Optional) The category of the article.
+  /// @return A [Future] that completes when the article is opened.
+  static Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    if (websiteId.trim().isEmpty) {
+      throw ArgumentError.value(
+        websiteId,
+        'websiteId',
+        'Website ID must not be empty.',
+      );
+    }
+    if (locale.trim().isEmpty) {
+      throw ArgumentError.value(
+        locale,
+        'locale',
+        'Locale must not be empty.',
+      );
+    }
+    if (slug.trim().isEmpty) {
+      throw ArgumentError.value(slug, 'slug', 'Slug must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.openHelpdeskArticle(
+      websiteId: websiteId,
+      locale: locale,
+      slug: slug,
+      title: title,
+      category: category,
+    );
+  }
+
   /// Attempts to open the Crisp chatbox from a notification intent.
   ///
   /// When using `CrispChatNotificationService` (which handles notifications

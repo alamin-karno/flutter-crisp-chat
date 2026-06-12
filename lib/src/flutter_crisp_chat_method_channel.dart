@@ -135,4 +135,34 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     _ensureNativeHandlerRegistered();
     _onNotificationTappedCallback = callback;
   }
+
+  /// [openHelpdesk] opens the Crisp helpdesk search interface.
+  @override
+  Future<void> openHelpdesk({required String websiteId}) async {
+    await methodChannel.invokeMethod('openHelpdesk', <String, String>{
+      'websiteId': websiteId,
+    });
+  }
+
+  /// [openHelpdeskArticle] opens a specific helpdesk article identified by
+  /// [locale] and [slug].
+  @override
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    await methodChannel.invokeMethod(
+      'openHelpdeskArticle',
+      <String, dynamic>{
+        'websiteId': websiteId,
+        'locale': locale,
+        'slug': slug,
+        if (title != null) 'title': title,
+        if (category != null) 'category': category,
+      },
+    );
+  }
 }

@@ -8,7 +8,7 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "crisp_chat",
+            name: "crisp-chat",
             targets: ["crisp_chat"]
         )
     ],
@@ -24,7 +24,10 @@ let package = Package(
             dependencies: [
                 .product(name: "Crisp", package: "crisp-sdk-ios")
             ],
-            path: "../Classes"
+            path: "Sources/crisp_chat",
+            linkerSettings: [
+                .linkedFramework("UIKit")
+            ]
         )
     ]
 )

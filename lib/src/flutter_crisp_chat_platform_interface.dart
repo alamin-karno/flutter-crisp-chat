@@ -91,4 +91,20 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     throw UnimplementedError(
         'setOnNotificationTappedCallback() has not been implemented.');
   }
+
+  /// [openHelpdesk] opens the Crisp helpdesk search interface.
+  Future<void> openHelpdesk({required String websiteId}) {
+    throw UnimplementedError('openHelpdesk() has not been implemented.');
+  }
+
+  /// [openHelpdeskArticle] opens a specific helpdesk article.
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) {
+    throw UnimplementedError('openHelpdeskArticle() has not been implemented.');
+  }
 }

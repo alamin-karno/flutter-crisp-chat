@@ -4,6 +4,7 @@ import Crisp
 
 /// [SwiftFlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
+@objc(FlutterCrispChatPlugin)
 public class SwiftFlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     private var channel: FlutterMethodChannel?
