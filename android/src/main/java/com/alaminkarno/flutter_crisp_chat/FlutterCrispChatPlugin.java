@@ -165,6 +165,8 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.success(false);
             }
+        } else if (call.method.equals("isVideoCallsSupported")) {
+            result.success(false);
         } else if (call.method.equals("pushSessionEvent")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
 
@@ -243,7 +245,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 Crisp.setUserNickname(config.user.nickName);
             }
             if (config.user.email != null) {
-                boolean result =  Crisp.setUserEmail(config.user.email);
+                boolean result = config.user.signature != null
+                        ? Crisp.setUserEmail(config.user.email, config.user.signature)
+                        : Crisp.setUserEmail(config.user.email);
                 if(!result){
                     Log.d("CRSIP_CHAT","Email not set");
                 }

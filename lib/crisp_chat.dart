@@ -7,11 +7,18 @@ import 'package:http/http.dart' as http;
 import 'src/config.dart';
 import 'src/flutter_crisp_chat_platform_interface.dart';
 import 'src/helper.dart';
+import 'src/platform_register.dart';
 
 export 'src/config.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
+  // Ensures Web/desktop platform implementations are registered before use.
+  // ignore: unused_field
+  static final bool _initialized = () {
+    registerCrispChatPlatform();
+    return true;
+  }();
   /// The cached session identifier.
   static String? _sessionIdentifier;
 
@@ -181,10 +188,26 @@ class FlutterCrispChat {
     );
   }
 
+  static Map<String, String> _crispApiHeaders({
+    required String identifier,
+    required String key,
+    bool jsonBody = false,
+  }) {
+    return {
+      'Authorization': 'Basic ${base64Encode(utf8.encode('$identifier:$key'))}',
+      'X-Crisp-Tier': 'plugin',
+      if (jsonBody) 'Content-Type': 'application/json',
+    };
+  }
+
   /// Fetches the unread message count for the current visitor session.
   ///
   /// This method makes a REST API call to Crisp to get conversation details,
   /// including the number of unread messages for the visitor.
+  ///
+  /// On iOS, the native Crisp SDK may not send read receipts to the server
+  /// when the visitor reads messages. In that case, [unread.visitor](https://docs.crisp.chat/references/rest-api/v1/#get-a-conversation)
+  /// stays non-zero until you call [markMessagesAsRead].
   ///
   /// {@category General}
   /// @param websiteId Your Crisp Website ID.
@@ -210,15 +233,11 @@ class FlutterCrispChat {
     final uri = Uri.parse(
       'https://api.crisp.chat/v1/website/$websiteId/conversation/$sessionId',
     );
-    final credentials = base64Encode(utf8.encode('$identifier:$key'));
 
     try {
       final response = await http.get(
         uri,
-        headers: {
-          'Authorization': 'Basic $credentials',
-          'X-Crisp-Tier': 'plugin',
-        },
+        headers: _crispApiHeaders(identifier: identifier, key: key),
       );
 
       if (kDebugMode) {
@@ -251,10 +270,6 @@ class FlutterCrispChat {
 
   /// Opens the Crisp helpdesk search interface.
   ///
-  /// Configures the Crisp SDK with the provided [websiteId] and then
-  /// opens the helpdesk search view, allowing users to browse and search
-  /// FAQ articles.
-  ///
   /// {@category Helpdesk}
   /// @param websiteId The Crisp website ID.
   /// @return A [Future] that completes when the helpdesk is opened.
@@ -272,22 +287,6 @@ class FlutterCrispChat {
   }
 
   /// Opens a specific helpdesk article.
-  ///
-  /// Configures the Crisp SDK with the provided [websiteId] and then
-  /// opens the helpdesk article identified by [locale] and [slug].
-  ///
-  /// The [locale] and [slug] can be found in the full URL of the article:
-  /// `https://help.example.com/<locale>/article/<slug>`
-  ///
-  /// Example:
-  /// ```dart
-  /// FlutterCrispChat.openHelpdeskArticle(
-  ///   websiteId: 'your-website-id',
-  ///   locale: 'en',
-  ///   slug: '10ud15y',
-  ///   title: 'Getting Started',
-  /// );
-  /// ```
   ///
   /// {@category Helpdesk}
   /// @param websiteId The Crisp website ID.
@@ -329,6 +328,70 @@ class FlutterCrispChat {
     );
   }
 
+  /// Marks all operator messages as read for the current visitor session.
+  ///
+  /// {@category General}
+  /// @param websiteId Your Crisp Website ID.
+  /// @param identifier Your Crisp REST API Identifier.
+  /// @param key Your Crisp REST API Key.
+  /// @return `true` if the request was accepted (HTTP 202), `false` on API
+  ///         error, or `null` if no active session exists.
+  static Future<bool?> markMessagesAsRead({
+    required String websiteId,
+    required String identifier,
+    required String key,
+  }) async {
+    final sessionId = await getSessionIdentifier();
+    if (sessionId == null) {
+      log(
+        'No active session, cannot mark messages as read.',
+        name: 'FlutterCrispChat',
+      );
+      return null;
+    }
+
+    final uri = Uri.parse(
+      'https://api.crisp.chat/v1/website/$websiteId/conversation/$sessionId/read',
+    );
+
+    try {
+      final response = await http.patch(
+        uri,
+        headers: _crispApiHeaders(
+          identifier: identifier,
+          key: key,
+          jsonBody: true,
+        ),
+        body: jsonEncode({
+          'from': 'operator',
+          'origin': 'chat',
+        }),
+      );
+
+      if (kDebugMode) {
+        log('URL: $uri - STATUS: ${response.statusCode}', name: 'API');
+        log('BODY: ${response.body}', name: 'API');
+      }
+
+      if (response.statusCode == 202) {
+        return true;
+      }
+
+      log(
+        'Failed to mark messages as read. Status: ${response.statusCode}, Body: ${response.body}',
+        name: 'FlutterCrispChat',
+      );
+      return false;
+    } catch (e, stackTrace) {
+      log(
+        'An error occurred while marking messages as read: $e',
+        stackTrace: stackTrace,
+        name: 'FlutterCrispChat',
+      );
+      return false;
+    }
+  }
+
   /// Attempts to open the Crisp chatbox from a notification intent.
   ///
   /// When using `CrispChatNotificationService` (which handles notifications
@@ -356,5 +419,36 @@ class FlutterCrispChat {
   /// @param callback The callback to invoke, or `null` to remove it.
   static void setOnNotificationTappedCallback(VoidCallback? callback) {
     FlutterCrispChatPlatform.instance.setOnNotificationTappedCallback(callback);
+  }
+
+  /// Returns whether Crisp video/audio calls are supported on this build.
+  ///
+  /// - **iOS:** `true` only when the app was built with video support enabled:
+  ///   **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`;
+  ///   **SPM:** `CRISP_CHAT_WEBRTC=true` before `flutter build ios`.
+  ///   Default builds return `false`.
+  /// - **Android:** always `false` until Crisp ships native video support.
+  /// - **Web / desktop:** `true` (calls are handled by the web chatbox when enabled
+  ///   in your Crisp dashboard).
+  ///
+  /// This is a build-time capability check, not a runtime toggle. See
+  /// [Platform setup — Enable video calls (iOS)](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
+  ///
+  /// {@category General}
+  static Future<bool> isVideoCallsSupported() {
+    return FlutterCrispChatPlatform.instance.isVideoCallsSupported();
+  }
+}
+
+/// Entry point for the macOS, Windows, and Linux Flutter plugin registrant.
+///
+/// The generated `dart_plugin_registrant` imports `package:crisp_chat/crisp_chat.dart`
+/// and calls [registerWith] on desktop targets.
+class CrispChatDesktopPlugin {
+  CrispChatDesktopPlugin._();
+
+  /// Registers the desktop [FlutterCrispChatPlatform] implementation.
+  static void registerWith() {
+    registerCrispChatPlatform();
   }
 }

@@ -19,7 +19,27 @@ next:
 
 # Full Example
 
-This is the complete working example app from the plugin's `example/` directory. It demonstrates Firebase initialization, notification handling, user configuration, session management, and unread message checking.
+This is the working example app from the plugin's `example/` directory.
+
+| Target            | What the example demonstrates                                                                                                                 |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Android / iOS** | Firebase, push notification hooks, user config, sessions, unread REST API; optional iOS video via `$CrispChatWebRTC` in `example/ios/Podfile` |
+| **Web**           | Web Chat SDK, sessions, events (no Firebase)                                                                                                  |
+| **Desktop**       | `runWebViewTitleBarWidget` in `main`, embedded WebView chat (no Firebase)                                                                     |
+
+### Run without Firebase (Web / desktop)
+
+```bash
+cd example
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
+```
+
+### Run with Firebase (Android / iOS)
+
+Use `--dart-define-from-file=config.json` as shown below. Firebase config files are gitignored.
+
+The snippet below shows the **mobile-oriented** `main()`; the repository example also gates Firebase and desktop `main()` for other platforms — see [Platform Setup](/getting_started/platform_setup).
 
 ## main.dart
 
@@ -103,6 +123,7 @@ class _MyAppState extends State<MyApp> {
       user: User(
         avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
         email: "alamin.karno@gmail.com",
+        signature: "USER_EMAIL_HMAC_SHA256_SIGNATURE",
         nickName: "Md. Al-Amin",
         phone: "5555555555",
         company: Company(
@@ -234,3 +255,8 @@ flutter run --dart-define-from-file=config.json
 ## Screenshot
 
 ![Crisp Chat SDK Demo](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
+
+## Next Steps
+
+- [FAQ](/reference/faq) — Frequently asked questions
+- [Changelog](/reference/changelog) — Version history and release notes

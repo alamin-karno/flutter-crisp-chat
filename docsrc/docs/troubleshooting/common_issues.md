@@ -19,6 +19,8 @@ next:
 
 # Common Issues
 
+For **Web and desktop** (blank WebView, loading skeleton, CSP, WebView2, macOS sandbox), see [Platform-Specific Troubleshooting](/troubleshooting/platform_specific#web).
+
 ## Build Errors
 
 ### `compileSdkVersion` too low
@@ -103,6 +105,14 @@ Possible causes:
 - Network error
 - The `websiteId` doesn't match your Crisp workspace
 
+### `getUnreadMessageCount` stays non-zero on iOS after reading chat
+
+On iOS, the Crisp native SDK may not send read receipts to the server when the visitor reads operator messages. The REST field `unread.visitor` reflects **server-side** state — if it stays non-zero after closing chat, the iOS SDK did not update it.
+
+**Workaround:** Call `FlutterCrispChat.markMessagesAsRead()` after the visitor closes chat, then re-fetch the count. See [Unread Messages — iOS limitation](/core_feature/unread_messages#ios-limitation-unread-count-not-clearing-after-reading-chat).
+
+**Report upstream:** Use [docs/crisp-sdk-ios-unread-issue.md](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/docs/crisp-sdk-ios-unread-issue.md) to file an issue on [crisp-im/crisp-sdk-ios](https://github.com/crisp-im/crisp-sdk-ios).
+
 ### `ArgumentError` when opening chat
 
 The plugin validates `email` and `company URL` formats. Ensure:
@@ -113,10 +123,34 @@ The plugin validates `email` and `company URL` formats. Ensure:
 
 ### Chat not opening
 
+#### "Error starting chat" / `invalid_website_id` in logs
+
+Primarily affects **Android and iOS**; see [Platform-Specific — Web](/troubleshooting/platform_specific#domain-lock-enabled) and [Platform-Specific — Desktop](/troubleshooting/platform_specific#domain-lock-enabled-1) for Web/desktop.
+
+| Item                | Detail                                                                                                                                            |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| Symptom             | Chat fails to load; native logs show `invalid_website_id` or `(Initialization Error) Error starting chat`                                         |
+| Common misdiagnosis | Website ID looks valid; REST website lookup succeeds                                                                                              |
+| Cause               | **Lock the chatbox to website domain** enabled in Crisp dashboard                                                                                 |
+| Fix                 | Disable domain lock under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**, fully restart the app, retry |
+
+Example log lines:
+
+```
+E/CrispSocket: A websocket error occured.
+E/CrispSocket: Name: session:created
+E/CrispSocket: Args: [ invalid_website_id ]
+E/CrispSocket: (Initialization Error) Error starting chat
+```
+
+Behavior can be **intermittent** — chat may work once, then fail until domain lock is disabled. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security) and [#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148).
+
+If domain lock is already disabled, also check:
+
 1. Verify your `websiteID` is correct (copy from Crisp dashboard)
 2. Check that `websiteID` is not empty
 3. Ensure the device has internet connectivity
-4. Check the debug console for error messages
+4. Check the debug console for other error messages
 
 ### Session data not appearing in Crisp dashboard
 
@@ -129,3 +163,8 @@ The plugin validates `email` and `company URL` formats. Ensure:
 - Check [Platform-Specific Issues](/troubleshooting/platform_specific)
 - [Open an issue on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/issues)
 - See the [Crisp Help Center](https://help.crisp.chat/en/) for Crisp-specific questions
+
+## Next Steps
+
+- [Platform-Specific](/troubleshooting/platform_specific) — Android, iOS, Web, and desktop troubleshooting
+- [Contributing](/community/contributing) — How to contribute to the project

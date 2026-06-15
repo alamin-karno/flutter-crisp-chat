@@ -1,4 +1,5 @@
 import 'package:crisp_chat/crisp_chat.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -16,17 +17,27 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  // Set up background message handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux)) {
+    if (runWebViewTitleBarWidget(args)) {
+      return;
+    }
+  }
 
-  // Request notification permission
-  await _requestNotificationPermission();
+  if (defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await _requestNotificationPermission();
+  }
 
   runApp(const MyApp());
 }
@@ -155,7 +166,7 @@ class _MyAppState extends State<MyApp> {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  FlutterCrispChat.openCrispChat(config: config);
+                  await FlutterCrispChat.openCrispChat(config: config);
 
                   /// Setting session data
                   FlutterCrispChat.setSessionString(
@@ -169,12 +180,10 @@ class _MyAppState extends State<MyApp> {
                     value: 12345,
                   );
 
-                  await Future.delayed(Duration(seconds: 1), () {
-                    FlutterCrispChat.pushSessionEvent(
-                      name: 'test_event',
-                      color: SessionEventColor.green,
-                    );
-                  });
+                  await FlutterCrispChat.pushSessionEvent(
+                    name: 'test_event',
+                    color: SessionEventColor.green,
+                  );
 
                   /// Checking session ID After 5 sec
                   await Future.delayed(const Duration(seconds: 5), () async {

@@ -107,4 +107,10 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError('openHelpdeskArticle() has not been implemented.');
   }
+
+  /// Returns whether video/audio calls are supported on this build.
+  Future<bool> isVideoCallsSupported() {
+    throw UnimplementedError(
+        'isVideoCallsSupported() has not been implemented.');
+  }
 }

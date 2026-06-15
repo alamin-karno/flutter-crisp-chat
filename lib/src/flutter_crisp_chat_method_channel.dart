@@ -165,4 +165,20 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       },
     );
   }
+
+  /// Returns whether the native build supports Crisp video/audio calls.
+  @override
+  Future<bool> isVideoCallsSupported() async {
+    try {
+      final result = await methodChannel.invokeMethod<bool>(
+        'isVideoCallsSupported',
+      );
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to check video call support: '${e.message}'.");
+      return false;
+    } on MissingPluginException {
+      return false;
+    }
+  }
 }

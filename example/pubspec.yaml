@@ -6,7 +6,8 @@ description: Demonstrates how to use the flutter_crisp_chat plugin.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
@@ -22,6 +23,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_core: ^4.3.0
   firebase_messaging: ^16.1.0
+  desktop_webview_window: ^0.3.0
 
 dev_dependencies:
   flutter_test:

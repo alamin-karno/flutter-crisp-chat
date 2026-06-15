@@ -1,4 +1,10 @@
 {
-    "platinum": [],
+    "platinum": [
+      {
+        "name": "Crisp",
+        "image": "https://uploads-ssl.webflow.com/5fcdef3cc7cf1d1e14b4ba0c/5fef34e1b64093d0aec1d091_crisp-chat.png",
+        "link": "https://crisp.chat/"
+      }
+    ],
     "average": []
 }

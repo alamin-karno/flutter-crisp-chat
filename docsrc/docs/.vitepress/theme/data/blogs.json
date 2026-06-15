@@ -8,7 +8,7 @@
       "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*ifOwY9pZ8TbmulqtL1jKog.png",
       "date": "June 26, 2024",
       "author": "Md. Al-Amin",
-      "tags": ["Flutter", "Crisp Chat", "Packags"],
+      "tags": ["Flutter", "Crisp Chat", "packages"],
       "readTime": "3 min read"
     },
     {
@@ -21,6 +21,39 @@
       "author": "Md. Al-Amin",
       "tags": ["Flutter", "FCM", "Notifications"],
       "readTime": "4 min read"
+    },
+    {
+      "id": "full-control-of-crisp-chat-modals-on-ios",
+      "title": "How a Bug Report Led Me to Give Flutter Developers Full Control of Crisp Chat Modals on iOS",
+      "description": "One of the things I enjoy most about maintaining open-source software is that sometimes the best improvements start with something very small.",
+      "url": "https://medium.com/@alaminkarno/how-a-bug-report-led-me-to-give-flutter-developers-full-control-of-crisp-chat-modals-on-ios-da13fa0fa2db",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:720/format:webp/1*JD6aD6abpvP4UPaqk7EKdA.png",
+      "date": "March 13, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Crisp Chat", "iOS", "Plugin"],
+      "readTime": "5 min read"
+    },
+    {
+      "id": "swift-package-manager-and-flutter-ios-plugins-crisp-chat-fix-story",
+      "title": "Swift Package Manager and Flutter iOS Plugins: The crisp_chat 2.4.8 Fix Story",
+      "description": "In this article, I share the story of how I fixed a critical issue in the crisp_chat Flutter plugin related to Swift Package Manager and iOS plugins, ensuring a smoother experience for developers.",
+      "url": "https://medium.com/@alaminkarno/swift-package-manager-and-flutter-ios-plugins-the-crisp-chat-2-4-8-fix-story-490316b3089c",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*FYp66Xb13lkpv2BIKce6cg.png",
+      "date": "May 25, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Swift Package Manager", "iOS", "Plugin", "Open Source"],
+      "readTime": "4 min read"
+    },
+    {
+      "id": "flutter-promised-write-once-run-anywhere-my-plugin-didnt-until-now",
+      "title": "Flutter Promised “Write Once, Run Anywhere.” My Plugin Didn’t, Until Now.",
+      "description": "How a single GitHub issue pushed crisp_chat from mobile-only to Android, iOS, Web, macOS, Windows, and Linux — with one Dart API.",
+      "url": "https://alaminkarno.medium.com/flutter-promised-write-once-run-anywhere-my-plugin-didnt-until-now-b18ebf709f87",
+      "thumbnail": "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*ANTPYgFLT07_g97bwLpoGg.png",
+      "date": "June 01, 2026",
+      "author": "Md. Al-Amin",
+      "tags": ["Flutter", "Crisp Chat", "Multi-platform", "Open Source", "Plugin"],
+      "readTime": "5 min read"
     }
   ]
 }

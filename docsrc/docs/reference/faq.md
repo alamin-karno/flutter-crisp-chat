@@ -23,21 +23,38 @@ next:
 
 ### What platforms does this plugin support?
 
-Android and iOS. The plugin wraps the official Crisp Android SDK (`2.0.18`) and Crisp iOS SDK (`~> 2.13.0`).
+**Android and iOS** use the official native Crisp SDKs (method channel). **Web** uses the official Crisp Web Chat SDK (`$crisp`). **macOS, Windows, and Linux** embed the same web chatbox in a desktop WebView (with a browser fallback when WebView is unavailable).
+
+See [Supported platforms](/getting_started/supported_platforms) for the full API matrix, desktop dependencies, and security notes for REST helpers on web.
 
 ### What is the minimum Flutter version required?
 
-Flutter 3.0+ with Dart 2.15.0+. Android requires API 23+ (Android 6.0) and iOS requires 13.0+.
+- **Web and desktop (2.5.0+):** Flutter **3.24.0+**, Dart **3.5.0+**
+- **Mobile-only usage:** Flutter 3.0+, Dart 2.15.0+ may still work; Android API 23+, iOS 13.0+
 
 ### Is this an official Crisp plugin?
 
-No. This is a community-maintained Flutter plugin created by [Md. Al-Amin](https://github.com/alamin-karno). It wraps the official native Crisp SDKs.
+No. This is a community-maintained Flutter plugin created by [Md. Al-Amin](https://github.com/alamin-karno). It wraps the official **native** Crisp SDKs on mobile and the official **Web Chat SDK** on Web/desktop.
+
+### Do push notifications work on Web or desktop?
+
+No. FCM/APNs setup in the docs applies to **Android and iOS** only. `openChatboxFromNotification` and `setOnNotificationTappedCallback` are no-ops on Web and desktop.
+
+### Do I need Firebase for Web or desktop?
+
+No. Firebase is only required if you test **mobile push notifications** in the example app. For Web/desktop, run with `--dart-define=websiteId=YOUR_ID` only.
 
 ### Where do I get my Website ID?
 
 Go to your [Crisp Dashboard](https://app.crisp.chat/) > **Settings** > **Website Settings** and copy your Website ID.
 
 ## Configuration
+
+### Why does chat show "Error starting chat" even with a valid Website ID?
+
+On **Android and iOS**, **Lock the chatbox to website domain (and subdomains)** must be **disabled** in the Crisp dashboard. Domain lock validates browser origins; the native mobile SDK has no matching origin, so the session is rejected. Logs may show a misleading `invalid_website_id` WebSocket error even though REST `GET /v1/website/{id}` still returns 200.
+
+Disable the setting under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**, restart the app, and try again. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security) and [Common Issues — Chat not opening](/troubleshooting/common_issues#chat-not-opening).
 
 ### What is `tokenId` used for?
 
@@ -46,6 +63,20 @@ The `tokenId` identifies returning users. When a user opens the chat with the sa
 ### Do I need to set user details?
 
 No. All fields in `User` and `Company` are optional. If you don't set them, the user appears as anonymous in the Crisp dashboard.
+
+### Does this support video or audio calls?
+
+**Platform summary:**
+
+| Platform          | Video/audio calls                                                                                                                                                                          |
+|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **iOS**           | Yes, when you opt in at build time — **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`; **SPM:** `CRISP_CHAT_WEBRTC=true` before `flutter build ios` (~10 MB larger). Default builds use the standard `Crisp` SDK without calls. |
+| **Android**       | Not yet — [Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181).                                                                                              |
+| **Web / desktop** | Yes, via the web chatbox when enabled in your Crisp dashboard.                                                                                                                             |
+
+There is **no** `CrispConfig` runtime flag for video. On iOS, the SDK variant is selected at compile time. Check your build with `FlutterCrispChat.isVideoCallsSupported()`.
+
+Setup guide: [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
 
 ### When should I call `resetCrispChatSession`?
 
@@ -71,7 +102,7 @@ Currently, Crisp push notifications on iOS are only sent to **production APNs ch
 
 ### Do I need `firebase_messaging` in my app?
 
-Yes. Even though the Crisp SDK handles the notification display, you need `firebase_core` and `firebase_messaging` in your Flutter project for Firebase initialization and permission handling.
+Only if you use **Android/iOS push notifications** with Crisp. Web and desktop do not use Firebase for chat. Even on mobile, the Crisp SDK handles notification display; you still need `firebase_core` and `firebase_messaging` for initialization and permission handling.
 
 ## Unread Messages
 
@@ -90,6 +121,10 @@ It returns `null` if:
 - The API credentials are invalid
 - A network error occurred
 
+### Why does `getUnreadMessageCount` stay non-zero on iOS after reading chat?
+
+The Crisp iOS SDK may not send read receipts to the server. Call `markMessagesAsRead()` after the visitor closes chat. See [Unread Messages — iOS limitation](/core_feature/unread_messages#ios-limitation-unread-count-not-clearing-after-reading-chat).
+
 ## Sessions
 
 ### Why does `getSessionIdentifier` return null?
@@ -105,3 +140,8 @@ Yes. Call `setSessionString`, `setSessionInt`, and `setSessionSegments` before `
 - [Open an issue on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/issues)
 - Check the [Troubleshooting](/troubleshooting/common_issues) page
 - See the [Crisp Help Center](https://help.crisp.chat/en/) for Crisp-specific questions
+
+## Next Steps
+
+- [Changelog](/reference/changelog) — Version history and release notes
+- [Common Issues](/troubleshooting/common_issues) — Troubleshooting guide

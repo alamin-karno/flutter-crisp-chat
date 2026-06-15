@@ -2,7 +2,7 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   title: 'Flutter Crisp Chat',
-  description: 'Official documentation for the Flutter Crisp Chat plugin — integrate Crisp live chat natively on Android & iOS.',
+  description: 'Official documentation for the Flutter Crisp Chat plugin — Crisp live chat on Android, iOS, Web, and desktop.',
   base: "/flutter-crisp-chat/",
   lastUpdated: true,
   lang: 'en-US',
@@ -113,6 +113,7 @@ export default defineConfig({
           { text: 'Overview', link: '/getting_started/overview' },
           { text: 'Installation', link: '/getting_started/install' },
           { text: 'Platform Setup', link: '/getting_started/platform_setup' },
+          { text: 'Supported Platforms', link: '/getting_started/supported_platforms' },
           { text: 'Quick Start', link: '/getting_started/quick_start' },
         ],
       },

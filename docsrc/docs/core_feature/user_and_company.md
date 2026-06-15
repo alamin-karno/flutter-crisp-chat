@@ -28,6 +28,7 @@ The `User` class holds personal details about the chat user. All fields are opti
 ```dart
 final user = User(
   email: 'jane@example.com',
+  signature: 'USER_EMAIL_HMAC_SHA256_SIGNATURE',
   nickName: 'Jane Smith',
   phone: '+1234567890',
   avatar: 'https://example.com/jane-avatar.png',
@@ -37,16 +38,21 @@ final user = User(
 
 ### User Fields
 
-| Field      | Type       | Description                               |
-|------------|------------|-------------------------------------------|
-| `email`    | `String?`  | User's email address (validated format)   |
-| `nickName` | `String?`  | Display name shown in the Crisp dashboard |
-| `phone`    | `String?`  | Phone number                              |
-| `avatar`   | `String?`  | URL to the user's avatar image            |
-| `company`  | `Company?` | Company details (see below)               |
+| Field       | Type       | Description                                  |
+|-------------|------------|----------------------------------------------|
+| `email`     | `String?`  | User's email address (validated format)      |
+| `signature` | `String?`  | HMAC-SHA256 signature for email verification |
+| `nickName`  | `String?`  | Display name shown in the Crisp dashboard    |
+| `phone`     | `String?`  | Phone number                                 |
+| `avatar`    | `String?`  | URL to the user's avatar image               |
+| `company`   | `Company?` | Company details (see below)                  |
 
 ::: warning Email Validation
 If you provide an `email`, it must be a valid email format. `openCrispChat` will throw an `ArgumentError` if the email is invalid.
+:::
+
+::: tip Identity Verification
+When Crisp Identity Verification is enabled, set `signature` with the HMAC-SHA256 signature for the provided `email`.
 :::
 
 ## Company
@@ -101,6 +107,7 @@ final config = CrispConfig(
   tokenId: 'user_12345',
   user: User(
     email: 'jane@acme.com',
+    signature: 'USER_EMAIL_HMAC_SHA256_SIGNATURE',
     nickName: 'Jane Smith',
     phone: '+1-555-0123',
     avatar: 'https://avatars.githubusercontent.com/u/12345',

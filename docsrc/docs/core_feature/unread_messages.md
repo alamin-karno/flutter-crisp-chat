@@ -125,6 +125,57 @@ Internally, `getUnreadMessageCount` does the following:
 
 If there is no active session (e.g., the user hasn't opened the chat yet), the method returns `null`.
 
+## iOS limitation: unread count not clearing after reading chat
+
+On iOS, the native Crisp SDK may **not send read receipts** to the Crisp backend when a visitor reads operator messages in `ChatViewController`. The REST field `unread.visitor` therefore stays non-zero even after the chat is closed — this is a **Crisp iOS SDK limitation**, not a bug in this plugin's REST call.
+
+### Workaround: mark messages as read via REST
+
+After the visitor closes the chat, call [markMessagesAsRead](#markmessagesasread) to reset the server-side counter:
+
+```dart
+await FlutterCrispChat.markMessagesAsRead(
+  websiteId: 'YOUR_WEBSITE_ID',
+  identifier: 'YOUR_IDENTIFIER',
+  key: 'YOUR_KEY',
+);
+
+final count = await FlutterCrispChat.getUnreadMessageCount(
+  websiteId: 'YOUR_WEBSITE_ID',
+  identifier: 'YOUR_IDENTIFIER',
+  key: 'YOUR_KEY',
+);
+// count should now be 0
+```
+
+### Verify with REST (control test)
+
+Use the verification script with your Marketplace credentials:
+
+```bash
+export CRISP_WEBSITE_ID=... CRISP_IDENTIFIER=... CRISP_KEY=... CRISP_SESSION_ID=...
+./scripts/verify_unread_read_receipts.sh full
+```
+
+If `PATCH /read` clears `unread.visitor` but reading in the iOS chat does not, file an issue with Crisp using [docs/crisp-sdk-ios-unread-issue.md](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/docs/crisp-sdk-ios-unread-issue.md).
+
+See also [Platform-Specific Issues — iOS unread count](/troubleshooting/platform_specific#ios-unread-count-not-clearing).
+
+## markMessagesAsRead
+
+Marks all operator messages as read for the current session via the Crisp REST API. Use on iOS when [getUnreadMessageCount](#usage) stays non-zero after the visitor reads chat.
+
+```dart
+final success = await FlutterCrispChat.markMessagesAsRead(
+  websiteId: 'YOUR_WEBSITE_ID',
+  identifier: 'YOUR_IDENTIFIER',
+  key: 'YOUR_KEY',
+);
+// success == true when accepted (HTTP 202)
+```
+
+**Returns:** `true` on success, `false` on API error, `null` if no active session.
+
 ## Next Steps
 
 - [Firebase Setup](/notifications/firebase_setup) — Set up push notifications for your app
