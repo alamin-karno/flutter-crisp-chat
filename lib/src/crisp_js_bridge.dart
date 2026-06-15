@@ -133,6 +133,30 @@ class CrispJsBridge {
 
   static String resetSession() => r'$crisp.push(["do", "session:reset"]);';
 
+  /// Opens the Crisp Helpdesk search UI via the web SDK.
+  static String openHelpdeskSearch() =>
+      r'$crisp.push(["do", "helpdesk:search"]);';
+
+  /// Opens a specific Crisp Helpdesk article via the web SDK.
+  ///
+  /// Format: `$crisp.push(["do", "helpdesk:article:open", [locale, slug, title?, category?]])`
+  static String openHelpdeskArticle({
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) {
+    final List<dynamic> args = [locale, slug];
+    // Crisp positional API: title must be included (even as null) when category is set.
+    if (title != null || category != null) {
+      args.add(title);
+    }
+    if (category != null) {
+      args.add(category);
+    }
+    return '\$crisp.push(${jsonEncode(["do", "helpdesk:article:open", args])});';
+  }
+
   static String setSessionString({required String key, required String value}) {
     return '\$crisp.push(${jsonEncode([
       "set",

@@ -127,6 +127,7 @@ export default defineConfig({
           { text: 'User & Company', link: '/core_feature/user_and_company' },
           { text: 'Session Management', link: '/core_feature/session_management' },
           { text: 'Unread Messages', link: '/core_feature/unread_messages' },
+          { text: 'Helpdesk / FAQ', link: '/core_feature/helpdesk' },
         ],
       },
 

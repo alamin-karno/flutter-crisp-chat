@@ -210,6 +210,32 @@ class _MyAppState extends State<MyApp> {
                 child: const Text('Open Crisp Chat'),
               ),
               const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FlutterCrispChat.openHelpdesk(websiteId: websiteID);
+                  } catch (e) {
+                    if (kDebugMode) print('openHelpdesk error: $e');
+                  }
+                },
+                child: const Text('Open Helpdesk'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FlutterCrispChat.openHelpdeskArticle(
+                      websiteId: websiteID,
+                      locale: 'en',
+                      slug: 'example-article',
+                    );
+                  } catch (e) {
+                    if (kDebugMode) print('openHelpdeskArticle error: $e');
+                  }
+                },
+                child: const Text('Open Helpdesk Article'),
+              ),
+              const SizedBox(height: 20),
               if (defaultTargetPlatform == TargetPlatform.iOS) ...[
                 ElevatedButton.icon(
                   onPressed: () => _showModalStyleSelection(),
