@@ -13,8 +13,8 @@ prev:
   link: '/core_feature/session_management'
 
 next:
-  text: 'Firebase Setup'
-  link: '/notifications/firebase_setup'
+  text: 'Helpdesk / FAQ'
+  link: '/core_feature/helpdesk'
 ---
 
 # Unread Messages

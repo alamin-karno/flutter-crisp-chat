@@ -34,6 +34,7 @@ next:
 | **Unread Messages**     | Query unread message count via the Crisp REST API                                                |
 | **Session Control**     | Get session identifiers and reset sessions on logout                                             |
 | **Video / audio calls** | Optional on **iOS** (build-time `CrispWebRTC` SDK); Web/desktop via web chatbox; Android not yet |
+| **Helpdesk / FAQ**      | Open the Crisp Helpdesk search screen or a specific article directly (Android, iOS, Web, desktop) |
 
 ## Supported SDK Versions
 

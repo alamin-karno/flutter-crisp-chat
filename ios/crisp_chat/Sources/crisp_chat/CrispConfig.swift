@@ -156,7 +156,7 @@ struct CrispConfig {
         guard let websiteID = json["websiteId"] as? String else {
             return nil
         }
-        
+
         return CrispConfig(
             websiteID: websiteID,
             tokenId: json["tokenId"] as? String,
