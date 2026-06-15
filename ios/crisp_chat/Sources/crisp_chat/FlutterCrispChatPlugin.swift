@@ -186,6 +186,40 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
         case "openChatboxFromNotification":
             result(false)
 
+        case "openHelpdesk":
+            guard let args = call.arguments as? [String: Any],
+                  let websiteId = args["websiteId"] as? String,
+                  !websiteId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or empty 'websiteId'.", details: nil))
+                return
+            }
+            CrispSDK.configure(websiteID: websiteId.trimmingCharacters(in: .whitespacesAndNewlines))
+            CrispSDK.searchHelpdesk()
+            if openChat() {
+                result(nil)
+            } else {
+                result(FlutterError(code: "NO_ACTIVE_SCENE", message: "No active iOS scene is available to present Crisp chat.", details: nil))
+            }
+
+        case "openHelpdeskArticle":
+            guard let args = call.arguments as? [String: Any],
+                  let websiteId = args["websiteId"] as? String,
+                  !websiteId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  let locale = args["locale"] as? String,
+                  let slug = args["slug"] as? String else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required arguments: 'websiteId', 'locale', 'slug'.", details: nil))
+                return
+            }
+            let title = args["title"] as? String
+            let category = args["category"] as? String
+            CrispSDK.configure(websiteID: websiteId.trimmingCharacters(in: .whitespacesAndNewlines))
+            CrispSDK.openHelpdeskArticle(locale: locale, slug: slug, title: title, category: category)
+            if openChat() {
+                result(nil)
+            } else {
+                result(FlutterError(code: "NO_ACTIVE_SCENE", message: "No active iOS scene is available to present Crisp chat.", details: nil))
+            }
+
         case "isVideoCallsSupported":
             #if CRISP_WEBRTC
             result(true)

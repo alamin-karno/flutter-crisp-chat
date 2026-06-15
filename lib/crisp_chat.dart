@@ -268,12 +268,67 @@ class FlutterCrispChat {
     }
   }
 
-  /// Marks all operator messages as read for the current visitor session.
+  /// Opens the Crisp helpdesk search interface.
   ///
-  /// Calls the Crisp REST API [Mark Messages As Read In Conversation](https://docs.crisp.chat/references/rest-api/v1/#mark-messages-as-read-in-conversation)
-  /// endpoint. Use this as a workaround on iOS when the native SDK does not
-  /// reset [unread.visitor](https://docs.crisp.chat/references/rest-api/v1/#get-a-conversation)
-  /// after the visitor reads messages in chat.
+  /// {@category Helpdesk}
+  /// @param websiteId The Crisp website ID.
+  /// @return A [Future] that completes when the helpdesk is opened.
+  static Future<void> openHelpdesk({required String websiteId}) async {
+    if (websiteId.trim().isEmpty) {
+      throw ArgumentError.value(
+        websiteId,
+        'websiteId',
+        'Website ID must not be empty.',
+      );
+    }
+    await FlutterCrispChatPlatform.instance.openHelpdesk(
+      websiteId: websiteId,
+    );
+  }
+
+  /// Opens a specific helpdesk article.
+  ///
+  /// {@category Helpdesk}
+  /// @param websiteId The Crisp website ID.
+  /// @param locale The locale of the article (e.g. `'en'`, `'fr'`).
+  /// @param slug The slug (ID) of the article.
+  /// @param title (Optional) The title of the article.
+  /// @param category (Optional) The category of the article.
+  /// @return A [Future] that completes when the article is opened.
+  static Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    if (websiteId.trim().isEmpty) {
+      throw ArgumentError.value(
+        websiteId,
+        'websiteId',
+        'Website ID must not be empty.',
+      );
+    }
+    if (locale.trim().isEmpty) {
+      throw ArgumentError.value(
+        locale,
+        'locale',
+        'Locale must not be empty.',
+      );
+    }
+    if (slug.trim().isEmpty) {
+      throw ArgumentError.value(slug, 'slug', 'Slug must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.openHelpdeskArticle(
+      websiteId: websiteId,
+      locale: locale,
+      slug: slug,
+      title: title,
+      category: category,
+    );
+  }
+
+  /// Marks all operator messages as read for the current visitor session.
   ///
   /// {@category General}
   /// @param websiteId Your Crisp Website ID.
