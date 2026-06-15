@@ -31,6 +31,8 @@ Complete reference for all public methods in the `FlutterCrispChat` class.
 | `pushSessionEvent`                                          | Yes                 | Yes           | WebView only       |
 | `getSessionIdentifier`                                      | Yes                 | Yes           | WebView only       |
 | `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*          | Yes*               |
+| `openHelpdesk`                                              | Native SDK UI       | Web chatbox   | WebView or browser |
+| `openHelpdeskArticle`                                       | Native SDK UI       | Web chatbox   | WebView or browser |
 | `openChatboxFromNotification`                               | Android (primarily) | No-op         | No-op              |
 | `setOnNotificationTappedCallback`                           | Android             | No-op         | No-op              |
 | `isVideoCallsSupported`                                     | iOS (opt-in WebRTC) | No (upstream) | Yes (web widget)   |
@@ -260,6 +262,84 @@ if (await FlutterCrispChat.isVideoCallsSupported()) {
   // iOS WebRTC build, or Web/desktop
 }
 ```
+
+---
+
+### openHelpdesk
+
+Opens the Crisp Helpdesk/FAQ search screen directly, without first opening live chat. Supported on **all platforms**.
+
+```dart
+static Future<void> openHelpdesk({required String websiteId})
+```
+
+| Parameter   | Type     | Required | Description           |
+|-------------|----------|----------|-----------------------|
+| `websiteId` | `String` | Yes      | Your Crisp website ID |
+
+**Throws:** `ArgumentError` if `websiteId` is empty or whitespace-only.
+
+**Example:**
+
+```dart
+await FlutterCrispChat.openHelpdesk(websiteId: 'YOUR_WEBSITE_ID');
+```
+
+| Platform            | Behaviour                                                              |
+|---------------------|------------------------------------------------------------------------|
+| **Android / iOS**   | Native SDK: calls `Crisp.searchHelpdesk()` / `CrispSDK.searchHelpdesk()` |
+| **Web**             | `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK   |
+| **Desktop**         | Same `$crisp` command injected into the embedded WebView              |
+
+See [Helpdesk / FAQ](/core_feature/helpdesk) for full details.
+
+---
+
+### openHelpdeskArticle
+
+Opens a specific helpdesk article by locale and slug. Supported on **all platforms**.
+
+```dart
+static Future<void> openHelpdeskArticle({
+  required String websiteId,
+  required String locale,
+  required String slug,
+  String? title,
+  String? category,
+})
+```
+
+| Parameter   | Type      | Required | Description                                     |
+|-------------|-----------|----------|-------------------------------------------------|
+| `websiteId` | `String`  | Yes      | Your Crisp website ID                           |
+| `locale`    | `String`  | Yes      | Article language code (e.g. `'en'`, `'fr'`)    |
+| `slug`      | `String`  | Yes      | Article slug from your Crisp Helpdesk dashboard |
+| `title`     | `String?` | No       | Optional display title override                 |
+| `category`  | `String?` | No       | Optional category name                          |
+
+**Throws:** `ArgumentError` if `websiteId`, `locale`, or `slug` is empty.
+
+**Example:**
+
+```dart
+await FlutterCrispChat.openHelpdeskArticle(
+  websiteId: 'YOUR_WEBSITE_ID',
+  locale: 'en',
+  slug: 'getting-started',
+  title: 'Getting Started',
+  category: 'General',
+);
+```
+
+The article `slug` can be found in your Crisp dashboard under **Helpdesk** → open an article → the URL and article settings contain the slug.
+
+| Platform            | Behaviour                                                                                        |
+|---------------------|--------------------------------------------------------------------------------------------------|
+| **Android / iOS**   | Native SDK: `Crisp.openHelpdeskArticle()` / `CrispSDK.openHelpdeskArticle()`                    |
+| **Web**             | `$crisp.push(["do", "helpdesk:article:open", [locale, slug, ...]])` via the Crisp Web Chat SDK  |
+| **Desktop**         | Same `$crisp` command injected into the embedded WebView                                         |
+
+See [Helpdesk / FAQ](/core_feature/helpdesk) for full details.
 
 ---
 

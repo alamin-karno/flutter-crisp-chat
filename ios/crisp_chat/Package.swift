@@ -53,6 +53,9 @@ let package = Package(
                 .product(name: crispSdkProduct, package: "crisp-sdk-ios")
             ],
             path: "Sources/crisp_chat",
+            linkerSettings: [
+                .linkedFramework("UIKit")
+            ],
             swiftSettings: crispChatSwiftSettings
         )
     ]

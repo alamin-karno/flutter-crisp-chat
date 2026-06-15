@@ -27,7 +27,8 @@ void main() {
   });
 
   test('forDesktopEvaluation wraps script to return empty string', () {
-    final wrapped = CrispJsBridge.forDesktopEvaluation(r'$crisp.push(["do","chat:open"]);');
+    final wrapped =
+        CrispJsBridge.forDesktopEvaluation(r'$crisp.push(["do","chat:open"]);');
     expect(wrapped, startsWith('(function(){try{'));
     expect(wrapped, endsWith('})();'));
     expect(wrapped, contains('return "";'));
@@ -54,5 +55,59 @@ void main() {
       ),
     );
     expect(script, isNot(contains('{}')));
+  });
+
+  test(r'openHelpdeskSearch produces correct crisp command', () {
+    final script = CrispJsBridge.openHelpdeskSearch();
+    expect(script, equals(r'$crisp.push(["do", "helpdesk:search"]);'));
+  });
+
+  test('openHelpdeskArticle with only required args', () {
+    final script = CrispJsBridge.openHelpdeskArticle(
+      locale: 'en',
+      slug: 'getting-started',
+    );
+    expect(script, contains('"helpdesk:article:open"'));
+    expect(script, contains('"en"'));
+    expect(script, contains('"getting-started"'));
+    // No title or category — array should have exactly 2 elements
+    expect(script, contains('["en","getting-started"]'));
+  });
+
+  test('openHelpdeskArticle with title but no category', () {
+    final script = CrispJsBridge.openHelpdeskArticle(
+      locale: 'fr',
+      slug: 'faq',
+      title: 'Questions fréquentes',
+    );
+    expect(script, contains('"fr"'));
+    expect(script, contains('"faq"'));
+    expect(script, contains('"Questions fréquentes"'));
+    // title present, category absent — array has 3 elements with string title
+    expect(script, contains('["fr","faq","Questions fréquentes"]'));
+  });
+
+  test(
+      'openHelpdeskArticle with category but no title inserts null placeholder',
+      () {
+    final script = CrispJsBridge.openHelpdeskArticle(
+      locale: 'de',
+      slug: 'setup',
+      category: 'General',
+    );
+    expect(script, contains('"de"'));
+    expect(script, contains('"setup"'));
+    // Crisp positional API requires null title when category is set
+    expect(script, contains('["de","setup",null,"General"]'));
+  });
+
+  test('openHelpdeskArticle with title and category', () {
+    final script = CrispJsBridge.openHelpdeskArticle(
+      locale: 'en',
+      slug: 'billing',
+      title: 'Billing FAQ',
+      category: 'Billing',
+    );
+    expect(script, contains('["en","billing","Billing FAQ","Billing"]'));
   });
 }

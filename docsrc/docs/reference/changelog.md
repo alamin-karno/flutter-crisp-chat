@@ -19,6 +19,19 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## [Unreleased]
+
+### Added
+* `FlutterCrispChat.openHelpdesk()` — opens the Crisp Helpdesk/FAQ search screen directly on **all platforms** (closes [#158](https://github.com/alamin-karno/flutter-crisp-chat/issues/158)). Android/iOS use the native SDK; Web and desktop push `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK.
+* `FlutterCrispChat.openHelpdeskArticle()` — opens a specific helpdesk article by `locale` and `slug`, with optional `title` and `category`, on **all platforms**. Android/iOS use the native SDK; Web and desktop push `$crisp.push(["do", "helpdesk:article:open", [...]])`. See [Helpdesk / FAQ](/core_feature/helpdesk) for full details.
+
+### Security
+* Fixed high-severity esbuild RCE vulnerability ([GHSA-gv7w-rqvm-qjhr](https://github.com/advisories/GHSA-gv7w-rqvm-qjhr)) in `docsrc/` dev tooling — bumped esbuild override to `^0.28.0` ([#159](https://github.com/alamin-karno/flutter-crisp-chat/pull/159)).
+* Fixed low-severity esbuild path traversal vulnerability ([GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr)) in `docsrc/` dev tooling — bumped esbuild override to `^0.28.1` ([#160](https://github.com/alamin-karno/flutter-crisp-chat/pull/160)).
+
+### Documentation
+* Added blog post covering the multi-platform `crisp_chat` Flutter plugin expansion to Web and desktop.
+
 ## 2.5.0
 
 ### Added

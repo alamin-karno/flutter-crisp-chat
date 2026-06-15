@@ -28,6 +28,7 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - User configuration with company and geoLocation
 - Send user notification about missing messages
 - Optional **iOS video/audio calls** (build-time opt-in via `CrispWebRTC` SDK)
+- **Helpdesk / FAQ** — open the Crisp helpdesk search or a specific article directly (Android, iOS, Web, and desktop)
 - Android, iOS, Web, macOS, Windows, and Linux
 
 ## Platform overview
@@ -627,6 +628,32 @@ final supported = await FlutterCrispChat.isVideoCallsSupported();
 ```
 
 Adds ~10 MB to the iOS binary. Android native video is [not supported yet by Crisp](https://github.com/crisp-im/crisp-sdk-android/issues/181). Full setup: [Enable video calls (iOS only)](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
+
+### Helpdesk / FAQ
+
+Open the Crisp Helpdesk/FAQ interface directly without going through the live chat. Useful when you want to direct users to self-service help content.
+
+> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux. Android/iOS use the native SDK; Web and desktop use the Crisp Web Chat SDK (`$crisp.push`).
+
+#### Open the helpdesk search screen
+
+```dart
+await FlutterCrispChat.openHelpdesk(websiteId: 'YOUR_WEBSITE_ID');
+```
+
+#### Open a specific helpdesk article
+
+```dart
+await FlutterCrispChat.openHelpdeskArticle(
+  websiteId: 'YOUR_WEBSITE_ID',
+  locale: 'en',               // article language code
+  slug: 'article-slug',       // article slug from your Crisp Helpdesk dashboard
+  title: 'Optional title',    // optional
+  category: 'Optional cat',   // optional
+);
+```
+
+The `slug` for an article can be found in the Crisp dashboard under **Helpdesk** → open the article → the URL contains the slug. Both methods throw `ArgumentError` if required fields are empty.
 
 For every request that you make to `getUnreadMessageCount` or `markMessagesAsRead`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`.
 
