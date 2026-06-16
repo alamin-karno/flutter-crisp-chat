@@ -1,3 +1,38 @@
+# [Unreleased]
+
+# 2.6.0
+
+Added
+---
+* `FlutterCrispChat.openHelpdesk()` — opens the Crisp Helpdesk/FAQ search screen directly on **all platforms** (closes [#158](https://github.com/alamin-karno/flutter-crisp-chat/issues/158)). On Android, calls `Crisp.searchHelpdesk()` then starts `ChatActivity`. On iOS, calls `CrispSDK.searchHelpdesk()` then presents `ChatViewController`. On Web and desktop, pushes `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK.
+* `FlutterCrispChat.openHelpdeskArticle()` — opens a specific helpdesk article by `locale` and `slug`, with optional `title` and `category`, on **all platforms**. Native SDK on Android/iOS; `$crisp.push(["do", "helpdesk:article:open", [...]])` on Web and desktop.
+
+Fixed
+---
+* Fixed iOS **Swift Package Manager** build error — added explicit `UIKit` linker setting to `Package.swift` ([#161](https://github.com/alamin-karno/flutter-crisp-chat/pull/161)).
+* Fixed spurious `"can not find webview for id: 0"` log noise on desktop — added 500 ms startup delay before polling and suppressed the transient initialisation error.
+
+Security
+---
+* Fixed high-severity esbuild RCE vulnerability ([GHSA-gv7w-rqvm-qjhr](https://github.com/advisories/GHSA-gv7w-rqvm-qjhr)) in `docsrc/` dev tooling — bumped esbuild override from `^0.25.0` to `^0.28.0` ([#159](https://github.com/alamin-karno/flutter-crisp-chat/pull/159)).
+* Fixed low-severity esbuild path traversal vulnerability ([GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr)) in `docsrc/` dev tooling — bumped esbuild override to `^0.28.1` ([#160](https://github.com/alamin-karno/flutter-crisp-chat/pull/160)).
+
+Documentation
+---
+* Added blog post covering the multi-platform (`crisp_chat`) Flutter plugin expansion to Web and desktop.
+* **docsrc PageSpeed / SEO improvements:**
+  * Replaced render-blocking CSS `@import` for Google Fonts with `<link rel="stylesheet">` + `<link rel="preconnect">` in the VitePress `head` config.
+  * Added missing `twitter:card`, `twitter:site`, `twitter:title`, `twitter:description`, and `twitter:image` meta tags to all pages.
+  * Added `og:image:width`, `og:image:height`, and `og:image:alt` to all pages.
+  * Added `<link rel="canonical">` to all pages.
+  * Added JSON-LD `SoftwareApplication` structured data to all pages.
+  * Replaced Bing-hotlinked Flutter and Firebase logos with locally-hosted copies (`/graphics/flutter-logo.png`, `/graphics/firebase-logo.png`, `/graphics/crisp-logo.png`) to eliminate third-party image dependencies and CLS.
+  * Downloaded hero image from external CDN (`digitiz.fr`) to `/graphics/crisp-hero.jpg` — served from same origin.
+  * Added explicit `width`/`height` attributes to all "Powered By" images to eliminate Cumulative Layout Shift (CLS).
+  * Removed invalid `alt` attribute from `<link rel="icon">` tag.
+  * Added `preconnect` hints for Google Fonts, gstatic, and Google Tag Manager.
+  * Added [Helpdesk / FAQ](/core_feature/helpdesk) documentation page.
+
 # 2.5.0
 
 Added

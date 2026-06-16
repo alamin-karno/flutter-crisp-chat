@@ -9,7 +9,8 @@
 # Ignore the example app's pubspec.lock file
 /example/pubspec.lock
 
-# Ignore the example app's build directories
+# Ignore build directories
+/build/
 /example/build/
 
 # Ignore the example app's generated files

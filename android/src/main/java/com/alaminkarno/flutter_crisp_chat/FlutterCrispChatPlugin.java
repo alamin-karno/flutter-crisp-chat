@@ -188,8 +188,47 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
             }
-        }
-        else {
+        } else if (call.method.equals("openHelpdesk")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String websiteId = (String) args.get("websiteId");
+                if (websiteId == null || websiteId.trim().isEmpty()) {
+                    result.error("INVALID_ARGUMENTS", "Missing or empty 'websiteId'", null);
+                    return;
+                }
+                Crisp.configure(context, websiteId.trim());
+                Crisp.searchHelpdesk(context);
+                openActivity();
+                result.success(null);
+            } else {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+            }
+        } else if (call.method.equals("openHelpdeskArticle")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String websiteId = (String) args.get("websiteId");
+                String locale = (String) args.get("locale");
+                String slug = (String) args.get("slug");
+                if (websiteId == null || websiteId.trim().isEmpty() || locale == null || slug == null) {
+                    result.error("INVALID_ARGUMENTS", "Missing required arguments: 'websiteId', 'locale', 'slug'", null);
+                    return;
+                }
+                String title = (String) args.get("title");
+                String category = (String) args.get("category");
+                Context articleContext = activity != null ? activity : context;
+                Crisp.configure(context, websiteId.trim());
+                if (title != null && category != null) {
+                    Crisp.openHelpdeskArticle(articleContext, locale, slug, title, category);
+                } else if (title != null) {
+                    Crisp.openHelpdeskArticle(articleContext, locale, slug, title);
+                } else {
+                    Crisp.openHelpdeskArticle(articleContext, locale, slug);
+                }
+                result.success(null);
+            } else {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+            }
+        } else {
             result.notImplemented();
         }
     }

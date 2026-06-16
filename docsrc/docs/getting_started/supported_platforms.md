@@ -42,6 +42,8 @@ next:
 | `getSessionIdentifier`               | Yes                       | Yes             | Yes (WebView only)       |
 | `getUnreadMessageCount`              | Yes                       | Yes*            | Yes*                     |
 | `markMessagesAsRead`                 | Yes                       | Yes*            | Yes*                     |
+| `openHelpdesk`                       | Yes                       | Yes             | Yes (WebView only)       |
+| `openHelpdeskArticle`                | Yes                       | Yes             | Yes (WebView only)       |
 | `openChatboxFromNotification`        | Android (primarily)       | No-op (`false`) | No-op (`false`)          |
 | `setOnNotificationTappedCallback`    | Android                   | No-op           | No-op                    |
 | `CrispConfig.modalPresentationStyle` | iOS only                  | Ignored         | Ignored                  |

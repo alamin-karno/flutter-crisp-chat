@@ -92,6 +92,11 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   }
 
   Future<void> _waitForCrispReady() async {
+    // The native webview context needs a moment to initialize after
+    // WebviewWindow.create() + launch(). Polling evaluateJavaScript
+    // before the native side is ready produces "can not find webview for id: 0"
+    // errors. A short initial delay avoids the bulk of these.
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     for (var i = 0; i < 100; i++) {
       final ready = await _evaluateInWebview(CrispJsBridge.isCrispReadyCheck());
       if (ready == 'true') {
@@ -122,7 +127,12 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
       return await webview.evaluateJavaScript(wrapped);
     } on PlatformException catch (e) {
       if (kDebugMode) {
-        debugPrint('Crisp WebView evaluateJavaScript: ${e.message}');
+        final msg = e.message ?? '';
+        // "can not find webview for id: X" fires transiently while the native
+        // context is still initializing — suppress it to avoid misleading noise.
+        if (!msg.startsWith('can not find webview')) {
+          debugPrint('Crisp WebView evaluateJavaScript: $msg');
+        }
       }
       return null;
     }
@@ -220,4 +230,31 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
 
   @override
   Future<bool> isVideoCallsSupported() async => true;
+
+  @override
+  Future<void> openHelpdesk({required String websiteId}) async {
+    if (_webview == null) {
+      await openCrispChat(config: CrispConfig(websiteID: websiteId));
+    }
+    await _runInWebview(CrispJsBridge.openHelpdeskSearch());
+  }
+
+  @override
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    if (_webview == null) {
+      await openCrispChat(config: CrispConfig(websiteID: websiteId));
+    }
+    await _runInWebview(CrispJsBridge.openHelpdeskArticle(
+      locale: locale,
+      slug: slug,
+      title: title,
+      category: category,
+    ));
+  }
 }

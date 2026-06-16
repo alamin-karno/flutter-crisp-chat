@@ -63,4 +63,27 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
 
   @override
   Future<bool> isVideoCallsSupported() async => true;
+
+  @override
+  Future<void> openHelpdesk({required String websiteId}) async {
+    await CrispWebSdk.ensureLoaded(websiteId: websiteId);
+    await CrispWebSdk.runScript(CrispJsBridge.openHelpdeskSearch());
+  }
+
+  @override
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    await CrispWebSdk.ensureLoaded(websiteId: websiteId);
+    await CrispWebSdk.runScript(CrispJsBridge.openHelpdeskArticle(
+      locale: locale,
+      slug: slug,
+      title: title,
+      category: category,
+    ));
+  }
 }

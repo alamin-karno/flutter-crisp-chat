@@ -75,6 +75,34 @@ class MockFlutterCrispChatPlatform
   bool mockVideoCallsSupported = false;
   @override
   Future<bool> isVideoCallsSupported() async => mockVideoCallsSupported;
+
+  bool openHelpdeskCalled = false;
+  Map<String, dynamic>? openHelpdeskArgs;
+  @override
+  Future<void> openHelpdesk({required String websiteId}) async {
+    openHelpdeskCalled = true;
+    openHelpdeskArgs = {'websiteId': websiteId};
+  }
+
+  bool openHelpdeskArticleCalled = false;
+  Map<String, dynamic>? openHelpdeskArticleArgs;
+  @override
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    openHelpdeskArticleCalled = true;
+    openHelpdeskArticleArgs = {
+      'websiteId': websiteId,
+      'locale': locale,
+      'slug': slug,
+      if (title != null) 'title': title,
+      if (category != null) 'category': category,
+    };
+  }
 }
 
 void main() {
@@ -243,5 +271,102 @@ void main() {
         );
       },
     );
+  });
+
+  group('openHelpdesk', () {
+    test('calls platform method with correct websiteId', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.openHelpdesk(websiteId: 'test-website-id');
+      expect(fakePlatform.openHelpdeskCalled, isTrue);
+      expect(fakePlatform.openHelpdeskArgs, equals({'websiteId': 'test-website-id'}));
+    });
+
+    test('throws ArgumentError for empty websiteId', () {
+      expect(
+        FlutterCrispChat.openHelpdesk(websiteId: ''),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for whitespace-only websiteId', () {
+      expect(
+        FlutterCrispChat.openHelpdesk(websiteId: '   '),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+  });
+
+  group('openHelpdeskArticle', () {
+    test('calls platform method with all arguments', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.openHelpdeskArticle(
+        websiteId: 'test-website-id',
+        locale: 'en',
+        slug: 'my-article',
+        title: 'My Article',
+        category: 'General',
+      );
+      expect(fakePlatform.openHelpdeskArticleCalled, isTrue);
+      expect(
+        fakePlatform.openHelpdeskArticleArgs,
+        equals({
+          'websiteId': 'test-website-id',
+          'locale': 'en',
+          'slug': 'my-article',
+          'title': 'My Article',
+          'category': 'General',
+        }),
+      );
+    });
+
+    test('calls platform method without optional fields', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.openHelpdeskArticle(
+        websiteId: 'test-website-id',
+        locale: 'en',
+        slug: 'my-article',
+      );
+      expect(fakePlatform.openHelpdeskArticleCalled, isTrue);
+      expect(
+        fakePlatform.openHelpdeskArticleArgs,
+        equals({'websiteId': 'test-website-id', 'locale': 'en', 'slug': 'my-article'}),
+      );
+    });
+
+    test('throws ArgumentError for empty websiteId', () {
+      expect(
+        FlutterCrispChat.openHelpdeskArticle(
+          websiteId: '',
+          locale: 'en',
+          slug: 'slug',
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for empty locale', () {
+      expect(
+        FlutterCrispChat.openHelpdeskArticle(
+          websiteId: 'valid-id',
+          locale: '',
+          slug: 'slug',
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for empty slug', () {
+      expect(
+        FlutterCrispChat.openHelpdeskArticle(
+          websiteId: 'valid-id',
+          locale: 'en',
+          slug: '',
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
   });
 }

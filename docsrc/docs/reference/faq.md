@@ -78,6 +78,16 @@ There is **no** `CrispConfig` runtime flag for video. On iOS, the SDK variant is
 
 Setup guide: [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
 
+### Can I open the Helpdesk / FAQ directly without live chat?
+
+Yes — on **all platforms**. Use `FlutterCrispChat.openHelpdesk()` to open the helpdesk search screen, or `FlutterCrispChat.openHelpdeskArticle()` to jump straight to a specific article.
+
+- **Android / iOS:** native SDK (`Crisp.searchHelpdesk()` / `CrispSDK.searchHelpdesk()`).
+- **Web:** `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK.
+- **Desktop:** same `$crisp` command injected into the embedded WebView (opens the WebView automatically if not already open).
+
+See [Helpdesk / FAQ](/core_feature/helpdesk) for full usage and platform details.
+
 ### When should I call `resetCrispChatSession`?
 
 Call it when your app user **logs out**. This clears the chat session so the next user doesn't see the previous user's conversation history.

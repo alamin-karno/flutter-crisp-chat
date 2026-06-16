@@ -31,7 +31,7 @@ Or manually add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  crisp_chat: ^2.5.0
+  crisp_chat: ^2.6.0
 ```
 
 For **Web and desktop** targets:
