@@ -21,9 +21,15 @@ All notable changes to the `crisp_chat` package are documented here. For the ful
 
 ## [Unreleased]
 
+## 2.6.0
+
 ### Added
 * `FlutterCrispChat.openHelpdesk()` — opens the Crisp Helpdesk/FAQ search screen directly on **all platforms** (closes [#158](https://github.com/alamin-karno/flutter-crisp-chat/issues/158)). Android/iOS use the native SDK; Web and desktop push `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK.
 * `FlutterCrispChat.openHelpdeskArticle()` — opens a specific helpdesk article by `locale` and `slug`, with optional `title` and `category`, on **all platforms**. Android/iOS use the native SDK; Web and desktop push `$crisp.push(["do", "helpdesk:article:open", [...]])`. See [Helpdesk / FAQ](/core_feature/helpdesk) for full details.
+
+### Fixed
+* Fixed iOS **Swift Package Manager** build error — added explicit `UIKit` linker setting to `Package.swift` ([#161](https://github.com/alamin-karno/flutter-crisp-chat/pull/161)).
+* Fixed spurious `"can not find webview for id: 0"` log noise on desktop — added startup delay before polling and suppressed transient initialisation error.
 
 ### Security
 * Fixed high-severity esbuild RCE vulnerability ([GHSA-gv7w-rqvm-qjhr](https://github.com/advisories/GHSA-gv7w-rqvm-qjhr)) in `docsrc/` dev tooling — bumped esbuild override to `^0.28.0` ([#159](https://github.com/alamin-karno/flutter-crisp-chat/pull/159)).
@@ -31,6 +37,8 @@ All notable changes to the `crisp_chat` package are documented here. For the ful
 
 ### Documentation
 * Added blog post covering the multi-platform `crisp_chat` Flutter plugin expansion to Web and desktop.
+* Added [Helpdesk / FAQ](/core_feature/helpdesk) documentation page with full usage examples for all platforms.
+* docsrc PageSpeed / SEO improvements: local asset hosting, non-render-blocking font loading, Open Graph / Twitter Card meta, canonical links, JSON-LD structured data, and CLS fixes.
 
 ## 2.5.0
 

@@ -1,6 +1,6 @@
 name: crisp_chat
 description: Flutter plugin for Crisp live chat on Android, iOS, Web, and desktop.
-version: 2.5.0
+version: 2.6.0
 
 readme: README.md
 license: MIT

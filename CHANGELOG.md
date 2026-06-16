@@ -1,9 +1,16 @@
 # [Unreleased]
 
+# 2.6.0
+
 Added
 ---
 * `FlutterCrispChat.openHelpdesk()` — opens the Crisp Helpdesk/FAQ search screen directly on **all platforms** (closes [#158](https://github.com/alamin-karno/flutter-crisp-chat/issues/158)). On Android, calls `Crisp.searchHelpdesk()` then starts `ChatActivity`. On iOS, calls `CrispSDK.searchHelpdesk()` then presents `ChatViewController`. On Web and desktop, pushes `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK.
 * `FlutterCrispChat.openHelpdeskArticle()` — opens a specific helpdesk article by `locale` and `slug`, with optional `title` and `category`, on **all platforms**. Native SDK on Android/iOS; `$crisp.push(["do", "helpdesk:article:open", [...]])` on Web and desktop.
+
+Fixed
+---
+* Fixed iOS **Swift Package Manager** build error — added explicit `UIKit` linker setting to `Package.swift` ([#161](https://github.com/alamin-karno/flutter-crisp-chat/pull/161)).
+* Fixed spurious `"can not find webview for id: 0"` log noise on desktop — added 500 ms startup delay before polling and suppressed the transient initialisation error.
 
 Security
 ---
@@ -24,6 +31,7 @@ Documentation
   * Added explicit `width`/`height` attributes to all "Powered By" images to eliminate Cumulative Layout Shift (CLS).
   * Removed invalid `alt` attribute from `<link rel="icon">` tag.
   * Added `preconnect` hints for Google Fonts, gstatic, and Google Tag Manager.
+  * Added [Helpdesk / FAQ](/core_feature/helpdesk) documentation page.
 
 # 2.5.0
 

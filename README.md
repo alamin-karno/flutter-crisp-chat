@@ -63,7 +63,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.5.0
+  crisp_chat: ^2.6.0
 ```
 
 **Web / desktop:** No native Crisp SDK install. Web loads `client.crisp.chat` at runtime. Desktop uses an embedded WebView (`desktop_webview_window`) or opens your browser if WebView is unavailable. See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
