@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Security
+---
+* Downgraded docsrc build toolchain from `vitepress@2.0.0-alpha.17` (vite 7.x) to `vitepress@1.6.4` (vite 5.x) to resolve two high-severity vite 7.x CVEs ([GHSA-859j-r86m-m3mj](https://github.com/advisories/GHSA-859j-r86m-m3mj), [GHSA-pc3c-v4xw-v6vq](https://github.com/advisories/GHSA-pc3c-v4xw-v6vq)) and one low-severity esbuild CVE ([GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99)) — patched versions (vite 7.3.5, esbuild 0.28.1) are not yet published so a toolchain downgrade to unaffected version ranges was applied. Removed the stale `esbuild@^0.28.1` npm override that referenced a non-existent version.
+
 # 2.6.0
 
 Added
