@@ -13,6 +13,17 @@ Security
 Documentation
 ---
 * Added blog post covering the multi-platform (`crisp_chat`) Flutter plugin expansion to Web and desktop.
+* **docsrc PageSpeed / SEO improvements:**
+  * Replaced render-blocking CSS `@import` for Google Fonts with `<link rel="stylesheet">` + `<link rel="preconnect">` in the VitePress `head` config.
+  * Added missing `twitter:card`, `twitter:site`, `twitter:title`, `twitter:description`, and `twitter:image` meta tags to all pages.
+  * Added `og:image:width`, `og:image:height`, and `og:image:alt` to all pages.
+  * Added `<link rel="canonical">` to all pages.
+  * Added JSON-LD `SoftwareApplication` structured data to all pages.
+  * Replaced Bing-hotlinked Flutter and Firebase logos with locally-hosted copies (`/graphics/flutter-logo.png`, `/graphics/firebase-logo.png`, `/graphics/crisp-logo.png`) to eliminate third-party image dependencies and CLS.
+  * Downloaded hero image from external CDN (`digitiz.fr`) to `/graphics/crisp-hero.jpg` — served from same origin.
+  * Added explicit `width`/`height` attributes to all "Powered By" images to eliminate Cumulative Layout Shift (CLS).
+  * Removed invalid `alt` attribute from `<link rel="icon">` tag.
+  * Added `preconnect` hints for Google Fonts, gstatic, and Google Tag Manager.
 
 # 2.5.0
 

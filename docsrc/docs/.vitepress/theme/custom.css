@@ -1,7 +1,7 @@
 /* Flutter-inspired theme for Flutter Crisp Chat docs */
 /* Reference: https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap');
+/* Google Fonts are loaded via <link> in config.mjs to avoid render-blocking CSS @import */
 
 /* ============================================
    Light Mode — Flutter Blue
