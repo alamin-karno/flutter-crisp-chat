@@ -21,7 +21,7 @@ hero:
   text: Crisp Live Chat for Flutter
   tagline: Integrate Crisp customer messaging on Android, iOS, Web, and desktop — native SDKs on mobile, official Web Chat SDK on web and desktop, with push notifications, sessions, and REST helpers.
   image:
-    src: 'https://digitiz.fr/wp-content/uploads/2021/06/Crisp-1.jpg'
+    src: '/graphics/crisp-hero.jpg'
     alt: Flutter Crisp Chat
   actions:
     - theme: brand

@@ -35,25 +35,57 @@ export default defineConfig({
   },
 
   head: [
-    ['link', { rel: "icon", type: "image/png", sizes: "16x16", href: "/flutter-crisp-chat/graphics/logo.png", alt: "logo" }],
-    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-SWJLYZRT92' }],
-    ['script', {}, `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-SWJLYZRT92');
-    `]
+    // Favicon — `alt` is not a valid attribute on <link>
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/flutter-crisp-chat/graphics/logo.png' }],
+    // Preconnect to origins used by the page (reduces TCP/TLS latency)
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+    ['link', { rel: 'preconnect', href: 'https://www.googletagmanager.com' }],
+    // Google Fonts — loaded as a <link> instead of CSS @import to avoid render-blocking
+    ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap' }],
+    // Google Analytics
+    ['script', { async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-SWJLYZRT92' }],
+    ['script', {}, `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-SWJLYZRT92');`],
   ],
 
   transformPageData(pageData) {
-    let url = 'https://alamin-karno.github.io/flutter-crisp-chat';
-    pageData.frontmatter.head ??= []
-    pageData.frontmatter.head.push(['meta', { property: 'og:locale', content: 'en_US' }])
-    pageData.frontmatter.head.push(['meta', { property: 'og:type', content: 'website' }])
-    pageData.frontmatter.head.push(['meta', { property: 'og:title', content: `${pageData.title} | Flutter Crisp Chat` }])
-    pageData.frontmatter.head.push(['meta', { property: 'og:description', content: `${pageData.description}` }])
-    pageData.frontmatter.head.push(['meta', { property: 'og:image', content: `${url}/graphics/logo.png` }])
-    pageData.frontmatter.head.push(['meta', { property: 'og:url', content: `${url}/${pageData.filePath.replace(".md", ".html")}` }])
+    const base = 'https://alamin-karno.github.io/flutter-crisp-chat';
+    const cleanPath = pageData.filePath.replace(/\.md$/, '').replace(/\/index$/, '/');
+    const pageUrl = `${base}/${cleanPath}`.replace(/\/+$/, '/');
+    const ogImage = `${base}/graphics/logo.png`;
+
+    pageData.frontmatter.head ??= [];
+    // Open Graph
+    pageData.frontmatter.head.push(['meta', { property: 'og:locale', content: 'en_US' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:type', content: 'website' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:title', content: `${pageData.title} | Flutter Crisp Chat` }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:description', content: pageData.description || '' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:image', content: ogImage }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:image:width', content: '200' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:image:height', content: '200' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:image:alt', content: 'Flutter Crisp Chat logo' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:url', content: pageUrl }]);
+    // Twitter / X Card
+    pageData.frontmatter.head.push(['meta', { name: 'twitter:card', content: 'summary' }]);
+    pageData.frontmatter.head.push(['meta', { name: 'twitter:site', content: '@alamin_karno' }]);
+    pageData.frontmatter.head.push(['meta', { name: 'twitter:title', content: `${pageData.title} | Flutter Crisp Chat` }]);
+    pageData.frontmatter.head.push(['meta', { name: 'twitter:description', content: pageData.description || '' }]);
+    pageData.frontmatter.head.push(['meta', { name: 'twitter:image', content: ogImage }]);
+    // Canonical URL
+    pageData.frontmatter.head.push(['link', { rel: 'canonical', href: pageUrl }]);
+    // JSON-LD structured data
+    pageData.frontmatter.head.push(['script', { type: 'application/ld+json' }, JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Flutter Crisp Chat',
+      description: 'Flutter plugin for Crisp live chat on Android, iOS, Web, macOS, Windows, and Linux.',
+      url: 'https://alamin-karno.github.io/flutter-crisp-chat/',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Android, iOS, macOS, Windows, Linux, Web',
+      author: { '@type': 'Person', name: 'Md. Al-Amin', url: 'https://github.com/alamin-karno' },
+      license: 'https://github.com/alamin-karno/flutter-crisp-chat/blob/main/LICENSE',
+      codeRepository: 'https://github.com/alamin-karno/flutter-crisp-chat',
+    })]);
   },
 
   themeConfig: {

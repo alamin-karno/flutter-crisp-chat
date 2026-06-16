@@ -1,4 +1,5 @@
 <script setup>
+import { withBase } from 'vitepress';
 import sponsorsJson from "@theme/data/sponsor.json";
 
 const sponsors = [...sponsorsJson.platinum, ...sponsorsJson.average];
@@ -44,13 +45,13 @@ const sponsors = [...sponsorsJson.platinum, ...sponsorsJson.average];
         <h3>Powered By</h3>
         <div class="logos">
             <a href="https://flutter.dev" target="_blank" title="Flutter">
-                <img src="https://tse3.mm.bing.net/th/id/OIP.hGnjnxryKnKZW9AJ_3ErvQHaFf?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Flutter" style="height: 32px;" />
+                <img :src="withBase('/graphics/flutter-logo.png')" alt="Flutter" width="32" height="32" style="height: 32px; width: auto;" />
             </a>
             <a href="https://crisp.chat" target="_blank" title="Crisp">
-                <img src="https://uploads-ssl.webflow.com/5fcdef3cc7cf1d1e14b4ba0c/5fef34e1b64093d0aec1d091_crisp-chat.png" alt="Crisp" style="height: 32px;" />
+                <img :src="withBase('/graphics/crisp-logo.png')" alt="Crisp" width="32" height="32" style="height: 32px; width: auto;" />
             </a>
             <a href="https://firebase.google.com" target="_blank" title="Firebase">
-                <img src="https://th.bing.com/th/id/R.1422944bd0e2453d6a2588f7ee305e6c?rik=DCQBmrX16yn13A&riu=http%3a%2f%2fblogs.powercode.id%2fwp-content%2fuploads%2f2022%2f09%2ffirebase3.png&ehk=WNZyhzq%2bgco2pRc50QvTZSxVcXufW2%2f29KPZ5Z6S26A%3d&risl=&pid=ImgRaw&r=0" alt="Firebase" style="height: 32px;" />
+                <img :src="withBase('/graphics/firebase-logo.png')" alt="Firebase" width="32" height="32" style="height: 32px; width: auto;" />
             </a>
         </div>
     </div>
