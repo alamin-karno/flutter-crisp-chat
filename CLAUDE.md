@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.5.0**.
+`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.6.0**.
 
 - Mobile (Android/iOS): wraps the native Crisp SDKs via platform channels
 - Web: embeds the official Crisp Web Chat SDK in an iframe via a JavaScript bridge
@@ -75,6 +75,10 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 ### iOS UIWindow Architecture
 
 The iOS plugin presents the Crisp chat in a **dedicated `UIWindow`** at `.alert` level, not as a modal over `FlutterViewController`. This prevents Flutter's rendering engine from pausing (which causes the black-screen-on-dismiss bug). A `CrispDismissalSentinel` (invisible zero-size UIView) detects dismissal via `didMoveToWindow` and tears down the window cleanly, handling re-entrant Crisp-presented VCs (e.g. camera picker).
+
+### Helpdesk Methods
+
+`openHelpdesk()` and `openHelpdeskArticle()` are cross-platform, unlike most other methods which have separate mobile/web/desktop code paths only via the platform interface split — these two route to a native SDK call on Android/iOS (`Crisp.searchHelpdesk()` / `CrispSDK.searchHelpdesk()`) and to a `$crisp.push(["do", "helpdesk:...", ...])` JS bridge call on Web/desktop.
 
 ### REST API Methods
 
