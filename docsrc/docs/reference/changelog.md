@@ -21,6 +21,9 @@ All notable changes to the `crisp_chat` package are documented here. For the ful
 
 ## [Unreleased]
 
+### Changed
+* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23`.
+
 ## 2.6.0
 
 ### Added

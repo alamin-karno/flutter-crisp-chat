@@ -697,7 +697,7 @@ Before using your development token, you now need to associate your marketplace 
 ## Supported SDK Versions
 This plugin aims to stay compatible with the latest Crisp SDKs. As of the latest update, it has been tested with:
 
-- Crisp Android SDK version: `2.0.20`
+- Crisp Android SDK version: `2.0.23`
 - Crisp iOS SDK version: ~> `2.13.0`
 - Crisp Web Chat SDK: loaded from `https://client.crisp.chat/l.js` at runtime (Web and desktop)
 

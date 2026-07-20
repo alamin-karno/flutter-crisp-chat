@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23` — includes fixes for an occasional crash on chatbox closing, a crash on messages with a `preview` field but no embedded preview, and rejecting `file://` scheme URL opening instead of crashing, plus an additive `onNotificationReceived` method on the native SDK's `EventsCallback` (not yet exposed through this plugin).
+
 Security
 ---
 * Added a `vite@^6.4.3` npm override in `docsrc/` to fix four Dependabot alerts left open by the previous `vitepress@1.6.4` downgrade — its direct `vite@^5.4.14` dependency resolved to `5.4.21`, which bundles an unpatched `esbuild@0.21.5` and predates fixes only ever backported to the vite `6.4.x` line: [GHSA-fx2h-pf6j-xcff](https://github.com/advisories/GHSA-fx2h-pf6j-xcff) (`server.fs.deny` bypass on Windows, high), [GHSA-v6wh-96g9-6wx3](https://github.com/advisories/GHSA-v6wh-96g9-6wx3) (launch-editor NTLMv2 hash disclosure), [GHSA-4w7w-66w2-5vf9](https://github.com/advisories/GHSA-4w7w-66w2-5vf9) (path traversal in optimized deps `.map` handling), and [GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99) (esbuild dev server request/response read). The override resolves to `vite@6.4.3` + `esbuild@0.25.12`, both within `@vitejs/plugin-vue`'s supported peer range for `vitepress@1.6.4`.
