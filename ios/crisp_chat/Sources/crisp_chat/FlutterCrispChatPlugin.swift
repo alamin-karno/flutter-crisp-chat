@@ -14,6 +14,10 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
     private var crispConfig: CrispConfig?
     private weak var previousNotificationDelegate: UNUserNotificationCenterDelegate?
 
+    /// Tokens for the currently-registered Crisp SDK event callbacks (see
+    /// `registerCrispEventCallbacks`). Empty when no Dart listener is active.
+    private var eventCallbackTokens: [CallbackToken] = []
+
     /// Dedicated window used to present the Crisp chat.
     ///
     /// Using a separate UIWindow means Flutter's own window is never covered,
@@ -227,9 +231,107 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             result(false)
             #endif
 
+        case "registerCrispEventListener":
+            registerCrispEventCallbacks()
+            result(nil)
+
+        case "unregisterCrispEventListener":
+            unregisterCrispEventCallbacks()
+            result(nil)
+
         default:
             result(FlutterMethodNotImplemented)
         }
+    }
+
+    /// Registers one `CrispSDK.addCallback` per event case, forwarding each
+    /// to Dart via `onCrispEvent`. No-op if already registered.
+    private func registerCrispEventCallbacks() {
+        guard eventCallbackTokens.isEmpty else { return }
+
+        eventCallbackTokens.append(CrispSDK.addCallback(.chatOpened { [weak self] in
+            self?.channel?.invokeMethod("onCrispEvent", arguments: ["type": "chatOpened"])
+        }))
+        eventCallbackTokens.append(CrispSDK.addCallback(.chatClosed { [weak self] in
+            self?.channel?.invokeMethod("onCrispEvent", arguments: ["type": "chatClosed"])
+        }))
+        eventCallbackTokens.append(CrispSDK.addCallback(.sessionLoaded { [weak self] sessionId in
+            self?.channel?.invokeMethod("onCrispEvent", arguments: ["type": "sessionLoaded", "sessionId": sessionId])
+        }))
+        eventCallbackTokens.append(CrispSDK.addCallback(.messageSent { [weak self] message in
+            self?.channel?.invokeMethod("onCrispEvent", arguments: [
+                "type": "messageSent",
+                "message": Self.messageToDictionary(message),
+            ])
+        }))
+        eventCallbackTokens.append(CrispSDK.addCallback(.messageReceived { [weak self] message in
+            self?.channel?.invokeMethod("onCrispEvent", arguments: [
+                "type": "messageReceived",
+                "message": Self.messageToDictionary(message),
+            ])
+        }))
+    }
+
+    /// Removes every token added by `registerCrispEventCallbacks`. The Crisp
+    /// SDK keeps a strong reference to registered callbacks, so this must be
+    /// called once Dart's last listener cancels.
+    private func unregisterCrispEventCallbacks() {
+        eventCallbackTokens.forEach { CrispSDK.removeCallback(token: $0) }
+        eventCallbackTokens.removeAll()
+    }
+
+    /// Builds the same payload shape produced by the Android side's
+    /// `messageToMap`, for a minimal, cross-platform `CrispMessage`.
+    private static func messageToDictionary(_ message: Message) -> [String: Any?] {
+        let contentType: String
+        let text: String?
+
+        switch message.content {
+        case .text(let value):
+            contentType = "text"
+            text = value
+        case .textWithAttachment(let value, _, _):
+            contentType = "text"
+            text = value
+        case .textWithVideoAttachment(let value, _, _):
+            contentType = "text"
+            text = value
+        case .file:
+            contentType = "file"
+            text = nil
+        case .animation:
+            contentType = "animation"
+            text = nil
+        case .audio:
+            contentType = "audio"
+            text = nil
+        case .picker:
+            contentType = "picker"
+            text = nil
+        case .field:
+            contentType = "field"
+            text = nil
+        case .carousel:
+            contentType = "carousel"
+            text = nil
+        }
+
+        let origin: String
+        switch message.origin {
+        case .local: origin = "local"
+        case .network: origin = "network"
+        case .update: origin = "update"
+        }
+
+        return [
+            "isMe": message.isMe,
+            "from": message.from == .user ? "user" : "operator",
+            "origin": origin,
+            "timestamp": Int(message.timestamp.timeIntervalSince1970 * 1000),
+            "fingerprint": message.fingerprint,
+            "contentType": contentType,
+            "text": text,
+        ]
     }
 
     /// Opens the Crisp chat in a dedicated UIWindow.

@@ -1,4 +1,5 @@
 import 'package:crisp_chat/src/config.dart';
+import 'package:crisp_chat/src/crisp_event.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
@@ -105,5 +106,39 @@ void main() {
     expect(captured!.arguments, containsPair('slug', 'faq'));
     expect((captured!.arguments as Map).containsKey('title'), isFalse);
     expect((captured!.arguments as Map).containsKey('category'), isFalse);
+  });
+
+  group('onCrispEvent', () {
+    test('registers on listen, unregisters on cancel, and forwards native events', () async {
+      final invokedMethods = <String>[];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        channel,
+        (MethodCall methodCall) async {
+          invokedMethods.add(methodCall.method);
+          return null;
+        },
+      );
+
+      final events = <CrispChatEvent>[];
+      final subscription = platform.onCrispEvent.listen(events.add);
+      await Future<void>.delayed(Duration.zero);
+      expect(invokedMethods, contains('registerCrispEventListener'));
+
+      const codec = StandardMethodCodec();
+      final data = codec.encodeMethodCall(
+        const MethodCall('onCrispEvent', {'type': 'chatOpened'}),
+      );
+      await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage('flutter_crisp_chat', data, (_) {});
+      await Future<void>.delayed(Duration.zero);
+
+      expect(events, hasLength(1));
+      expect(events.single.type, CrispEventType.chatOpened);
+
+      await subscription.cancel();
+      await Future<void>.delayed(Duration.zero);
+      expect(invokedMethods, contains('unregisterCrispEventListener'));
+    });
   });
 }

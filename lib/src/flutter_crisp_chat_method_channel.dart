@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'config.dart';
+import 'crisp_event.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// An implementation of [FlutterCrispChatPlatform] that uses method channels.
@@ -17,6 +20,11 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
 
   /// Whether the native method call handler has been set up.
   bool _isHandlerRegistered = false;
+
+  /// Broadcast controller backing [onCrispEvent]. Created lazily on first
+  /// listen, and tells native to (un)register its SDK event callback in
+  /// [StreamController.onListen]/[StreamController.onCancel].
+  StreamController<CrispChatEvent>? _eventController;
 
   /// Lazily registers the native → Dart method call handler.
   /// This avoids calling [setMethodCallHandler] before the binding is ready.
@@ -33,7 +41,29 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       case 'onCrispNotificationTapped':
         _onNotificationTappedCallback?.call();
         break;
+      case 'onCrispEvent':
+        final args = call.arguments as Map<dynamic, dynamic>;
+        _eventController?.add(CrispChatEvent.fromMap(args));
+        break;
     }
+  }
+
+  /// A broadcast stream of native Crisp SDK events. Registers the native
+  /// event callback on first listen, and unregisters it once the last
+  /// listener cancels — the native SDK keeps a strong reference to its
+  /// event callback, so it should not stay registered when unused.
+  @override
+  Stream<CrispChatEvent> get onCrispEvent {
+    _eventController ??= StreamController<CrispChatEvent>.broadcast(
+      onListen: () {
+        _ensureNativeHandlerRegistered();
+        methodChannel.invokeMethod('registerCrispEventListener');
+      },
+      onCancel: () {
+        methodChannel.invokeMethod('unregisterCrispEventListener');
+      },
+    );
+    return _eventController!.stream;
   }
 
   /// [openCrispChat] is use to invoke the Method Channel and call native

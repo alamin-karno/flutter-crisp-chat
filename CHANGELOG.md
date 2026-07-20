@@ -1,8 +1,12 @@
 # [Unreleased]
 
+Added
+---
+* `FlutterCrispChat.onCrispEvent` — a broadcast `Stream<CrispChatEvent>` of native Crisp SDK events: `sessionLoaded`, `chatOpened`, `chatClosed`, `messageSent`, `messageReceived`, and (Android-only) `notificationReceived`. Wraps the native SDK's `EventsCallback` on Android and the `Crisp.Callback` enum on iOS; the native callback is registered on first `.listen()` and unregistered once the last listener cancels. Not supported on Web/desktop.
+
 Changed
 ---
-* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23` — includes fixes for an occasional crash on chatbox closing, a crash on messages with a `preview` field but no embedded preview, and rejecting `file://` scheme URL opening instead of crashing, plus an additive `onNotificationReceived` method on the native SDK's `EventsCallback` (not yet exposed through this plugin).
+* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23` — includes fixes for an occasional crash on chatbox closing, a crash on messages with a `preview` field but no embedded preview, and rejecting `file://` scheme URL opening instead of crashing, plus an additive `onNotificationReceived` method on the native SDK's `EventsCallback`, now exposed as `CrispEventType.notificationReceived` through `FlutterCrispChat.onCrispEvent`.
 
 Security
 ---

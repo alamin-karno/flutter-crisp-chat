@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crisp_chat/crisp_chat.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_platform_interface.dart';
@@ -103,6 +105,11 @@ class MockFlutterCrispChatPlatform
       if (category != null) 'category': category,
     };
   }
+
+  final StreamController<CrispChatEvent> eventStreamController =
+      StreamController<CrispChatEvent>.broadcast();
+  @override
+  Stream<CrispChatEvent> get onCrispEvent => eventStreamController.stream;
 }
 
 void main() {
@@ -367,6 +374,26 @@ void main() {
         ),
         throwsA(isA<ArgumentError>()),
       );
+    });
+  });
+
+  group('onCrispEvent', () {
+    test('forwards events from the platform implementation', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+
+      final events = <CrispChatEvent>[];
+      final subscription = FlutterCrispChat.onCrispEvent.listen(events.add);
+
+      fakePlatform.eventStreamController.add(
+        CrispChatEvent.fromMap({'type': 'chatOpened'}),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(events, hasLength(1));
+      expect(events.single.type, CrispEventType.chatOpened);
+
+      await subscription.cancel();
     });
   });
 }

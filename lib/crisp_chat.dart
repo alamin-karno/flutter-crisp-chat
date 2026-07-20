@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'src/config.dart';
+import 'src/crisp_event.dart';
 import 'src/flutter_crisp_chat_platform_interface.dart';
 import 'src/helper.dart';
 import 'src/platform_register.dart';
 
 export 'src/config.dart';
+export 'src/crisp_event.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
@@ -438,6 +440,22 @@ class FlutterCrispChat {
   static Future<bool> isVideoCallsSupported() {
     return FlutterCrispChatPlatform.instance.isVideoCallsSupported();
   }
+
+  /// A broadcast stream of native Crisp SDK events: session loaded, chat
+  /// opened/closed, and message sent/received.
+  ///
+  /// The native event callback is registered on the first `.listen()` call
+  /// and unregistered once the last listener cancels, so it's safe to listen
+  /// and cancel freely without leaking a native-side registration.
+  ///
+  /// Not supported on Web/desktop — the stream never emits there.
+  ///
+  /// [CrispEventType.notificationReceived] is Android-only; the iOS Crisp SDK
+  /// has no matching callback, so iOS never emits it.
+  ///
+  /// {@category Events}
+  static Stream<CrispChatEvent> get onCrispEvent =>
+      FlutterCrispChatPlatform.instance.onCrispEvent;
 }
 
 /// Entry point for the macOS, Windows, and Linux Flutter plugin registrant.

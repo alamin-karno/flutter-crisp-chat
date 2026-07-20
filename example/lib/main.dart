@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crisp_chat/crisp_chat.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -86,10 +88,23 @@ class _MyAppState extends State<MyApp> {
 
   int count = 0;
   late CrispConfig config;
+  StreamSubscription<CrispChatEvent>? _crispEventSubscription;
 
   @override
   void initState() {
     super.initState();
+
+    // Listen to native Crisp SDK events (session loaded, chat opened/closed,
+    // message sent/received, and Android-only notification received) for
+    // manual verification on-device — not covered by `flutter test`.
+    _crispEventSubscription = FlutterCrispChat.onCrispEvent.listen((event) {
+      if (kDebugMode) {
+        final messageText = event.message != null
+            ? ' - ${event.message!.from.name}: ${event.message!.text}'
+            : '';
+        print('Crisp event: ${event.type.name}$messageText');
+      }
+    });
 
     // Try to open Crisp chatbox if the app was launched from a Crisp notification
     // (terminated state). This opens the app first, then opens the chatbox.
@@ -131,6 +146,12 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _crispEventSubscription?.cancel();
+    super.dispose();
   }
 
   void _checkUnreadMessages() async {
