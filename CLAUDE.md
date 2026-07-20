@@ -86,6 +86,8 @@ The iOS plugin presents the Crisp chat in a **dedicated `UIWindow`** at `.alert`
 
 On iOS, the native Crisp SDK may not send read receipts when the visitor reads messages, so `unread.visitor` stays non-zero until `markMessagesAsRead()` is called. See `docs/ios-unread-workaround-decision.md`.
 
+The root-level `docs/` folder (distinct from `docsrc/`, the public VitePress site below) holds internal investigation write-ups like this one — `docs/crisp-sdk-ios-unread-issue.md` and `docs/unread-count-verification.md` are the supporting research. `scripts/verify_unread_read_receipts.sh` (hits the Crisp REST API directly to check `unread.visitor` behavior) and `scripts/file-crisp-ios-unread-issue.sh` (files the write-up as a GitHub issue on `crisp-im/crisp-sdk-ios` via `gh`) are the companion tooling for that investigation.
+
 ### Web SDK Conditional Imports
 
 The web SDK uses the Flutter conditional import pattern:
