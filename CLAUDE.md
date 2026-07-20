@@ -70,7 +70,7 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 
 - **iOS**: Crisp iOS SDK 2.13.0, min iOS 13.0. Integrated via CocoaPods or SPM.
   - Optional WebRTC (video calls): set `$CrispChatWebRTC = true` in the app's `ios/Podfile` (CocoaPods) or `CRISP_CHAT_WEBRTC=true` env var (SPM). The Swift code uses `#if CRISP_WEBRTC` to switch imports.
-- **Android**: Crisp Android SDK 2.0.20, minSdkVersion 23, compileSdkVersion 36.
+- **Android**: Crisp Android SDK 2.0.23, minSdkVersion 23, compileSdkVersion 36.
 
 ### iOS UIWindow Architecture
 
