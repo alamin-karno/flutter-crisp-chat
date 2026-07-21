@@ -1,5 +1,3 @@
-# [Unreleased]
-
 # 2.7.0
 
 Added
