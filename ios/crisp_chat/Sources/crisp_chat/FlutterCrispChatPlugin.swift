@@ -362,6 +362,30 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
         return true
     }
 
+    /// Opens the chat now if a foreground-active scene exists, otherwise
+    /// once the app becomes active.
+    ///
+    /// Notification tap responses are delivered while the scene is still
+    /// `foregroundInactive` — both on cold start and on background resume —
+    /// so calling `openChat()` directly from
+    /// `userNotificationCenter(_:didReceive:)` fails its scene guard and the
+    /// tap is silently dropped.
+    private func openChatWhenActive() {
+        if openChat() { return }
+
+        var observer: NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            if let observer = observer {
+                NotificationCenter.default.removeObserver(observer)
+            }
+            _ = self?.openChat()
+        }
+    }
+
     /// Handles registration of device token for push notifications.
     public func application(_ application: UIApplication,
                             didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -422,7 +446,7 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             CrispSDK.handlePushNotification(notification)
 
             DispatchQueue.main.async { [weak self] in
-                self?.openChat()
+                self?.openChatWhenActive()
             }
         } else {
             #if DEBUG
