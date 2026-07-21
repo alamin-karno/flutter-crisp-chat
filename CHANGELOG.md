@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 2.7.0
+
 Added
 ---
 * `FlutterCrispChat.onCrispEvent` — a broadcast `Stream<CrispChatEvent>` of native Crisp SDK events: `sessionLoaded`, `chatOpened`, `chatClosed`, `messageSent`, `messageReceived`, and (Android-only) `notificationReceived`. Wraps the native SDK's `EventsCallback` on Android and the `Crisp.Callback` enum on iOS; the native callback is registered on first `.listen()` and unregistered once the last listener cancels. Not supported on Web/desktop.
@@ -17,6 +19,21 @@ Security
 ---
 * Added a `vite@^6.4.3` npm override in `docsrc/` to fix four Dependabot alerts left open by the previous `vitepress@1.6.4` downgrade — its direct `vite@^5.4.14` dependency resolved to `5.4.21`, which bundles an unpatched `esbuild@0.21.5` and predates fixes only ever backported to the vite `6.4.x` line: [GHSA-fx2h-pf6j-xcff](https://github.com/advisories/GHSA-fx2h-pf6j-xcff) (`server.fs.deny` bypass on Windows, high), [GHSA-v6wh-96g9-6wx3](https://github.com/advisories/GHSA-v6wh-96g9-6wx3) (launch-editor NTLMv2 hash disclosure), [GHSA-4w7w-66w2-5vf9](https://github.com/advisories/GHSA-4w7w-66w2-5vf9) (path traversal in optimized deps `.map` handling), and [GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99) (esbuild dev server request/response read). The override resolves to `vite@6.4.3` + `esbuild@0.25.12`, both within `@vitejs/plugin-vue`'s supported peer range for `vitepress@1.6.4`.
 * Downgraded docsrc build toolchain from `vitepress@2.0.0-alpha.17` (vite 7.x) to `vitepress@1.6.4` (vite 5.x) to resolve two high-severity vite 7.x CVEs ([GHSA-859j-r86m-m3mj](https://github.com/advisories/GHSA-859j-r86m-m3mj), [GHSA-pc3c-v4xw-v6vq](https://github.com/advisories/GHSA-pc3c-v4xw-v6vq)) and one low-severity esbuild CVE ([GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99)) — patched versions (vite 7.3.5, esbuild 0.28.1) are not yet published so a toolchain downgrade to unaffected version ranges was applied. Removed the stale `esbuild@^0.28.1` npm override that referenced a non-existent version.
+
+Documentation
+---
+* **docsrc PageSpeed / SEO / AEO improvements** (Lighthouse mobile performance 69 → 72+ locally, LCP/FCP/CLS all improved, CLS now a perfect 0):
+  * Re-encoded `graphics/logo.png` — it was actually a 2048×2048 JPEG mislabeled with a `.png` extension at 89.7 KB, displayed at 24–32px everywhere (favicon, nav logo, OG image). Re-saved as a true 256×256 PNG at 12 KB (~87% smaller).
+  * Resized `graphics/firebase-logo.png` (640×640 → 128×128) and `graphics/crisp-logo.png` (200×200 → 96×96) to match their ~32px display size.
+  * Resized `graphics/crisp-hero.jpg` (1280×720 → 640×360) to match the home hero's max 320px CSS box at 2x retina.
+  * Self-hosted the "Crisp" sponsor logo (`docsrc/docs/.vitepress/theme/data/sponsor.json`) instead of hotlinking `uploads-ssl.webflow.com` — the last remaining third-party image hotlink, previously missed when the other logos were localized.
+  * Added explicit `width`/`height` to the nav logo (`themeConfig.logo`), the home hero image (`index.md` frontmatter), the sponsor card image, and the GitHub avatar — closes the Lighthouse `unsized-images` audit and drops CLS to 0.
+  * Added `loading="lazy"` to all below-the-fold images (sponsor logos, "Powered By" logos, author avatar), and `fetchpriority="high"` plus a homepage-scoped `<link rel="preload" as="image">` on the hero image (the LCP candidate).
+  * Requested a downsized GitHub avatar via `?s=96` instead of the full-resolution image for a 48px display.
+  * Converted the Google Fonts `<link rel="stylesheet">` to a preload + `media="print"` swap pattern (with a `<noscript>` fallback) so it no longer render-blocks first paint (~920ms savings) — same fonts, no visual change.
+  * Added `FAQPage` JSON-LD structured data to `reference/faq.md` for FAQ rich results and answer-engine extraction.
+  * Added `docs/public/llms.txt` (per the emerging `llms.txt` convention) summarizing the project and linking key docs pages for AI answer engines/crawlers.
+  * Known, unaddressed Lighthouse findings: `uses-long-cache-ttl` (GitHub Pages doesn't support custom `Cache-Control` headers) and `unused-javascript` on `gtag.js` (inherent to Google Analytics; already the lighter alternative to a full GTM container).
 
 # 2.6.0
 

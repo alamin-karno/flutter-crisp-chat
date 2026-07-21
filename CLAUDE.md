@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.6.0**.
+`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.7.0**.
 
 - Mobile (Android/iOS): wraps the native Crisp SDKs via platform channels
 - Web: embeds the official Crisp Web Chat SDK in an iframe via a JavaScript bridge
