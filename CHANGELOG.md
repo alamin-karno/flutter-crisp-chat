@@ -6,6 +6,7 @@ Added
 
 Changed
 ---
+* Added the `FlutterFramework` SPM dependency to `ios/crisp_chat/Package.swift`, as required by Flutter 3.44+'s Swift Package Manager plugin support for plugins that `import Flutter` directly — silences the "missing a dependency on FlutterFramework" build warning.
 * Upgraded Crisp Android SDK from `2.0.20` to `2.0.23` — includes fixes for an occasional crash on chatbox closing, a crash on messages with a `preview` field but no embedded preview, and rejecting `file://` scheme URL opening instead of crashing, plus an additive `onNotificationReceived` method on the native SDK's `EventsCallback`, now exposed as `CrispEventType.notificationReceived` through `FlutterCrispChat.onCrispEvent`.
 
 Security
