@@ -13,8 +13,8 @@ prev:
   link: '/core_feature/unread_messages'
 
 next:
-  text: 'Firebase Setup'
-  link: '/notifications/firebase_setup'
+  text: 'Chat Events'
+  link: '/core_feature/chat_events'
 ---
 
 # Helpdesk / FAQ

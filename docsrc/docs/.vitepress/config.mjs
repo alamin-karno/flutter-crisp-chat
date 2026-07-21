@@ -160,6 +160,7 @@ export default defineConfig({
           { text: 'Session Management', link: '/core_feature/session_management' },
           { text: 'Unread Messages', link: '/core_feature/unread_messages' },
           { text: 'Helpdesk / FAQ', link: '/core_feature/helpdesk' },
+          { text: 'Chat Events', link: '/core_feature/chat_events' },
         ],
       },
 

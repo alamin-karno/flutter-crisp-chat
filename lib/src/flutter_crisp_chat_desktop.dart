@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'config.dart';
+import 'crisp_event.dart';
 import 'crisp_js_bridge.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
@@ -230,6 +231,9 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
 
   @override
   Future<bool> isVideoCallsSupported() async => true;
+
+  @override
+  Stream<CrispChatEvent> get onCrispEvent => const Stream.empty();
 
   @override
   Future<void> openHelpdesk({required String websiteId}) async {

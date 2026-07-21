@@ -186,7 +186,7 @@ Future<void> main(List<String> args) async {
 4. **Windows:** install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/)
 5. **Linux:** `sudo apt install libwebkit2gtk-4.1-dev`
 
-`openChatboxFromNotification`, `setOnNotificationTappedCallback`, and `CrispConfig.enableNotifications` do **not** apply on Web/desktop.
+`openChatboxFromNotification`, `setOnNotificationTappedCallback`, `onCrispEvent`, and `CrispConfig.enableNotifications` do **not** apply on Web/desktop.
 
 See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) for the API matrix and troubleshooting.
 
@@ -677,6 +677,39 @@ Before using your development token, you now need to associate your marketplace 
 2. Click on **Add Trusted Workspace** and submit your `website_id`
 3. Enter the credentials of your main Crisp account (the ones you use to access your main Crisp account) and then submit your 2FA token (if any is enabled)
 4. You're all done! You are now ready to use REST API and start building your plugin
+
+### Chat Events
+
+Listen to native Crisp SDK events — useful for updating an unread badge in real time instead of polling `getUnreadMessageCount()`.
+
+> **Platform support:** Android and iOS only. The stream never emits on Web/desktop.
+
+```dart
+final subscription = FlutterCrispChat.onCrispEvent.listen((event) {
+  switch (event.type) {
+    case CrispEventType.sessionLoaded:
+      print('Session loaded: ${event.sessionId}');
+    case CrispEventType.chatOpened:
+      print('Chat opened');
+    case CrispEventType.chatClosed:
+      print('Chat closed');
+    case CrispEventType.messageSent:
+    case CrispEventType.messageReceived:
+      print('Message from ${event.message?.from}: ${event.message?.text}');
+    case CrispEventType.notificationReceived:
+      print('Notification data: ${event.notificationData}'); // Android-only
+  }
+});
+
+// Later, when no longer needed:
+await subscription.cancel();
+```
+
+The native event callback is registered on the first `.listen()` call and unregistered once the last listener cancels, so it's safe to listen and cancel freely.
+
+`CrispMessage` (carried by `messageSent`/`messageReceived` events) is a minimal summary — `isMe`, `from`, `origin`, `timestamp`, `fingerprint`, `contentType`, and `text` (only populated when `contentType` is `CrispMessageContentType.text`). Rich content (carousel targets, picker choices, file/audio metadata) is not mapped in this version.
+
+`CrispEventType.notificationReceived` is Android-only — the iOS Crisp SDK has no matching callback, so iOS never emits it.
 
 ## Screenshot (GIF)
 

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'config.dart';
+import 'crisp_event.dart';
 import 'flutter_crisp_chat_method_channel.dart';
 
 abstract class FlutterCrispChatPlatform extends PlatformInterface {
@@ -112,5 +113,12 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   Future<bool> isVideoCallsSupported() {
     throw UnimplementedError(
         'isVideoCallsSupported() has not been implemented.');
+  }
+
+  /// A broadcast stream of native Crisp SDK events (session loaded, chat
+  /// opened/closed, message sent/received, and Android-only notification
+  /// received).
+  Stream<CrispChatEvent> get onCrispEvent {
+    throw UnimplementedError('onCrispEvent has not been implemented.');
   }
 }
