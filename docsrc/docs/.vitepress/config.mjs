@@ -41,8 +41,10 @@ export default defineConfig({
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     ['link', { rel: 'preconnect', href: 'https://www.googletagmanager.com' }],
-    // Google Fonts — loaded as a <link> instead of CSS @import to avoid render-blocking
-    ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap' }],
+    // Google Fonts — preload + swap so the stylesheet fetch never blocks first render
+    ['link', { rel: 'preload', as: 'style', href: 'https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap' }],
+    ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap', media: 'print', onload: "this.media='all'" }],
+    ['noscript', {}, '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700&display=swap">'],
     // Google Analytics
     ['script', { async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-SWJLYZRT92' }],
     ['script', {}, `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-SWJLYZRT92');`],
@@ -61,8 +63,8 @@ export default defineConfig({
     pageData.frontmatter.head.push(['meta', { property: 'og:title', content: `${pageData.title} | Flutter Crisp Chat` }]);
     pageData.frontmatter.head.push(['meta', { property: 'og:description', content: pageData.description || '' }]);
     pageData.frontmatter.head.push(['meta', { property: 'og:image', content: ogImage }]);
-    pageData.frontmatter.head.push(['meta', { property: 'og:image:width', content: '200' }]);
-    pageData.frontmatter.head.push(['meta', { property: 'og:image:height', content: '200' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:image:width', content: '256' }]);
+    pageData.frontmatter.head.push(['meta', { property: 'og:image:height', content: '256' }]);
     pageData.frontmatter.head.push(['meta', { property: 'og:image:alt', content: 'Flutter Crisp Chat logo' }]);
     pageData.frontmatter.head.push(['meta', { property: 'og:url', content: pageUrl }]);
     // Twitter / X Card
@@ -93,6 +95,8 @@ export default defineConfig({
     logo: {
       src: '/graphics/logo.png',
       alt: 'Flutter Crisp Chat',
+      width: 24,
+      height: 24,
     },
 
     search: {

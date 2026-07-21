@@ -1,0 +1,23 @@
+# Flutter Crisp Chat
+
+> Flutter plugin for the Crisp live chat SDK on Android, iOS, Web, macOS, Windows, and Linux — native Crisp SDKs on mobile, the official Crisp Web Chat SDK on web and desktop, with push notifications, session management, and REST helpers. Community-maintained, not an official Crisp product.
+
+## Docs
+- [Overview](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/overview): What the plugin does and which platforms it supports
+- [Installation](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/install): Add crisp_chat to a Flutter project
+- [Platform Setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup): Android, iOS, Web, and desktop-specific setup steps
+- [Supported Platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms): Full per-platform API support matrix
+- [Quick Start](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/quick_start): Minimal working example
+- [Configuration](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration): CrispConfig options
+- [User & Company](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/user_and_company): Setting visitor identity
+- [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management): Session lifecycle and reset
+- [Unread Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/unread_messages): Unread count REST helpers
+- [Helpdesk / FAQ](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/helpdesk): Opening the Crisp helpdesk in-app
+- [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events): The onCrispEvent native event stream
+- [API Documentation](https://alamin-karno.github.io/flutter-crisp-chat/reference/api_documentation): Full API reference
+- [FAQ](https://alamin-karno.github.io/flutter-crisp-chat/reference/faq): Common questions and troubleshooting
+- [Changelog](https://alamin-karno.github.io/flutter-crisp-chat/reference/changelog): Version history and release notes
+
+## Optional
+- [GitHub repository](https://github.com/alamin-karno/flutter-crisp-chat): Source code, issues, contributing guide
+- [pub.dev package](https://pub.dev/packages/crisp_chat): Published package and API docs
