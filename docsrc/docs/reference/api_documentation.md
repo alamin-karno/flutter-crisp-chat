@@ -343,6 +343,36 @@ See [Helpdesk / FAQ](/core_feature/helpdesk) for full details.
 
 ---
 
+### onCrispEvent
+
+A broadcast stream of native Crisp SDK events. Supported on **Android and iOS only** — never emits on Web/desktop.
+
+```dart
+static Stream<CrispChatEvent> get onCrispEvent
+```
+
+The native event callback is registered on the first `.listen()` call and unregistered once the last listener cancels.
+
+**Example:**
+
+```dart
+final subscription = FlutterCrispChat.onCrispEvent.listen((event) {
+  print('${event.type}: ${event.message?.text}');
+});
+
+await subscription.cancel();
+```
+
+| Platform            | Behaviour                                                              |
+|---------------------|--------------------------------------------------------------------------|
+| **Android**         | Native SDK: `Crisp.addCallback(EventsCallback)` / `Crisp.removeCallback()` |
+| **iOS**              | Native SDK: `CrispSDK.addCallback(Callback)` / `CrispSDK.removeCallback(token:)` |
+| **Web / Desktop**   | Not supported — the stream never emits                                 |
+
+See [Chat Events](/core_feature/chat_events) for full details, including the `CrispChatEvent`/`CrispMessage` field reference.
+
+---
+
 ## CrispConfig
 
 ```dart

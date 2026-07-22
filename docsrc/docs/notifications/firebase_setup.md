@@ -9,8 +9,8 @@ head:
       content: "crisp firebase setup, flutter crisp fcm, crisp push notifications firebase, crisp cloud messaging"
 
 prev:
-  text: 'Helpdesk / FAQ'
-  link: '/core_feature/helpdesk'
+  text: 'Chat Events'
+  link: '/core_feature/chat_events'
 
 next:
   text: 'Android Notifications'

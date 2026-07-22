@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.5.0**.
+`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.7.0**.
 
 - Mobile (Android/iOS): wraps the native Crisp SDKs via platform channels
 - Web: embeds the official Crisp Web Chat SDK in an iframe via a JavaScript bridge
@@ -70,17 +70,23 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 
 - **iOS**: Crisp iOS SDK 2.13.0, min iOS 13.0. Integrated via CocoaPods or SPM.
   - Optional WebRTC (video calls): set `$CrispChatWebRTC = true` in the app's `ios/Podfile` (CocoaPods) or `CRISP_CHAT_WEBRTC=true` env var (SPM). The Swift code uses `#if CRISP_WEBRTC` to switch imports.
-- **Android**: Crisp Android SDK 2.0.20, minSdkVersion 23, compileSdkVersion 36.
+- **Android**: Crisp Android SDK 2.0.23, minSdkVersion 23, compileSdkVersion 36.
 
 ### iOS UIWindow Architecture
 
 The iOS plugin presents the Crisp chat in a **dedicated `UIWindow`** at `.alert` level, not as a modal over `FlutterViewController`. This prevents Flutter's rendering engine from pausing (which causes the black-screen-on-dismiss bug). A `CrispDismissalSentinel` (invisible zero-size UIView) detects dismissal via `didMoveToWindow` and tears down the window cleanly, handling re-entrant Crisp-presented VCs (e.g. camera picker).
+
+### Helpdesk Methods
+
+`openHelpdesk()` and `openHelpdeskArticle()` are cross-platform, unlike most other methods which have separate mobile/web/desktop code paths only via the platform interface split — these two route to a native SDK call on Android/iOS (`Crisp.searchHelpdesk()` / `CrispSDK.searchHelpdesk()`) and to a `$crisp.push(["do", "helpdesk:...", ...])` JS bridge call on Web/desktop.
 
 ### REST API Methods
 
 `getUnreadMessageCount()` and `markMessagesAsRead()` are REST calls (using `package:http`) to the Crisp REST API — they require a `crispApiKey` and `identifier` obtained from a Crisp Marketplace plugin token. See `CONTRIBUTING.md` for how to get these. They are not native SDK calls.
 
 On iOS, the native Crisp SDK may not send read receipts when the visitor reads messages, so `unread.visitor` stays non-zero until `markMessagesAsRead()` is called. See `docs/ios-unread-workaround-decision.md`.
+
+The root-level `docs/` folder (distinct from `docsrc/`, the public VitePress site below) holds internal investigation write-ups like this one — `docs/crisp-sdk-ios-unread-issue.md` and `docs/unread-count-verification.md` are the supporting research. `scripts/verify_unread_read_receipts.sh` (hits the Crisp REST API directly to check `unread.visitor` behavior) and `scripts/file-crisp-ios-unread-issue.sh` (files the write-up as a GitHub issue on `crisp-im/crisp-sdk-ios` via `gh`) are the companion tooling for that investigation.
 
 ### Web SDK Conditional Imports
 

@@ -41,6 +41,9 @@ let package = Package(
         )
     ],
     dependencies: [
+        // Required by Flutter's SPM plugin support (3.44+) for plugins that
+        // import Flutter directly, resolved by Flutter's tooling at build time.
+        .package(name: "FlutterFramework", path: "../FlutterFramework"),
         .package(
             url: "https://github.com/crisp-im/crisp-sdk-ios.git",
             from: "2.13.0"
@@ -50,6 +53,7 @@ let package = Package(
         .target(
             name: "crisp_chat",
             dependencies: [
+                .product(name: "FlutterFramework", package: "FlutterFramework"),
                 .product(name: crispSdkProduct, package: "crisp-sdk-ios")
             ],
             path: "Sources/crisp_chat",

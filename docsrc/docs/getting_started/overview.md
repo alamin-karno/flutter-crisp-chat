@@ -40,7 +40,7 @@ next:
 
 | Platform | SDK                                      | Version / source                                                                                    |
 |----------|------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| Android  | Crisp Android SDK                        | `2.0.20`                                                                                            |
+| Android  | Crisp Android SDK                        | `2.0.23`                                                                                            |
 | iOS      | Crisp iOS SDK (`Crisp` or `CrispWebRTC`) | `~> 2.13.0` — see [Enable video calls](/getting_started/platform_setup#enable-video-calls-ios-only) |
 | Web      | Crisp Web Chat SDK (`$crisp`)            | Loaded from `https://client.crisp.chat/l.js`                                                        |
 | Desktop  | Same as Web (embedded WebView)           | `desktop_webview_window` + browser fallback                                                         |
