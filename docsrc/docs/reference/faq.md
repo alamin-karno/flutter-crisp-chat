@@ -8,6 +8,37 @@ head:
     - name: keywords
       content: "flutter crisp chat faq, crisp chat questions, crisp_chat help, crisp chat flutter troubleshooting"
 
+  - - script
+    - type: application/ld+json
+    - |
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What platforms does this plugin support?", "acceptedAnswer": { "@type": "Answer", "text": "Android and iOS use the official native Crisp SDKs via method channel. Web uses the official Crisp Web Chat SDK. macOS, Windows, and Linux embed the same web chatbox in a desktop WebView, with a browser fallback when WebView is unavailable." } },
+          { "@type": "Question", "name": "What is the minimum Flutter version required?", "acceptedAnswer": { "@type": "Answer", "text": "For Web and desktop (2.5.0+): Flutter 3.24.0+ and Dart 3.5.0+. For mobile-only usage, Flutter 3.0+ and Dart 2.15.0+ may still work, with Android API 23+ and iOS 13.0+." } },
+          { "@type": "Question", "name": "Is this an official Crisp plugin?", "acceptedAnswer": { "@type": "Answer", "text": "No. This is a community-maintained Flutter plugin created by Md. Al-Amin. It wraps the official native Crisp SDKs on mobile and the official Web Chat SDK on Web and desktop." } },
+          { "@type": "Question", "name": "Do push notifications work on Web or desktop?", "acceptedAnswer": { "@type": "Answer", "text": "No. Firebase Cloud Messaging and APNs setup applies to Android and iOS only. openChatboxFromNotification and setOnNotificationTappedCallback are no-ops on Web and desktop." } },
+          { "@type": "Question", "name": "Do I need Firebase for Web or desktop?", "acceptedAnswer": { "@type": "Answer", "text": "No. Firebase is only required for testing mobile push notifications in the example app. For Web and desktop, run with the websiteId dart-define only." } },
+          { "@type": "Question", "name": "Where do I get my Website ID?", "acceptedAnswer": { "@type": "Answer", "text": "Go to your Crisp Dashboard, then Settings, then Website Settings, and copy your Website ID." } },
+          { "@type": "Question", "name": "Why does chat show 'Error starting chat' even with a valid Website ID?", "acceptedAnswer": { "@type": "Answer", "text": "On Android and iOS, the 'Lock the chatbox to website domain' setting must be disabled in the Crisp dashboard, since the native mobile SDK has no matching browser origin to validate against." } },
+          { "@type": "Question", "name": "What is tokenId used for?", "acceptedAnswer": { "@type": "Answer", "text": "The tokenId identifies returning users. When a user opens the chat with the same tokenId, Crisp restores their previous conversation." } },
+          { "@type": "Question", "name": "Do I need to set user details?", "acceptedAnswer": { "@type": "Answer", "text": "No. All fields in User and Company are optional. If you don't set them, the user appears as anonymous in the Crisp dashboard." } },
+          { "@type": "Question", "name": "Does this support video or audio calls?", "acceptedAnswer": { "@type": "Answer", "text": "On iOS, video and audio calls are supported when opted in at build time via CocoaPods or Swift Package Manager flags. Android does not support native video calls yet. Web and desktop support calls via the web chatbox when enabled in the Crisp dashboard." } },
+          { "@type": "Question", "name": "Can I open the Helpdesk / FAQ directly without live chat?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, on all platforms, using openHelpdesk() to open the helpdesk search screen or openHelpdeskArticle() to open a specific article directly." } },
+          { "@type": "Question", "name": "When should I call resetCrispChatSession?", "acceptedAnswer": { "@type": "Answer", "text": "Call it when your app user logs out, to clear the chat session so the next user doesn't see the previous user's conversation history." } },
+          { "@type": "Question", "name": "What's the difference between Option A and Option B for Android notifications?", "acceptedAnswer": { "@type": "Answer", "text": "Option A (CrispNotificationService) automatically opens the Crisp chat activity when a notification is tapped. Option B (CrispChatNotificationService) opens your app first, and you call openChatboxFromNotification() to open the chatbox when ready." } },
+          { "@type": "Question", "name": "Do iOS notifications work in development/sandbox mode?", "acceptedAnswer": { "@type": "Answer", "text": "No. Crisp push notifications on iOS are only sent to production APNs channels, not development or sandbox environments." } },
+          { "@type": "Question", "name": "Why am I not receiving notifications on Android?", "acceptedAnswer": { "@type": "Answer", "text": "Check that the notification service is declared in AndroidManifest.xml, that Firebase credentials are configured in the Crisp dashboard, that enableNotifications is set to true in CrispConfig, and that firebase_messaging is added to the project." } },
+          { "@type": "Question", "name": "How do I get the unread message count?", "acceptedAnswer": { "@type": "Answer", "text": "Use FlutterCrispChat.getUnreadMessageCount() with your Website ID and Crisp REST API credentials." } },
+          { "@type": "Question", "name": "Where do I get the API identifier and key?", "acceptedAnswer": { "@type": "Answer", "text": "These come from the Crisp Marketplace, not your regular Crisp dashboard login, by creating a plugin and generating development tokens." } },
+          { "@type": "Question", "name": "Why does getUnreadMessageCount return null?", "acceptedAnswer": { "@type": "Answer", "text": "It returns null if no active session exists yet, the API credentials are invalid, or a network error occurred." } },
+          { "@type": "Question", "name": "Why does getUnreadMessageCount stay non-zero on iOS after reading chat?", "acceptedAnswer": { "@type": "Answer", "text": "The Crisp iOS SDK may not send read receipts to the server, so call markMessagesAsRead() after the visitor closes chat." } },
+          { "@type": "Question", "name": "Why does getSessionIdentifier return null?", "acceptedAnswer": { "@type": "Answer", "text": "The session identifier is only available after openCrispChat has been called and the chat has been initialized." } },
+          { "@type": "Question", "name": "Can I set session data before opening the chat?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Call setSessionString, setSessionInt, and setSessionSegments before openCrispChat, and the data will be associated with the session when it's created." } }
+        ]
+      }
+
 prev:
   text: 'Full Example'
   link: '/reference/examples'

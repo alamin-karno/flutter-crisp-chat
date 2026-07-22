@@ -12,9 +12,12 @@ function goAuthor() {
             <!-- Left: avatar + identity -->
             <div class="ha-left">
                 <img
-                    src="https://avatars.githubusercontent.com/u/56608168?v=4"
+                    src="https://avatars.githubusercontent.com/u/56608168?v=4&s=96"
                     alt="Md. Al-Amin"
                     class="ha-avatar"
+                    width="48"
+                    height="48"
+                    loading="lazy"
                 />
                 <div class="ha-identity">
                     <span class="ha-name">Md. Al-Amin</span>

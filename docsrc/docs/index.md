@@ -16,6 +16,11 @@ head:
     - name: google-site-verification
       content: gjJvl6jAwo8pORAiWoawGoaLl9DNNyoA9Mo73_M7AQY
 
+  - - link
+    - rel: preload
+      as: image
+      href: /flutter-crisp-chat/graphics/crisp-hero.jpg
+
 hero:
   name: Flutter Crisp Chat
   text: Crisp Live Chat for Flutter
@@ -23,6 +28,9 @@ hero:
   image:
     src: '/graphics/crisp-hero.jpg'
     alt: Flutter Crisp Chat
+    width: 640
+    height: 360
+    fetchpriority: high
   actions:
     - theme: brand
       text: Get Started

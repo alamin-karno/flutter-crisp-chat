@@ -19,10 +19,30 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
-## [Unreleased]
+## 2.7.0
+
+### Added
+* `FlutterCrispChat.onCrispEvent` — a broadcast `Stream<CrispChatEvent>` of native Crisp SDK events: `sessionLoaded`, `chatOpened`, `chatClosed`, `messageSent`, `messageReceived`, and (Android-only) `notificationReceived`. See [Chat Events](/core_feature/chat_events). Not supported on Web/desktop.
 
 ### Changed
-* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23`.
+* Added the `FlutterFramework` SPM dependency to `ios/crisp_chat/Package.swift`, required by Flutter 3.44+'s Swift Package Manager plugin support for plugins that `import Flutter` directly.
+* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23` — crash fixes plus an additive `onNotificationReceived` method, now exposed as `CrispEventType.notificationReceived`.
+
+### Fixed
+* Fixed iOS notification tap never opening the chatbox on cold start or background resume ([#169](https://github.com/alamin-karno/flutter-crisp-chat/issues/169)).
+
+### Security
+* Resolved four Dependabot alerts in `docsrc/` via a `vite@^6.4.3` npm override ([GHSA-fx2h-pf6j-xcff](https://github.com/advisories/GHSA-fx2h-pf6j-xcff), [GHSA-v6wh-96g9-6wx3](https://github.com/advisories/GHSA-v6wh-96g9-6wx3), [GHSA-4w7w-66w2-5vf9](https://github.com/advisories/GHSA-4w7w-66w2-5vf9), [GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99)).
+* Downgraded docsrc build toolchain from `vitepress@2.0.0-alpha.17` to `vitepress@1.6.4` to resolve two high-severity vite 7.x CVEs.
+
+### Documentation
+* **docsrc PageSpeed / SEO / AEO improvements** (Lighthouse mobile performance 69 → 72+, CLS now 0):
+  * Re-encoded `logo.png` (was a 2048×2048 JPEG mislabeled `.png`, 89.7 KB) to a true 256×256 PNG at 12 KB; resized `firebase-logo.png` and `crisp-logo.png` to their display size.
+  * Resized the home hero image to match its max display size at 2x retina.
+  * Self-hosted the "Crisp" sponsor logo instead of hotlinking Webflow's CDN.
+  * Added explicit `width`/`height` to all images (closes Lighthouse's `unsized-images` audit), `loading="lazy"` on below-the-fold images, and `fetchpriority="high"` + a preload hint on the hero image.
+  * Converted the Google Fonts stylesheet to a non-render-blocking preload + swap pattern.
+  * Added `FAQPage` JSON-LD structured data to the [FAQ](/reference/faq) page, and a `llms.txt` file summarizing the project for AI answer engines.
 
 ## 2.6.0
 
