@@ -41,4 +41,4 @@ Note: This plugin is still under development, anyone want to contribute on this 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.

@@ -1,0 +1,77 @@
+---
+layout: home
+
+title: Home
+
+head:
+  - - meta
+    - name: description
+      content: Flutter Crisp Chat — Crisp live chat for Flutter on Android, iOS, Web, and desktop (macOS, Windows, Linux). Push notifications on mobile, same Dart API everywhere.
+
+  - - meta
+    - name: keywords
+      content: "flutter crisp chat, crisp chat flutter, crisp sdk flutter, flutter live chat, flutter customer support, crisp chat plugin, crisp_chat pub.dev, flutter chat widget"
+
+  - - meta
+    - name: google-site-verification
+      content: gjJvl6jAwo8pORAiWoawGoaLl9DNNyoA9Mo73_M7AQY
+
+  - - link
+    - rel: preload
+      as: image
+      href: /flutter-crisp-chat/graphics/crisp-hero.jpg
+
+hero:
+  name: Flutter Crisp Chat
+  text: Crisp Live Chat for Flutter
+  tagline: Integrate Crisp customer messaging on Android, iOS, Web, and desktop — native SDKs on mobile, official Web Chat SDK on web and desktop, with push notifications, sessions, and REST helpers.
+  image:
+    src: '/graphics/crisp-hero.jpg'
+    alt: Flutter Crisp Chat
+    width: 640
+    height: 360
+    fetchpriority: high
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /getting_started/overview
+    - theme: alt
+      text: View on pub.dev
+      link: https://pub.dev/packages/crisp_chat
+    - theme: alt
+      text: GitHub
+      link: https://github.com/alamin-karno/flutter-crisp-chat
+
+features:
+  - icon: "\U0001F680"
+    title: Easy Integration
+    details: Add Crisp live chat to your Flutter app with just a few lines of code. Simple API, minimal setup.
+
+  - icon: "\U0001F4F1"
+    title: Cross-Platform
+    details: Android and iOS use the official native Crisp SDKs. Web and desktop use the Crisp Web Chat SDK. Optional iOS video/audio calls via build-time CrispWebRTC SDK opt-in.
+
+  - icon: "\U0001F3A5"
+    title: Video Calls (iOS)
+    details: Opt-in Crisp video and audio calls on iOS via CrispWebRTC (~10 MB). Check support with isVideoCallsSupported(). Web and desktop use the web chatbox.
+
+  - icon: "\U0001F514"
+    title: Push Notifications
+    details: Full FCM (Android) and APNs (iOS) push notification support with two handling modes. Web and desktop do not use mobile push helpers.
+
+  - icon: "\U0001F464"
+    title: User Management
+    details: Set user details like name, email, phone, avatar, and company info. Identify returning users with token IDs.
+
+  - icon: "\U0001F4CA"
+    title: Session Control
+    details: Manage sessions with custom data, segments, events, and unread message counts via the Crisp REST API.
+
+  - icon: "\U0001F4DA"
+    title: Helpdesk / FAQ
+    details: Open the Crisp Helpdesk search screen or jump straight to a specific article on Android, iOS, Web, and desktop \u2014 no live chat required.
+
+  - icon: "\U0001F6E0\uFE0F"
+    title: Fully Documented
+    details: Comprehensive documentation with step-by-step guides, API reference, full examples, and troubleshooting tips.
+---

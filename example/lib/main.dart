@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:crisp_chat/crisp_chat.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -16,17 +19,27 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  // Set up background message handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux)) {
+    if (runWebViewTitleBarWidget(args)) {
+      return;
+    }
+  }
 
-  // Request notification permission
-  await _requestNotificationPermission();
+  if (defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await _requestNotificationPermission();
+  }
 
   runApp(const MyApp());
 }
@@ -46,15 +59,15 @@ Future<void> _requestNotificationPermission() async {
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     if (kDebugMode) {
-      print('✅ User granted permission');
+      print('User granted permission');
     }
   } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
     if (kDebugMode) {
-      print('⚠️ User granted provisional permission');
+      print('User granted provisional permission');
     }
   } else {
     if (kDebugMode) {
-      print('❌ User declined or has not accepted permission');
+      print('User declined or has not accepted permission');
     }
   }
 }
@@ -67,12 +80,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String websiteID = String.fromEnvironment('WEBSITE_ID');
+  static const String websiteID = String.fromEnvironment('websiteId');
+  static const String identifier = String.fromEnvironment('identifier');
+  static const String crispApiKey = String.fromEnvironment('crispApiKey');
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  int count = 0;
   late CrispConfig config;
+  StreamSubscription<CrispChatEvent>? _crispEventSubscription;
 
   @override
   void initState() {
     super.initState();
+
+    // Listen to native Crisp SDK events (session loaded, chat opened/closed,
+    // message sent/received, and Android-only notification received) for
+    // manual verification on-device — not covered by `flutter test`.
+    _crispEventSubscription = FlutterCrispChat.onCrispEvent.listen((event) {
+      if (kDebugMode) {
+        final messageText = event.message != null
+            ? ' - ${event.message!.from.name}: ${event.message!.text}'
+            : '';
+        print('Crisp event: ${event.type.name}$messageText');
+      }
+    });
+
+    // Try to open Crisp chatbox if the app was launched from a Crisp notification
+    // (terminated state). This opens the app first, then opens the chatbox.
+    FlutterCrispChat.openChatboxFromNotification();
+
+    // Listen for Crisp notification taps while the app is in the background.
+    // When the user taps a notification, this callback fires, and we can
+    // then open the chatbox.
+    FlutterCrispChat.setOnNotificationTappedCallback(() {
+      if (kDebugMode) {
+        print('Crisp notification tapped while app was in background');
+      }
+      FlutterCrispChat.openChatboxFromNotification();
+    });
 
     config = CrispConfig(
       websiteID: websiteID,
@@ -103,9 +149,33 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void dispose() {
+    _crispEventSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _checkUnreadMessages() async {
+    int? unreadCount = await FlutterCrispChat.getUnreadMessageCount(
+      websiteId: websiteID,
+      identifier: identifier,
+      key: crispApiKey,
+    );
+
+    if (unreadCount != null && unreadCount > 0) {
+      if (kDebugMode) {
+        print('You have $unreadCount unread messages.');
+      }
+      setState(() {
+        count = unreadCount;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Crisp Chat'),
@@ -117,7 +187,7 @@ class _MyAppState extends State<MyApp> {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  FlutterCrispChat.openCrispChat(config: config);
+                  await FlutterCrispChat.openCrispChat(config: config);
 
                   /// Setting session data
                   FlutterCrispChat.setSessionString(
@@ -131,12 +201,10 @@ class _MyAppState extends State<MyApp> {
                     value: 12345,
                   );
 
-                  await Future.delayed(Duration(seconds: 1), () {
-                    FlutterCrispChat.pushSessionEvent(
-                      name: 'test_event',
-                      color: SessionEventColor.green,
-                    );
-                  });
+                  await FlutterCrispChat.pushSessionEvent(
+                    name: 'test_event',
+                    color: SessionEventColor.green,
+                  );
 
                   /// Checking session ID After 5 sec
                   await Future.delayed(const Duration(seconds: 5), () async {
@@ -162,10 +230,205 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: const Text('Open Crisp Chat'),
               ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FlutterCrispChat.openHelpdesk(websiteId: websiteID);
+                  } catch (e) {
+                    if (kDebugMode) print('openHelpdesk error: $e');
+                  }
+                },
+                child: const Text('Open Helpdesk'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FlutterCrispChat.openHelpdeskArticle(
+                      websiteId: websiteID,
+                      locale: 'en',
+                      slug: 'example-article',
+                    );
+                  } catch (e) {
+                    if (kDebugMode) print('openHelpdeskArticle error: $e');
+                  }
+                },
+                child: const Text('Open Helpdesk Article'),
+              ),
+              const SizedBox(height: 20),
+              if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+                ElevatedButton.icon(
+                  onPressed: () => _showModalStyleSelection(),
+                  icon: const Icon(Icons.style),
+                  label: const Text('iOS Modal Style Demo'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+              Badge.count(
+                count: count,
+                isLabelVisible: count != 0,
+                maxCount: 9,
+                child: ElevatedButton(
+                  onPressed: _checkUnreadMessages,
+                  child: Text('Unread'),
+                ),
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _showModalStyleSelection() {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select iOS Modal Presentation Style'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Choose how the Crisp chat modal should appear on iOS:',
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+              _buildStyleOption(
+                context,
+                'Full Screen',
+                ModalPresentationStyle.fullScreen,
+                'Covers entire screen (Default)',
+              ),
+              _buildStyleOption(
+                context,
+                'Page Sheet',
+                ModalPresentationStyle.pageSheet,
+                'Standard page sheet style',
+              ),
+              _buildStyleOption(
+                context,
+                'Form Sheet',
+                ModalPresentationStyle.formSheet,
+                'Centered form style',
+              ),
+              _buildStyleOption(
+                context,
+                'Over Full Screen',
+                ModalPresentationStyle.overFullScreen,
+                'Transparent overlay',
+              ),
+              _buildStyleOption(
+                context,
+                'Over Current Context',
+                ModalPresentationStyle.overCurrentContext,
+                'Over current content',
+              ),
+              _buildStyleOption(
+                context,
+                'Popover',
+                ModalPresentationStyle.popover,
+                'Popover style (iPad only)',
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildStyleOption(
+    BuildContext context,
+    String title,
+    ModalPresentationStyle style,
+    String description,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pop();
+          _openCrispChatWithStyle(style);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                description,
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openCrispChatWithStyle(ModalPresentationStyle style) async {
+    // Create a new config with the selected modal presentation style
+    final styleConfig = CrispConfig(
+      websiteID: websiteID,
+      tokenId: "Token Id",
+      sessionSegment: 'modal_style_demo',
+      modalPresentationStyle: style, // Set the modal presentation style
+      user: User(
+        avatar: "https://avatars.githubusercontent.com/u/56608168?v=4",
+        email: "alamin.karno@gmail.com",
+        nickName: "Md. Al-Amin",
+        phone: "5555555555",
+        company: Company(
+          companyDescription: "Unlock superior software solutions"
+              " with Vivasoft, a leading offshore development firm"
+              " delivering creativity and expertise.",
+          name: "Vivasoft Limited",
+          url: "https://vivasoftltd.com/",
+          employment: Employment(
+            role: "Mobile Application Developer",
+            title: "Software Engineer L-II",
+          ),
+          geoLocation: GeoLocation(
+            city: "Dhaka",
+            country: "Bangladesh",
+          ),
+        ),
+      ),
+    );
+
+    try {
+      await FlutterCrispChat.openCrispChat(config: styleConfig);
+
+      if (kDebugMode) {
+        print('Opened Crisp Chat with modal style: ${style.name}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error opening Crisp chat: $e');
+      }
+    }
   }
 }

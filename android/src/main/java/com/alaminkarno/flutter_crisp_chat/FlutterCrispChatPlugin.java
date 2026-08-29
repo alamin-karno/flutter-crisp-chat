@@ -3,6 +3,8 @@ package com.alaminkarno.flutter_crisp_chat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,10 +14,16 @@ import com.alaminkarno.flutter_crisp_chat.config.CrispConfig;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import im.crisp.client.external.ChatActivity;
 import im.crisp.client.external.Crisp;
+import im.crisp.client.external.EventsCallback;
 import im.crisp.client.external.data.SessionEvent.Color;
+import im.crisp.client.external.data.message.Message;
+import im.crisp.client.external.data.message.content.Content;
+import im.crisp.client.external.data.message.content.TextContent;
+import im.crisp.client.external.notification.CrispNotificationClient;
 
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -24,18 +32,90 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 
 /**
  * [FlutterCrispChatPlugin] using [FlutterPlugin], [MethodCallHandler] and [ActivityAware]
  * to handling Method Channel Callback from Flutter and Open new Activity.
  */
-public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.NewIntentListener {
 
     private static final String CHANNEL_NAME = "flutter_crisp_chat";
 
     private MethodChannel channel;
     private Context context;
     private Activity activity;
+    private ActivityPluginBinding activityBinding;
+    private boolean isEventsCallbackRegistered = false;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    // Kept as a private field (not a supertype of this public class) because
+    // `crisp-sdk` is an `implementation`-scoped dependency: if this class
+    // implemented EventsCallback directly, EventsCallback would leak into
+    // this class's public supertype signature, and any app referencing this
+    // plugin would fail to compile without also depending on crisp-sdk
+    // directly. Crisp invokes these callbacks on its own thread, so each
+    // dispatch to Flutter (which requires the main thread) is posted to
+    // mainHandler.
+    private final EventsCallback eventsCallback = new EventsCallback() {
+        @Override
+        public void onSessionLoaded(String sessionId) {
+            mainHandler.post(() -> {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("type", "sessionLoaded");
+                payload.put("sessionId", sessionId);
+                channel.invokeMethod("onCrispEvent", payload);
+            });
+        }
+
+        @Override
+        public void onChatOpened() {
+            mainHandler.post(() -> {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("type", "chatOpened");
+                channel.invokeMethod("onCrispEvent", payload);
+            });
+        }
+
+        @Override
+        public void onChatClosed() {
+            mainHandler.post(() -> {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("type", "chatClosed");
+                channel.invokeMethod("onCrispEvent", payload);
+            });
+        }
+
+        @Override
+        public void onMessageSent(Message message) {
+            mainHandler.post(() -> {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("type", "messageSent");
+                payload.put("message", messageToMap(message));
+                channel.invokeMethod("onCrispEvent", payload);
+            });
+        }
+
+        @Override
+        public void onMessageReceived(Message message) {
+            mainHandler.post(() -> {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("type", "messageReceived");
+                payload.put("message", messageToMap(message));
+                channel.invokeMethod("onCrispEvent", payload);
+            });
+        }
+
+        @Override
+        public void onNotificationReceived(Map<String, String> data) {
+            mainHandler.post(() -> {
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("type", "notificationReceived");
+                payload.put("notificationData", data);
+                channel.invokeMethod("onCrispEvent", payload);
+            });
+        }
+    };
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -47,22 +127,46 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        this.activityBinding = binding;
         this.activity = binding.getActivity();
+        binding.addOnNewIntentListener(this);
     }
 
     @Override
     public void onDetachedFromActivityForConfigChanges() {
+        if (activityBinding != null) {
+            activityBinding.removeOnNewIntentListener(this);
+        }
+        this.activityBinding = null;
         this.activity = null;
     }
 
     @Override
     public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        this.activityBinding = binding;
         this.activity = binding.getActivity();
+        binding.addOnNewIntentListener(this);
     }
 
     @Override
     public void onDetachedFromActivity() {
+        if (activityBinding != null) {
+            activityBinding.removeOnNewIntentListener(this);
+        }
+        this.activityBinding = null;
         this.activity = null;
+    }
+
+    @Override
+    public boolean onNewIntent(@NonNull Intent intent) {
+        if (activity != null) {
+            activity.setIntent(intent);
+        }
+        // Notify Flutter side about a new intent (potential Crisp notification tap)
+        if (channel != null) {
+            channel.invokeMethod("onCrispNotificationTapped", null);
+        }
+        return false;
     }
 
     /// [onMethodCall] if for handling method call from flutter end.
@@ -72,6 +176,12 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {
                 CrispConfig config = CrispConfig.fromJson(args);
+
+                if(config.websiteId == null || config.websiteId.equals("")) {
+                    result.error("INVALID_ARGUMENTS", "Missing 'websiteId' argument", null);
+                    return;
+                }
+
                 if (config.tokenId != null) {
                     Crisp.configure(context, config.websiteId, config.tokenId);
                 } else {
@@ -125,6 +235,27 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.notImplemented();
             }
+        } else if (call.method.equals("openChatboxFromNotification")) {
+            if (activity != null) {
+                boolean opened = CrispNotificationClient.openChatbox(activity, activity.getIntent());
+                result.success(opened);
+            } else {
+                result.success(false);
+            }
+        } else if (call.method.equals("isVideoCallsSupported")) {
+            result.success(false);
+        } else if (call.method.equals("registerCrispEventListener")) {
+            if (!isEventsCallbackRegistered) {
+                Crisp.addCallback(eventsCallback);
+                isEventsCallbackRegistered = true;
+            }
+            result.success(null);
+        } else if (call.method.equals("unregisterCrispEventListener")) {
+            if (isEventsCallbackRegistered) {
+                Crisp.removeCallback(eventsCallback);
+                isEventsCallbackRegistered = false;
+            }
+            result.success(null);
         } else if (call.method.equals("pushSessionEvent")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
 
@@ -146,8 +277,47 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
             }
-        }
-        else {
+        } else if (call.method.equals("openHelpdesk")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String websiteId = (String) args.get("websiteId");
+                if (websiteId == null || websiteId.trim().isEmpty()) {
+                    result.error("INVALID_ARGUMENTS", "Missing or empty 'websiteId'", null);
+                    return;
+                }
+                Crisp.configure(context, websiteId.trim());
+                Crisp.searchHelpdesk(context);
+                openActivity();
+                result.success(null);
+            } else {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+            }
+        } else if (call.method.equals("openHelpdeskArticle")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String websiteId = (String) args.get("websiteId");
+                String locale = (String) args.get("locale");
+                String slug = (String) args.get("slug");
+                if (websiteId == null || websiteId.trim().isEmpty() || locale == null || slug == null) {
+                    result.error("INVALID_ARGUMENTS", "Missing required arguments: 'websiteId', 'locale', 'slug'", null);
+                    return;
+                }
+                String title = (String) args.get("title");
+                String category = (String) args.get("category");
+                Context articleContext = activity != null ? activity : context;
+                Crisp.configure(context, websiteId.trim());
+                if (title != null && category != null) {
+                    Crisp.openHelpdeskArticle(articleContext, locale, slug, title, category);
+                } else if (title != null) {
+                    Crisp.openHelpdeskArticle(articleContext, locale, slug, title);
+                } else {
+                    Crisp.openHelpdeskArticle(articleContext, locale, slug);
+                }
+                result.success(null);
+            } else {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+            }
+        } else {
             result.notImplemented();
         }
     }
@@ -164,7 +334,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
                 Crisp.setUserNickname(config.user.nickName);
             }
             if (config.user.email != null) {
-                boolean result =  Crisp.setUserEmail(config.user.email);
+                boolean result = config.user.signature != null
+                        ? Crisp.setUserEmail(config.user.email, config.user.signature)
+                        : Crisp.setUserEmail(config.user.email);
                 if(!result){
                     Log.d("CRSIP_CHAT","Email not set");
                 }
@@ -225,8 +397,32 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        if (isEventsCallbackRegistered) {
+            Crisp.removeCallback(eventsCallback);
+            isEventsCallbackRegistered = false;
+        }
         channel.setMethodCallHandler(null);
         context = null;
+        activityBinding = null;
+    }
+
+    private Map<String, Object> messageToMap(Message message) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("isMe", message.isMe());
+        map.put("from", message.getFrom().name().toLowerCase(Locale.ROOT));
+        map.put("origin", message.getOrigin() != null ? message.getOrigin().getValue() : null);
+        map.put("timestamp", message.getTimestamp());
+        map.put("fingerprint", message.getFingerprint());
+        map.put("contentType", message.getType().name().toLowerCase(Locale.ROOT));
+
+        Content content = message.getContent();
+        if (content instanceof TextContent) {
+            map.put("text", ((TextContent) content).getText());
+        } else {
+            map.put("text", null);
+        }
+
+        return map;
     }
 
 }

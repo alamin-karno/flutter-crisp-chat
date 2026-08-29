@@ -1,3 +1,195 @@
+# 2.7.0
+
+Added
+---
+* `FlutterCrispChat.onCrispEvent` — a broadcast `Stream<CrispChatEvent>` of native Crisp SDK events: `sessionLoaded`, `chatOpened`, `chatClosed`, `messageSent`, `messageReceived`, and (Android-only) `notificationReceived`. Wraps the native SDK's `EventsCallback` on Android and the `Crisp.Callback` enum on iOS; the native callback is registered on first `.listen()` and unregistered once the last listener cancels. Not supported on Web/desktop.
+
+Changed
+---
+* Added the `FlutterFramework` SPM dependency to `ios/crisp_chat/Package.swift`, as required by Flutter 3.44+'s Swift Package Manager plugin support for plugins that `import Flutter` directly — silences the "missing a dependency on FlutterFramework" build warning.
+* Upgraded Crisp Android SDK from `2.0.20` to `2.0.23` — includes fixes for an occasional crash on chatbox closing, a crash on messages with a `preview` field but no embedded preview, and rejecting `file://` scheme URL opening instead of crashing, plus an additive `onNotificationReceived` method on the native SDK's `EventsCallback`, now exposed as `CrispEventType.notificationReceived` through `FlutterCrispChat.onCrispEvent`.
+
+Fixed
+---
+* Fixed iOS notification tap never opening the chatbox on cold start or background resume ([#169](https://github.com/alamin-karno/flutter-crisp-chat/issues/169)) — the tap is delivered while the scene is still `foregroundInactive`, which failed `openChat()`'s foreground-active scene guard and silently dropped the tap. `userNotificationCenter(_:didReceive:)` now routes through a new `openChatWhenActive()` helper that defers opening until a one-shot `UIApplication.didBecomeActiveNotification` fires if no active scene exists yet ([#174](https://github.com/alamin-karno/flutter-crisp-chat/pull/174)).
+
+Security
+---
+* Added a `vite@^6.4.3` npm override in `docsrc/` to fix four Dependabot alerts left open by the previous `vitepress@1.6.4` downgrade — its direct `vite@^5.4.14` dependency resolved to `5.4.21`, which bundles an unpatched `esbuild@0.21.5` and predates fixes only ever backported to the vite `6.4.x` line: [GHSA-fx2h-pf6j-xcff](https://github.com/advisories/GHSA-fx2h-pf6j-xcff) (`server.fs.deny` bypass on Windows, high), [GHSA-v6wh-96g9-6wx3](https://github.com/advisories/GHSA-v6wh-96g9-6wx3) (launch-editor NTLMv2 hash disclosure), [GHSA-4w7w-66w2-5vf9](https://github.com/advisories/GHSA-4w7w-66w2-5vf9) (path traversal in optimized deps `.map` handling), and [GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99) (esbuild dev server request/response read). The override resolves to `vite@6.4.3` + `esbuild@0.25.12`, both within `@vitejs/plugin-vue`'s supported peer range for `vitepress@1.6.4`.
+* Downgraded docsrc build toolchain from `vitepress@2.0.0-alpha.17` (vite 7.x) to `vitepress@1.6.4` (vite 5.x) to resolve two high-severity vite 7.x CVEs ([GHSA-859j-r86m-m3mj](https://github.com/advisories/GHSA-859j-r86m-m3mj), [GHSA-pc3c-v4xw-v6vq](https://github.com/advisories/GHSA-pc3c-v4xw-v6vq)) and one low-severity esbuild CVE ([GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99)) — patched versions (vite 7.3.5, esbuild 0.28.1) are not yet published so a toolchain downgrade to unaffected version ranges was applied. Removed the stale `esbuild@^0.28.1` npm override that referenced a non-existent version.
+
+Documentation
+---
+* **docsrc PageSpeed / SEO / AEO improvements** (Lighthouse mobile performance 69 → 72+ locally, LCP/FCP/CLS all improved, CLS now a perfect 0):
+  * Re-encoded `graphics/logo.png` — it was actually a 2048×2048 JPEG mislabeled with a `.png` extension at 89.7 KB, displayed at 24–32px everywhere (favicon, nav logo, OG image). Re-saved as a true 256×256 PNG at 12 KB (~87% smaller).
+  * Resized `graphics/firebase-logo.png` (640×640 → 128×128) and `graphics/crisp-logo.png` (200×200 → 96×96) to match their ~32px display size.
+  * Resized `graphics/crisp-hero.jpg` (1280×720 → 640×360) to match the home hero's max 320px CSS box at 2x retina.
+  * Self-hosted the "Crisp" sponsor logo (`docsrc/docs/.vitepress/theme/data/sponsor.json`) instead of hotlinking `uploads-ssl.webflow.com` — the last remaining third-party image hotlink, previously missed when the other logos were localized.
+  * Added explicit `width`/`height` to the nav logo (`themeConfig.logo`), the home hero image (`index.md` frontmatter), the sponsor card image, and the GitHub avatar — closes the Lighthouse `unsized-images` audit and drops CLS to 0.
+  * Added `loading="lazy"` to all below-the-fold images (sponsor logos, "Powered By" logos, author avatar), and `fetchpriority="high"` plus a homepage-scoped `<link rel="preload" as="image">` on the hero image (the LCP candidate).
+  * Requested a downsized GitHub avatar via `?s=96` instead of the full-resolution image for a 48px display.
+  * Converted the Google Fonts `<link rel="stylesheet">` to a preload + `media="print"` swap pattern (with a `<noscript>` fallback) so it no longer render-blocks first paint (~920ms savings) — same fonts, no visual change.
+  * Added `FAQPage` JSON-LD structured data to `reference/faq.md` for FAQ rich results and answer-engine extraction.
+  * Added `docs/public/llms.txt` (per the emerging `llms.txt` convention) summarizing the project and linking key docs pages for AI answer engines/crawlers.
+  * Known, unaddressed Lighthouse findings: `uses-long-cache-ttl` (GitHub Pages doesn't support custom `Cache-Control` headers) and `unused-javascript` on `gtag.js` (inherent to Google Analytics; already the lighter alternative to a full GTM container).
+
+# 2.6.0
+
+Added
+---
+* `FlutterCrispChat.openHelpdesk()` — opens the Crisp Helpdesk/FAQ search screen directly on **all platforms** (closes [#158](https://github.com/alamin-karno/flutter-crisp-chat/issues/158)). On Android, calls `Crisp.searchHelpdesk()` then starts `ChatActivity`. On iOS, calls `CrispSDK.searchHelpdesk()` then presents `ChatViewController`. On Web and desktop, pushes `$crisp.push(["do", "helpdesk:search"])` via the Crisp Web Chat SDK.
+* `FlutterCrispChat.openHelpdeskArticle()` — opens a specific helpdesk article by `locale` and `slug`, with optional `title` and `category`, on **all platforms**. Native SDK on Android/iOS; `$crisp.push(["do", "helpdesk:article:open", [...]])` on Web and desktop.
+
+Fixed
+---
+* Fixed iOS **Swift Package Manager** build error — added explicit `UIKit` linker setting to `Package.swift` ([#161](https://github.com/alamin-karno/flutter-crisp-chat/pull/161)).
+* Fixed spurious `"can not find webview for id: 0"` log noise on desktop — added 500 ms startup delay before polling and suppressed the transient initialisation error.
+
+Security
+---
+* Fixed high-severity esbuild RCE vulnerability ([GHSA-gv7w-rqvm-qjhr](https://github.com/advisories/GHSA-gv7w-rqvm-qjhr)) in `docsrc/` dev tooling — bumped esbuild override from `^0.25.0` to `^0.28.0` ([#159](https://github.com/alamin-karno/flutter-crisp-chat/pull/159)).
+* Fixed low-severity esbuild path traversal vulnerability ([GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr)) in `docsrc/` dev tooling — bumped esbuild override to `^0.28.1` ([#160](https://github.com/alamin-karno/flutter-crisp-chat/pull/160)).
+
+Documentation
+---
+* Added blog post covering the multi-platform (`crisp_chat`) Flutter plugin expansion to Web and desktop.
+* **docsrc PageSpeed / SEO improvements:**
+  * Replaced render-blocking CSS `@import` for Google Fonts with `<link rel="stylesheet">` + `<link rel="preconnect">` in the VitePress `head` config.
+  * Added missing `twitter:card`, `twitter:site`, `twitter:title`, `twitter:description`, and `twitter:image` meta tags to all pages.
+  * Added `og:image:width`, `og:image:height`, and `og:image:alt` to all pages.
+  * Added `<link rel="canonical">` to all pages.
+  * Added JSON-LD `SoftwareApplication` structured data to all pages.
+  * Replaced Bing-hotlinked Flutter and Firebase logos with locally-hosted copies (`/graphics/flutter-logo.png`, `/graphics/firebase-logo.png`, `/graphics/crisp-logo.png`) to eliminate third-party image dependencies and CLS.
+  * Downloaded hero image from external CDN (`digitiz.fr`) to `/graphics/crisp-hero.jpg` — served from same origin.
+  * Added explicit `width`/`height` attributes to all "Powered By" images to eliminate Cumulative Layout Shift (CLS).
+  * Removed invalid `alt` attribute from `<link rel="icon">` tag.
+  * Added `preconnect` hints for Google Fonts, gstatic, and Google Tag Manager.
+  * Added [Helpdesk / FAQ](/core_feature/helpdesk) documentation page.
+
+# 2.5.0
+
+Added
+---
+* **Web** support via the official Crisp Web Chat SDK (`$crisp` / `client.crisp.chat`).
+* **Desktop** support for **macOS**, **Windows**, and **Linux** using `desktop_webview_window`, with browser fallback when WebView is unavailable.
+* `FlutterCrispChat.markMessagesAsRead()` — REST `PATCH` to clear `unread.visitor` (workaround when the iOS native SDK does not sync read receipts; also usable on Android, Web, and desktop with REST credentials).
+* `FlutterCrispChat.isVideoCallsSupported()` — returns whether the **current build** supports Crisp calls (iOS WebRTC variant, or Web/desktop).
+* Optional **iOS video/audio calls** (build-time opt-in, not a runtime `CrispConfig` flag):
+  * **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile` → links `Crisp/CrispWebRTC` instead of `Crisp/Crisp` (~10 MB larger).
+  * **SPM:** `CRISP_CHAT_WEBRTC=true` before `flutter build ios` (or Xcode scheme env var); `Package.swift` selects `CrispWebRTC` automatically.
+  * Android native video is not supported yet ([upstream #181](https://github.com/crisp-im/crisp-sdk-android/issues/181)); Web/desktop use the web chatbox when enabled in the Crisp dashboard.
+* Documentation: [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms) guide and platform API matrix; Crisp dashboard **domain lock** guidance ([#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148)); iOS unread-count limitation and verification ([`docs/unread-count-verification.md`](docs/unread-count-verification.md)).
+
+Changed
+---
+* Minimum **Dart SDK 3.5.0** and **Flutter 3.24.0** (required by desktop WebView dependency).
+* `openChatboxFromNotification` and `setOnNotificationTappedCallback` are no-ops on Web/desktop.
+* Example app extended with **linux**, **macos**, and **windows** runners for multi-platform testing.
+* GitHub Actions **CI** workflow (analyze + test on Ubuntu).
+
+Breaking
+---
+* Apps on **Flutter < 3.24** or **Dart < 3.5** must stay on **2.4.8** for mobile-only usage.
+* New dependencies: `desktop_webview_window`, `http`, `url_launcher`, `web`.
+
+# 2.4.8
+
+Fixed
+---
+* Fixed iOS **Swift Package Manager** integration introduced in `2.4.2` that failed during Xcode package resolution with `target 'crisp_chat' in package 'crisp_chat' is outside the package root`.
+* Fixed SPM product name to `crisp-chat` (required by Flutter's generated `FlutterGeneratedPluginSwiftPackage`).
+* Fixed SPM target to be Swift-only; CocoaPods continues to use a thin Objective-C registration shim in `ios/Classes/`.
+
+Changed
+---
+* Consolidated iOS Swift sources under `ios/crisp_chat/Sources/crisp_chat/` for both SPM and CocoaPods.
+* Restored `ModalPresentationStyle.popover` on iOS (`UIModalPresentationStyle.popover`) with `popoverPresentationController` configuration for iPad.
+* Fixed CocoaPods duplicate `FlutterCrispChatPlugin` interface (removed redundant ObjC shim; Swift-only registration).
+
+# 2.4.7
+
+Added
+---
+* Added `signature` parameter to `User` for Crisp Identity Verification on Android and iOS.
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.18` to `2.0.20`.
+    - Added mobile SDK specific strings localization.
+    - [#232](https://github.com/crisp-im/crisp-sdk-android/issues/232) Added missing mobile SDK specific strings localization.
+
+Fixed
+---
+* Fixed issue: [#132](https://github.com/alamin-karno/flutter-crisp-chat/issues/132) - [iOS] Black screen after closing chat (fullScreen) / tap-through when open (overFullScreen)
+
+# 2.4.6
+
+Added
+---
+* Added `modalPresentationStyle` parameter to `CrispConfig` for iOS modal presentation style configuration.
+* Added `ModalPresentationStyle` enum with options: `fullScreen`, `pageSheet`, `formSheet`, `overFullScreen`, `overCurrentContext`, and `popover`.
+* Default modal presentation style is set to `fullScreen` to prevent touch events from passing through to the underlying Flutter UI.
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.17` to `2.0.18`.
+  - Fixed crash on message deserialization when origin is null.
+
+Fixed
+---
+* Fixed issue where `enableNotifications: false` in `CrispConfig` was being ignored on iOS, causing the Crisp SDK to still prompt for push notification permissions after sending the first message.
+
+# 2.4.5
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.16` to `2.0.17`.
+  - Scroll to last message after visitor sent it
+  - Updated smileys sorting according to Web dashboard
+
+# 2.4.4
+
+Added
+---
+* Added `CrispChatNotificationService` — a custom `FirebaseMessagingService` that handles Crisp push notifications without auto-opening `ChatActivity`. This allows the app to open first, then programmatically open the chatbox.
+* Added `openChatboxFromNotification()` method to open the Crisp chatbox from a notification intent after the app has launched.
+* Added `setOnNotificationTappedCallback()` method to listen for Crisp notification taps while the app is in the background.
+* Added `firebase-messaging` as a `compileOnly` dependency in the SDK's `build.gradle`.
+
+Changed
+---
+* Upgraded Crisp iOS SDK from `2.12.0` to `2.13.0`.
+* Updated `FlutterCrispChatPlugin.java` to implement `NewIntentListener` for detecting notification taps via `onNewIntent`.
+* Updated `README.md` with two notification handling approaches: **Option A** (auto-open ChatActivity) and **Option B** (open app first, then chatbox).
+
+Fixed
+---
+* Fixed issue: [#79](https://github.com/alamin-karno/flutter-crisp-chat/issues/79) — Crisp notification tap directly opens ChatActivity instead of the app's main screen on terminated state.
+
+# 2.4.3
+
+Fixed
+---
+* Fixed issue: [#98](https://github.com/alamin-karno/flutter-crisp-chat/issues/98) Bug: `getSessionIdentifier()` returns null after closing chat, preventing unread message checks
+
+# 2.4.2
+
+Added
+---
+* Added `getUnreadMessageCount` to get unread message count,
+* Added **Swift Package Manager** support for iOS,
+* Add validation for websiteID on iOS & Android SDK Level.
+
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.13` to `2.0.16`.
+* Increased `minSdkVersion` from `21` to `23`.
+* Updated `compileSdkVersion` from `35` to `36`.
+* Upgraded Android Gradle Plugin (AGP) from `8.6.1` to `8.9.1`.
+* Upgraded Gradle from `8.7` to `8.11.1`,
+* Upgraded Crisp iOS SDK from `2.8.2` to `2.12.0`,
+* Increased the minimum iOS deployment target from `9.0` to `13.0`,
+
 # 2.4.1
 
 Added
@@ -44,7 +236,7 @@ Changed
 * Switched from generic `Exception` to `ArgumentError` for input validation with more descriptive messages.
 
 Fixed
-___
+---
 * Fixed issue: [#46](https://github.com/alamin-karno/flutter-crisp-chat/issues/57) Android mailto: links in chat fail to launch email app on some devices (e.g., Xiaomi/Redmi, Android 12+)
 
 # 2.2.5

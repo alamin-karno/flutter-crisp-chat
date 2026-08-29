@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'config.dart';
+import 'crisp_event.dart';
 import 'flutter_crisp_chat_method_channel.dart';
 
 abstract class FlutterCrispChatPlatform extends PlatformInterface {
@@ -71,5 +74,51 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     SessionEventColor color = SessionEventColor.blue,
   }) {
     throw UnimplementedError('pushSessionEvent() has not been implemented.');
+  }
+
+  /// [openChatboxFromNotification] attempts to open the Crisp chatbox from
+  /// a notification intent. Returns `true` if the chatbox was opened
+  /// successfully (i.e., the app was launched from a Crisp notification),
+  /// `false` otherwise.
+  Future<bool> openChatboxFromNotification() {
+    throw UnimplementedError(
+        'openChatboxFromNotification() has not been implemented.');
+  }
+
+  /// [setOnNotificationTappedCallback] sets a callback that will be invoked
+  /// when a Crisp notification is tapped while the app is running
+  /// (background → foreground via onNewIntent).
+  void setOnNotificationTappedCallback(VoidCallback? callback) {
+    throw UnimplementedError(
+        'setOnNotificationTappedCallback() has not been implemented.');
+  }
+
+  /// [openHelpdesk] opens the Crisp helpdesk search interface.
+  Future<void> openHelpdesk({required String websiteId}) {
+    throw UnimplementedError('openHelpdesk() has not been implemented.');
+  }
+
+  /// [openHelpdeskArticle] opens a specific helpdesk article.
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) {
+    throw UnimplementedError('openHelpdeskArticle() has not been implemented.');
+  }
+
+  /// Returns whether video/audio calls are supported on this build.
+  Future<bool> isVideoCallsSupported() {
+    throw UnimplementedError(
+        'isVideoCallsSupported() has not been implemented.');
+  }
+
+  /// A broadcast stream of native Crisp SDK events (session loaded, chat
+  /// opened/closed, message sent/received, and Android-only notification
+  /// received).
+  Stream<CrispChatEvent> get onCrispEvent {
+    throw UnimplementedError('onCrispEvent has not been implemented.');
   }
 }

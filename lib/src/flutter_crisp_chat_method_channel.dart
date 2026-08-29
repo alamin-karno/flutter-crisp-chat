@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'config.dart';
+import 'crisp_event.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// An implementation of [FlutterCrispChatPlatform] that uses method channels.
@@ -10,6 +13,58 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_crisp_chat');
+
+  /// Callback invoked when a Crisp notification is tapped while the app
+  /// is running (background → foreground via onNewIntent).
+  VoidCallback? _onNotificationTappedCallback;
+
+  /// Whether the native method call handler has been set up.
+  bool _isHandlerRegistered = false;
+
+  /// Broadcast controller backing [onCrispEvent]. Created lazily on first
+  /// listen, and tells native to (un)register its SDK event callback in
+  /// [StreamController.onListen]/[StreamController.onCancel].
+  StreamController<CrispChatEvent>? _eventController;
+
+  /// Lazily registers the native → Dart method call handler.
+  /// This avoids calling [setMethodCallHandler] before the binding is ready.
+  void _ensureNativeHandlerRegistered() {
+    if (!_isHandlerRegistered) {
+      _isHandlerRegistered = true;
+      methodChannel.setMethodCallHandler(_handleNativeMethodCall);
+    }
+  }
+
+  /// Handles method calls from native platform to Dart.
+  Future<dynamic> _handleNativeMethodCall(MethodCall call) async {
+    switch (call.method) {
+      case 'onCrispNotificationTapped':
+        _onNotificationTappedCallback?.call();
+        break;
+      case 'onCrispEvent':
+        final args = call.arguments as Map<dynamic, dynamic>;
+        _eventController?.add(CrispChatEvent.fromMap(args));
+        break;
+    }
+  }
+
+  /// A broadcast stream of native Crisp SDK events. Registers the native
+  /// event callback on first listen, and unregisters it once the last
+  /// listener cancels — the native SDK keeps a strong reference to its
+  /// event callback, so it should not stay registered when unused.
+  @override
+  Stream<CrispChatEvent> get onCrispEvent {
+    _eventController ??= StreamController<CrispChatEvent>.broadcast(
+      onListen: () {
+        _ensureNativeHandlerRegistered();
+        methodChannel.invokeMethod('registerCrispEventListener');
+      },
+      onCancel: () {
+        methodChannel.invokeMethod('unregisterCrispEventListener');
+      },
+    );
+    return _eventController!.stream;
+  }
 
   /// [openCrispChat] is use to invoke the Method Channel and call native
   /// code with arguments `websiteID`.
@@ -84,5 +139,76 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
       'name': name,
       'color': color.name.toString(),
     });
+  }
+
+  /// [openChatboxFromNotification] attempts to open the Crisp chatbox from
+  /// a notification intent. Returns `true` if the chatbox was opened
+  /// successfully, `false` otherwise.
+  @override
+  Future<bool> openChatboxFromNotification() async {
+    _ensureNativeHandlerRegistered();
+    try {
+      final result = await methodChannel.invokeMethod<bool>(
+        'openChatboxFromNotification',
+      );
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to open chatbox from notification: '${e.message}'.");
+      return false;
+    }
+  }
+
+  /// [setOnNotificationTappedCallback] sets a callback that fires when a
+  /// Crisp notification is tapped while the app is running.
+  @override
+  void setOnNotificationTappedCallback(VoidCallback? callback) {
+    _ensureNativeHandlerRegistered();
+    _onNotificationTappedCallback = callback;
+  }
+
+  /// [openHelpdesk] opens the Crisp helpdesk search interface.
+  @override
+  Future<void> openHelpdesk({required String websiteId}) async {
+    await methodChannel.invokeMethod('openHelpdesk', <String, String>{
+      'websiteId': websiteId,
+    });
+  }
+
+  /// [openHelpdeskArticle] opens a specific helpdesk article identified by
+  /// [locale] and [slug].
+  @override
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    await methodChannel.invokeMethod(
+      'openHelpdeskArticle',
+      <String, dynamic>{
+        'websiteId': websiteId,
+        'locale': locale,
+        'slug': slug,
+        if (title != null) 'title': title,
+        if (category != null) 'category': category,
+      },
+    );
+  }
+
+  /// Returns whether the native build supports Crisp video/audio calls.
+  @override
+  Future<bool> isVideoCallsSupported() async {
+    try {
+      final result = await methodChannel.invokeMethod<bool>(
+        'isVideoCallsSupported',
+      );
+      return result ?? false;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to check video call support: '${e.message}'.");
+      return false;
+    } on MissingPluginException {
+      return false;
+    }
   }
 }

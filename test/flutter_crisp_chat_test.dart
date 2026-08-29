@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crisp_chat/crisp_chat.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_platform_interface.dart';
@@ -58,6 +60,56 @@ class MockFlutterCrispChatPlatform
   }) async {
     setSessionAttributesArgs = {'name': name, 'color': color};
   }
+
+  bool openChatboxFromNotificationCalled = false;
+  bool mockOpenChatboxResult = false;
+  @override
+  Future<bool> openChatboxFromNotification() async {
+    openChatboxFromNotificationCalled = true;
+    return mockOpenChatboxResult;
+  }
+
+  @override
+  void setOnNotificationTappedCallback(VoidCallback? callback) {
+    // No-op for testing
+  }
+
+  bool mockVideoCallsSupported = false;
+  @override
+  Future<bool> isVideoCallsSupported() async => mockVideoCallsSupported;
+
+  bool openHelpdeskCalled = false;
+  Map<String, dynamic>? openHelpdeskArgs;
+  @override
+  Future<void> openHelpdesk({required String websiteId}) async {
+    openHelpdeskCalled = true;
+    openHelpdeskArgs = {'websiteId': websiteId};
+  }
+
+  bool openHelpdeskArticleCalled = false;
+  Map<String, dynamic>? openHelpdeskArticleArgs;
+  @override
+  Future<void> openHelpdeskArticle({
+    required String websiteId,
+    required String locale,
+    required String slug,
+    String? title,
+    String? category,
+  }) async {
+    openHelpdeskArticleCalled = true;
+    openHelpdeskArticleArgs = {
+      'websiteId': websiteId,
+      'locale': locale,
+      'slug': slug,
+      if (title != null) 'title': title,
+      if (category != null) 'category': category,
+    };
+  }
+
+  final StreamController<CrispChatEvent> eventStreamController =
+      StreamController<CrispChatEvent>.broadcast();
+  @override
+  Stream<CrispChatEvent> get onCrispEvent => eventStreamController.stream;
 }
 
 void main() {
@@ -74,6 +126,18 @@ void main() {
     FlutterCrispChatPlatform.instance = fakePlatform;
 
     await FlutterCrispChat.openCrispChat(config: config);
+  });
+
+  test('User.toJson includes identity verification signature', () {
+    final user = User(
+      email: 'user@example.com',
+      signature: '0123456789abcdef',
+    );
+
+    expect(
+      user.toJson(),
+      containsPair('signature', '0123456789abcdef'),
+    );
   });
 
   test('resetCrispChatSession', () async {
@@ -146,8 +210,10 @@ void main() {
       'returns null if platform throws error',
       () async {
         final fakePlatform = MockFlutterCrispChatPlatform();
-        fakePlatform.getSessionIdentifierShouldThrowError = true;
         FlutterCrispChatPlatform.instance = fakePlatform;
+        await FlutterCrispChat.resetCrispChatSession();
+
+        fakePlatform.getSessionIdentifierShouldThrowError = true;
 
         final sessionId = await FlutterCrispChat.getSessionIdentifier();
         expect(sessionId, isNull);
@@ -212,5 +278,122 @@ void main() {
         );
       },
     );
+  });
+
+  group('openHelpdesk', () {
+    test('calls platform method with correct websiteId', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.openHelpdesk(websiteId: 'test-website-id');
+      expect(fakePlatform.openHelpdeskCalled, isTrue);
+      expect(fakePlatform.openHelpdeskArgs, equals({'websiteId': 'test-website-id'}));
+    });
+
+    test('throws ArgumentError for empty websiteId', () {
+      expect(
+        FlutterCrispChat.openHelpdesk(websiteId: ''),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for whitespace-only websiteId', () {
+      expect(
+        FlutterCrispChat.openHelpdesk(websiteId: '   '),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+  });
+
+  group('openHelpdeskArticle', () {
+    test('calls platform method with all arguments', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.openHelpdeskArticle(
+        websiteId: 'test-website-id',
+        locale: 'en',
+        slug: 'my-article',
+        title: 'My Article',
+        category: 'General',
+      );
+      expect(fakePlatform.openHelpdeskArticleCalled, isTrue);
+      expect(
+        fakePlatform.openHelpdeskArticleArgs,
+        equals({
+          'websiteId': 'test-website-id',
+          'locale': 'en',
+          'slug': 'my-article',
+          'title': 'My Article',
+          'category': 'General',
+        }),
+      );
+    });
+
+    test('calls platform method without optional fields', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.openHelpdeskArticle(
+        websiteId: 'test-website-id',
+        locale: 'en',
+        slug: 'my-article',
+      );
+      expect(fakePlatform.openHelpdeskArticleCalled, isTrue);
+      expect(
+        fakePlatform.openHelpdeskArticleArgs,
+        equals({'websiteId': 'test-website-id', 'locale': 'en', 'slug': 'my-article'}),
+      );
+    });
+
+    test('throws ArgumentError for empty websiteId', () {
+      expect(
+        FlutterCrispChat.openHelpdeskArticle(
+          websiteId: '',
+          locale: 'en',
+          slug: 'slug',
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for empty locale', () {
+      expect(
+        FlutterCrispChat.openHelpdeskArticle(
+          websiteId: 'valid-id',
+          locale: '',
+          slug: 'slug',
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for empty slug', () {
+      expect(
+        FlutterCrispChat.openHelpdeskArticle(
+          websiteId: 'valid-id',
+          locale: 'en',
+          slug: '',
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+  });
+
+  group('onCrispEvent', () {
+    test('forwards events from the platform implementation', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+
+      final events = <CrispChatEvent>[];
+      final subscription = FlutterCrispChat.onCrispEvent.listen(events.add);
+
+      fakePlatform.eventStreamController.add(
+        CrispChatEvent.fromMap({'type': 'chatOpened'}),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(events, hasLength(1));
+      expect(events.single.type, CrispEventType.chatOpened);
+
+      await subscription.cancel();
+    });
   });
 }

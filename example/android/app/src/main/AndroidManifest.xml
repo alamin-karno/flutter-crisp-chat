@@ -37,9 +37,11 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-       <!-- Crisp Messaging Service -->
+       <!-- Crisp Messaging Service (opens app first, then chatbox via Flutter) -->
+       <!-- For auto-opening ChatActivity on notification tap, use instead:
+            android:name="im.crisp.client.external.notification.CrispNotificationService" -->
        <service
-           android:name="im.crisp.client.external.notification.CrispNotificationService"
+           android:name="com.alaminkarno.flutter_crisp_chat.CrispChatNotificationService"
            android:exported="false">
            <intent-filter>
                <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -1,0 +1,170 @@
+---
+head:
+  - - meta
+    - name: description
+      content: Troubleshoot common issues with the Flutter Crisp Chat plugin — build errors, notifications, sessions, and runtime problems.
+
+  - - meta
+    - name: keywords
+      content: "flutter crisp chat issues, crisp chat troubleshooting, crisp_chat build error, crisp chat not working"
+
+prev:
+  text: 'Changelog'
+  link: '/reference/changelog'
+
+next:
+  text: 'Platform-Specific'
+  link: '/troubleshooting/platform_specific'
+---
+
+# Common Issues
+
+For **Web and desktop** (blank WebView, loading skeleton, CSP, WebView2, macOS sandbox), see [Platform-Specific Troubleshooting](/troubleshooting/platform_specific#web).
+
+## Build Errors
+
+### `compileSdkVersion` too low
+
+```
+ERROR: uses-sdk:minSdkVersion 21 cannot be smaller than version 23
+```
+
+**Fix:** Set `compileSdkVersion 36` and `minSdkVersion 23` in `android/app/build.gradle`.
+
+### Missing Internet permission
+
+```
+java.net.SocketException: Permission denied
+```
+
+**Fix:** Add `<uses-permission android:name="android.permission.INTERNET"/>` to your `AndroidManifest.xml`.
+
+### CocoaPods version conflict
+
+```
+CocoaPods could not find compatible versions for pod "Crisp"
+```
+
+**Fix:** Delete `ios/Podfile.lock` and run `pod install --repo-update` in the `ios/` directory.
+
+### Firebase Messaging not found (SDK build)
+
+```
+error: package com.google.firebase.messaging does not exist
+```
+
+This happens if `firebase_messaging` is not in your app's dependencies. The SDK uses `compileOnly` for Firebase Messaging.
+
+**Fix:** Ensure `firebase_messaging` is added to your `pubspec.yaml`:
+```shell
+flutter pub add firebase_messaging
+```
+
+## Notification Issues
+
+### Not receiving notifications on Android
+
+1. Verify the notification service is declared in `AndroidManifest.xml` (either `CrispNotificationService` or `CrispChatNotificationService`)
+2. Check that Firebase credentials are configured in the Crisp dashboard
+3. Ensure `enableNotifications: true` in `CrispConfig`
+4. Verify `firebase_core` and `firebase_messaging` are in your dependencies
+
+### Notification tap opens ChatActivity directly (unwanted)
+
+You're using **Option A** (`CrispNotificationService`). Switch to **Option B** (`CrispChatNotificationService`) in your `AndroidManifest.xml`. See [Notification Handling](/notifications/handling).
+
+### Notification tap does nothing (Option B)
+
+Ensure you've added both handlers in your `initState`:
+
+```dart
+// Terminated state
+FlutterCrispChat.openChatboxFromNotification();
+
+// Background state
+FlutterCrispChat.setOnNotificationTappedCallback(() {
+  FlutterCrispChat.openChatboxFromNotification();
+});
+```
+
+### iOS notifications not received in development
+
+Crisp push notifications on iOS currently only work with **production APNs channels**. Development/sandbox provisioning profiles won't receive notifications.
+
+## Session Issues
+
+### `getSessionIdentifier` returns null
+
+The session ID is only available after `openCrispChat` has been called. The plugin caches the ID internally, so it may return a cached value even after the chat is closed.
+
+### `getUnreadMessageCount` returns null
+
+Possible causes:
+- No active session (user hasn't opened the chat yet)
+- Invalid API credentials (`identifier` and `key`)
+- Network error
+- The `websiteId` doesn't match your Crisp workspace
+
+### `getUnreadMessageCount` stays non-zero on iOS after reading chat
+
+On iOS, the Crisp native SDK may not send read receipts to the server when the visitor reads operator messages. The REST field `unread.visitor` reflects **server-side** state — if it stays non-zero after closing chat, the iOS SDK did not update it.
+
+**Workaround:** Call `FlutterCrispChat.markMessagesAsRead()` after the visitor closes chat, then re-fetch the count. See [Unread Messages — iOS limitation](/core_feature/unread_messages#ios-limitation-unread-count-not-clearing-after-reading-chat).
+
+**Report upstream:** Use [docs/crisp-sdk-ios-unread-issue.md](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/docs/crisp-sdk-ios-unread-issue.md) to file an issue on [crisp-im/crisp-sdk-ios](https://github.com/crisp-im/crisp-sdk-ios).
+
+### `ArgumentError` when opening chat
+
+The plugin validates `email` and `company URL` formats. Ensure:
+- Email follows standard format (e.g., `user@example.com`)
+- Company URL is a valid absolute URL (e.g., `https://example.com`)
+
+## Runtime Issues
+
+### Chat not opening
+
+#### "Error starting chat" / `invalid_website_id` in logs
+
+Primarily affects **Android and iOS**; see [Platform-Specific — Web](/troubleshooting/platform_specific#domain-lock-enabled) and [Platform-Specific — Desktop](/troubleshooting/platform_specific#domain-lock-enabled-1) for Web/desktop.
+
+| Item                | Detail                                                                                                                                            |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| Symptom             | Chat fails to load; native logs show `invalid_website_id` or `(Initialization Error) Error starting chat`                                         |
+| Common misdiagnosis | Website ID looks valid; REST website lookup succeeds                                                                                              |
+| Cause               | **Lock the chatbox to website domain** enabled in Crisp dashboard                                                                                 |
+| Fix                 | Disable domain lock under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**, fully restart the app, retry |
+
+Example log lines:
+
+```
+E/CrispSocket: A websocket error occured.
+E/CrispSocket: Name: session:created
+E/CrispSocket: Args: [ invalid_website_id ]
+E/CrispSocket: (Initialization Error) Error starting chat
+```
+
+Behavior can be **intermittent** — chat may work once, then fail until domain lock is disabled. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security) and [#148](https://github.com/alamin-karno/flutter-crisp-chat/issues/148).
+
+If domain lock is already disabled, also check:
+
+1. Verify your `websiteID` is correct (copy from Crisp dashboard)
+2. Check that `websiteID` is not empty
+3. Ensure the device has internet connectivity
+4. Check the debug console for other error messages
+
+### Session data not appearing in Crisp dashboard
+
+- Call `setSessionString`/`setSessionInt`/`setSessionSegments` **before** `openCrispChat`
+- Ensure key names are not empty
+- Check that the values are being set (no exceptions thrown)
+
+## Still Stuck?
+
+- Check [Platform-Specific Issues](/troubleshooting/platform_specific)
+- [Open an issue on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/issues)
+- See the [Crisp Help Center](https://help.crisp.chat/en/) for Crisp-specific questions
+
+## Next Steps
+
+- [Platform-Specific](/troubleshooting/platform_specific) — Android, iOS, Web, and desktop troubleshooting
+- [Contributing](/community/contributing) — How to contribute to the project
