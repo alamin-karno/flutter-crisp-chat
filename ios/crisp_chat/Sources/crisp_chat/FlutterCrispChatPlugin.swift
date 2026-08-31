@@ -37,8 +37,18 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
         registrar.addApplicationDelegate(instance)
 
         let notificationCenter = UNUserNotificationCenter.current()
-        instance.previousNotificationDelegate = notificationCenter.delegate
-        notificationCenter.delegate = instance
+        var shouldReplaceDelegate = true
+
+        if let existingDelegate = notificationCenter.delegate,
+           let flutterProviderProtocol = NSProtocolFromString("FlutterAppLifeCycleProvider"),
+           (existingDelegate as AnyObject).conforms(to: flutterProviderProtocol) {
+            shouldReplaceDelegate = false
+        }
+
+        if shouldReplaceDelegate {
+            instance.previousNotificationDelegate = notificationCenter.delegate
+            notificationCenter.delegate = instance
+        }
 
         // Register for remote notifications as required by Crisp SDK
         DispatchQueue.main.async {
@@ -426,7 +436,11 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                     withCompletionHandler: completionHandler
                 )
             } else {
-                completionHandler([])
+                if #available(iOS 14.0, *) {
+                    completionHandler([.banner, .sound])
+                } else {
+                    completionHandler([.alert, .sound])
+                }
             }
         }
     }
