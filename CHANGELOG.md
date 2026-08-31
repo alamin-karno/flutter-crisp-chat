@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Changed
+---
+* Upgraded Crisp Android SDK from `2.0.23` to `2.0.24` — fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and both Helpdesk and Chat showing when calling `searchHelpdesk` before starting the chatbox (the latter directly affects this plugin's `openHelpdesk()`). Also bumps the transitive `androidx.core:core` dependency from `1.17.0` to `1.18.0`, fixing a crash on insets. See the [`2.0.24` release notes](https://github.com/crisp-im/crisp-sdk-android/releases/tag/v2.0.24).
+
 Fixed
 ---
 * Fixed iOS Crisp blocking non-Crisp foreground notifications ([#78](https://github.com/alamin-karno/flutter-crisp-chat/issues/78), [#179](https://github.com/alamin-karno/flutter-crisp-chat/pull/179)) — `FlutterCrispChatPlugin` no longer unconditionally takes over `UNUserNotificationCenter.current().delegate`. If the existing delegate already conforms to `FlutterAppLifeCycleProvider` (i.e. `FlutterAppDelegate` itself, which already broadcasts `willPresent`/`didReceive` to every plugin registered via `addApplicationDelegate`, Crisp included), the plugin leaves it in place instead of replacing it — avoiding a fight over the delegate slot with other plugins. Also fixed a fallback path that silently swallowed non-Crisp foreground notifications (`completionHandler([])`) when no previous delegate existed; it now presents them with `.banner`/`.alert` + `.sound` like the system default.

@@ -730,7 +730,7 @@ The native event callback is registered on the first `.listen()` call and unregi
 ## Supported SDK Versions
 This plugin aims to stay compatible with the latest Crisp SDKs. As of the latest update, it has been tested with:
 
-- Crisp Android SDK version: `2.0.23`
+- Crisp Android SDK version: `2.0.24`
 - Crisp iOS SDK version: ~> `2.13.0`
 - Crisp Web Chat SDK: loaded from `https://client.crisp.chat/l.js` at runtime (Web and desktop)
 
