@@ -14,6 +14,16 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
     private var crispConfig: CrispConfig?
     private weak var previousNotificationDelegate: UNUserNotificationCenterDelegate?
 
+    /// Guards against re-entering the forward call to `previousNotificationDelegate`.
+    ///
+    /// When Crisp is reached through Flutter's `FlutterPluginAppLifeCycleDelegate` fan-out
+    /// (rather than being the direct `UNUserNotificationCenter.delegate`), forwarding to
+    /// `previousNotificationDelegate` can loop back into that same fan-out — which calls
+    /// Crisp again — producing infinite recursion and a stack-overflow crash. These flags
+    /// make the forward a one-shot per top-level callback.
+    private var isForwardingWillPresent = false
+    private var isForwardingDidReceive = false
+
     /// Tokens for the currently-registered Crisp SDK event callbacks (see
     /// `registerCrispEventCallbacks`). Empty when no Dart listener is active.
     private var eventCallbackTokens: [CallbackToken] = []
@@ -427,14 +437,17 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             #if DEBUG
             print("[CrispPlugin] Non-Crisp notification in willPresent")
             #endif
-            if let previousNotificationDelegate = previousNotificationDelegate,
+            if !isForwardingWillPresent,
+               let previousNotificationDelegate = previousNotificationDelegate,
                previousNotificationDelegate !== self,
                previousNotificationDelegate.responds(to: #selector(userNotificationCenter(_:willPresent:withCompletionHandler:))) {
+                isForwardingWillPresent = true
                 previousNotificationDelegate.userNotificationCenter?(
                     center,
                     willPresent: notification,
                     withCompletionHandler: completionHandler
                 )
+                isForwardingWillPresent = false
             } else {
                 if #available(iOS 14.0, *) {
                     completionHandler([.banner, .sound])
@@ -466,14 +479,17 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             #if DEBUG
             print("[CrispPlugin] Non-Crisp notification tapped")
             #endif
-            if let previousNotificationDelegate = previousNotificationDelegate,
+            if !isForwardingDidReceive,
+               let previousNotificationDelegate = previousNotificationDelegate,
                previousNotificationDelegate !== self,
                previousNotificationDelegate.responds(to: #selector(userNotificationCenter(_:didReceive:withCompletionHandler:))) {
+                isForwardingDidReceive = true
                 previousNotificationDelegate.userNotificationCenter?(
                     center,
                     didReceive: response,
                     withCompletionHandler: completionHandler
                 )
+                isForwardingDidReceive = false
                 return
             }
         }
