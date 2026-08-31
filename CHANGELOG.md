@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 2.8.0
+
 Added
 ---
 * `FlutterCrispChat.runBotScenario({required String scenarioId})` — runs a Crisp Bot scenario (as configured in the Bot plugin on your Crisp website) on Android, iOS, Web, and desktop. Wraps `Crisp.runBotScenario(String)` (Android), `CrispSDK.session.runBotScenario(id:)` (iOS), and `$crisp.push(["do", "bot:scenario:run", [scenarioId]])` (Web/desktop). Throws `ArgumentError` for an empty/whitespace-only `scenarioId`.
