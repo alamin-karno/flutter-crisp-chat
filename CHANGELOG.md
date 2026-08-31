@@ -6,6 +6,7 @@ Added
 
 Changed
 ---
+* Bumped the example app's Android build tooling — Gradle `8.11.1` → `8.14.5`, Android Gradle Plugin `8.9.1` → `8.11.1`, Kotlin `2.1.0` → `2.2.20` — to clear Flutter's deprecated-version-support warnings, and raised the example's Gradle daemon heap (`org.gradle.jvmargs`) from `1536M` to `3072M` to avoid an out-of-memory failure under the newer AGP.
 * Upgraded Crisp Android SDK from `2.0.23` to `2.0.24` — fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and both Helpdesk and Chat showing when calling `searchHelpdesk` before starting the chatbox (the latter directly affects this plugin's `openHelpdesk()`). Also bumps the transitive `androidx.core:core` dependency from `1.17.0` to `1.18.0`, fixing a crash on insets. See the [`2.0.24` release notes](https://github.com/crisp-im/crisp-sdk-android/releases/tag/v2.0.24).
 
 Fixed
