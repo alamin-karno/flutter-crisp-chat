@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Added
+---
+* `FlutterCrispChat.runBotScenario({required String scenarioId})` — runs a Crisp Bot scenario (as configured in the Bot plugin on your Crisp website) on Android, iOS, Web, and desktop. Wraps `Crisp.runBotScenario(String)` (Android), `CrispSDK.session.runBotScenario(id:)` (iOS), and `$crisp.push(["do", "bot:scenario:run", [scenarioId]])` (Web/desktop). Throws `ArgumentError` for an empty/whitespace-only `scenarioId`.
+
 Changed
 ---
 * Upgraded Crisp Android SDK from `2.0.23` to `2.0.24` — fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and both Helpdesk and Chat showing when calling `searchHelpdesk` before starting the chatbox (the latter directly affects this plugin's `openHelpdesk()`). Also bumps the transitive `androidx.core:core` dependency from `1.17.0` to `1.18.0`, fixing a crash on insets. See the [`2.0.24` release notes](https://github.com/crisp-im/crisp-sdk-android/releases/tag/v2.0.24).

@@ -110,6 +110,14 @@ class MockFlutterCrispChatPlatform
       StreamController<CrispChatEvent>.broadcast();
   @override
   Stream<CrispChatEvent> get onCrispEvent => eventStreamController.stream;
+
+  bool runBotScenarioCalled = false;
+  Map<String, dynamic>? runBotScenarioArgs;
+  @override
+  Future<void> runBotScenario({required String scenarioId}) async {
+    runBotScenarioCalled = true;
+    runBotScenarioArgs = {'scenarioId': scenarioId};
+  }
 }
 
 void main() {
@@ -278,6 +286,31 @@ void main() {
         );
       },
     );
+  });
+
+  group('runBotScenario', () {
+    test('calls platform method with correct scenarioId', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      await FlutterCrispChat.runBotScenario(scenarioId: 'test-scenario-id');
+      expect(fakePlatform.runBotScenarioCalled, isTrue);
+      expect(fakePlatform.runBotScenarioArgs,
+          equals({'scenarioId': 'test-scenario-id'}));
+    });
+
+    test('throws ArgumentError for empty scenarioId', () {
+      expect(
+        FlutterCrispChat.runBotScenario(scenarioId: ''),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for whitespace-only scenarioId', () {
+      expect(
+        FlutterCrispChat.runBotScenario(scenarioId: '   '),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
   });
 
   group('openHelpdesk', () {

@@ -29,6 +29,7 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - Send user notification about missing messages
 - Optional **iOS video/audio calls** (build-time opt-in via `CrispWebRTC` SDK)
 - **Helpdesk / FAQ** — open the Crisp helpdesk search or a specific article directly (Android, iOS, Web, and desktop)
+- **Bot Scenarios** — trigger a configured Crisp Bot scenario by ID (Android, iOS, Web, and desktop)
 - Android, iOS, Web, macOS, Windows, and Linux
 
 ## Platform overview
@@ -710,6 +711,18 @@ The native event callback is registered on the first `.listen()` call and unregi
 `CrispMessage` (carried by `messageSent`/`messageReceived` events) is a minimal summary — `isMe`, `from`, `origin`, `timestamp`, `fingerprint`, `contentType`, and `text` (only populated when `contentType` is `CrispMessageContentType.text`). Rich content (carousel targets, picker choices, file/audio metadata) is not mapped in this version.
 
 `CrispEventType.notificationReceived` is Android-only — the iOS Crisp SDK has no matching callback, so iOS never emits it.
+
+### Bot Scenarios
+
+Run a Bot scenario configured in the Bot plugin on your Crisp website — useful for kicking off an automated flow (e.g. onboarding, FAQ triage) from within your app.
+
+> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux.
+
+```dart
+await FlutterCrispChat.runBotScenario(scenarioId: 'YOUR_SCENARIO_ID');
+```
+
+The scenario ID can be found in the Crisp dashboard under **Settings** → **Chatbot**. Throws `ArgumentError` if `scenarioId` is empty.
 
 ## Screenshot (GIF)
 

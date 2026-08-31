@@ -236,6 +236,11 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   Stream<CrispChatEvent> get onCrispEvent => const Stream.empty();
 
   @override
+  Future<void> runBotScenario({required String scenarioId}) async {
+    await _runInWebview(CrispJsBridge.runBotScenario(scenarioId: scenarioId));
+  }
+
+  @override
   Future<void> openHelpdesk({required String websiteId}) async {
     if (_webview == null) {
       await openCrispChat(config: CrispConfig(websiteID: websiteId));

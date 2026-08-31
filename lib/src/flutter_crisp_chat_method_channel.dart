@@ -196,6 +196,15 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     );
   }
 
+  /// [runBotScenario] is used to invoke the Method Channel and call native
+  /// code with argument `scenarioId`.
+  @override
+  Future<void> runBotScenario({required String scenarioId}) async {
+    await methodChannel.invokeMethod('runBotScenario', <String, String>{
+      'scenarioId': scenarioId,
+    });
+  }
+
   /// Returns whether the native build supports Crisp video/audio calls.
   @override
   Future<bool> isVideoCallsSupported() async {
