@@ -19,6 +19,19 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## 2.8.0
+
+### Added
+* `FlutterCrispChat.runBotScenario({required String scenarioId})` — runs a Crisp Bot scenario (as configured in the Bot plugin on your Crisp website) on Android, iOS, Web, and desktop. Throws `ArgumentError` for an empty/whitespace-only `scenarioId`.
+
+### Changed
+* Bumped the example app's Android build tooling — Gradle, Android Gradle Plugin, and Kotlin — to clear Flutter's deprecated-version-support warnings.
+* Upgraded Crisp Android SDK from `2.0.23` to `2.0.24` — fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and both Helpdesk and Chat showing when calling `searchHelpdesk` before starting the chatbox.
+
+### Fixed
+* Fixed iOS Crisp blocking non-Crisp foreground notifications ([#78](https://github.com/alamin-karno/flutter-crisp-chat/issues/78), [#179](https://github.com/alamin-karno/flutter-crisp-chat/pull/179)).
+* Fixed an iOS stack-overflow crash on non-Crisp notifications ([#180](https://github.com/alamin-karno/flutter-crisp-chat/issues/180)) caused by a re-entrant notification-delegate forwarding loop.
+
 ## 2.7.0
 
 ### Added

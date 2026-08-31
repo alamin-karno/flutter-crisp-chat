@@ -57,6 +57,14 @@ void main() {
     expect(script, isNot(contains('{}')));
   });
 
+  test('runBotScenario produces correct crisp command', () {
+    final script = CrispJsBridge.runBotScenario(scenarioId: 'scenario_id');
+    expect(
+      script,
+      equals(r'$crisp.push(["do","bot:scenario:run",["scenario_id"]]);'),
+    );
+  });
+
   test(r'openHelpdeskSearch produces correct crisp command', () {
     final script = CrispJsBridge.openHelpdeskSearch();
     expect(script, equals(r'$crisp.push(["do", "helpdesk:search"]);'));

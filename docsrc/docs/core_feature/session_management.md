@@ -2,11 +2,11 @@
 head:
   - - meta
     - name: description
-      content: Manage Crisp chat sessions in Flutter — set custom data, segments, events, get session IDs, and reset sessions.
+      content: Manage Crisp chat sessions in Flutter — set custom data, segments, events, bot scenarios, get session IDs, and reset sessions.
 
   - - meta
     - name: keywords
-      content: "crisp session management, flutter crisp session data, crisp session segments, crisp session events, reset crisp session"
+      content: "crisp session management, flutter crisp session data, crisp session segments, crisp session events, crisp bot scenario, reset crisp session"
 
 prev:
   text: 'User & Company'
@@ -95,6 +95,20 @@ await FlutterCrispChat.pushSessionEvent(
 | `SessionEventColor.purple` | Purple         |
 | `SessionEventColor.red`    | Red            |
 | `SessionEventColor.yellow` | Yellow         |
+
+## Run Bot Scenarios
+
+Trigger a Bot scenario configured in the Bot plugin on your Crisp website — useful for kicking off an automated flow (e.g. onboarding, FAQ triage) from within your app.
+
+```dart
+await FlutterCrispChat.runBotScenario(scenarioId: 'YOUR_SCENARIO_ID');
+```
+
+The scenario ID can be found in the Crisp dashboard under **Settings** → **Chatbot**.
+
+::: warning
+`scenarioId` must be non-empty. An `ArgumentError` is thrown otherwise.
+:::
 
 ## Get Session Identifier
 

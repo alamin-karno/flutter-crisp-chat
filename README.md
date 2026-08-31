@@ -29,6 +29,7 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - Send user notification about missing messages
 - Optional **iOS video/audio calls** (build-time opt-in via `CrispWebRTC` SDK)
 - **Helpdesk / FAQ** — open the Crisp helpdesk search or a specific article directly (Android, iOS, Web, and desktop)
+- **Bot Scenarios** — trigger a configured Crisp Bot scenario by ID (Android, iOS, Web, and desktop)
 - Android, iOS, Web, macOS, Windows, and Linux
 
 ## Platform overview
@@ -63,7 +64,7 @@ or manually configure pubspec.yml file
 dependencies:
   flutter:
     sdk: flutter
-  crisp_chat: ^2.7.0
+  crisp_chat: ^2.8.0
 ```
 
 **Web / desktop:** No native Crisp SDK install. Web loads `client.crisp.chat` at runtime. Desktop uses an embedded WebView (`desktop_webview_window`) or opens your browser if WebView is unavailable. See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
@@ -711,6 +712,18 @@ The native event callback is registered on the first `.listen()` call and unregi
 
 `CrispEventType.notificationReceived` is Android-only — the iOS Crisp SDK has no matching callback, so iOS never emits it.
 
+### Bot Scenarios
+
+Run a Bot scenario configured in the Bot plugin on your Crisp website — useful for kicking off an automated flow (e.g. onboarding, FAQ triage) from within your app.
+
+> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux.
+
+```dart
+await FlutterCrispChat.runBotScenario(scenarioId: 'YOUR_SCENARIO_ID');
+```
+
+The scenario ID can be found in the Crisp dashboard under **Settings** → **Chatbot**. Throws `ArgumentError` if `scenarioId` is empty.
+
 ## Screenshot (GIF)
 
 ![Crisp Chat SDK for Android](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
@@ -730,7 +743,7 @@ The native event callback is registered on the first `.listen()` call and unregi
 ## Supported SDK Versions
 This plugin aims to stay compatible with the latest Crisp SDKs. As of the latest update, it has been tested with:
 
-- Crisp Android SDK version: `2.0.23`
+- Crisp Android SDK version: `2.0.24`
 - Crisp iOS SDK version: ~> `2.13.0`
 - Crisp Web Chat SDK: loaded from `https://client.crisp.chat/l.js` at runtime (Web and desktop)
 

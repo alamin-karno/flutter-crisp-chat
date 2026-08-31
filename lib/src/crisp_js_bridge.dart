@@ -208,6 +208,11 @@ class CrispJsBridge {
     ])});';
   }
 
+  /// Runs a Bot scenario by [scenarioId] via the web SDK.
+  static String runBotScenario({required String scenarioId}) {
+    return '\$crisp.push(${jsonEncode(["do", "bot:scenario:run", [scenarioId]])});';
+  }
+
   /// Reads session id; always returns a string for desktop WebView bridges.
   static String getSessionIdentifier() => forDesktopEvaluation(r'''
     if (window.__crispSessionId) return String(window.__crispSessionId);

@@ -1,14 +1,30 @@
 # Native SDK API Gap Analysis (Android + iOS)
 
-**Date:** 2026-07-21
-**Status:** Item #1 implemented (`feat/crisp-chat-events`, 2026-07-21). #2/#3 confirmed feasible, not yet scheduled. Remaining items are still an idea backlog.
+**Date:** 2026-07-21 (updated 2026-08-31)
+**Status:** Item #1 implemented (`feat/crisp-chat-events`, 2026-07-21). Item #2 implemented (`feat/run-bot-scenario`, 2026-08-31) — turned out to have full cross-platform parity (Web SDK included, see below), so it shipped on all platforms rather than mobile-only. #3 confirmed feasible, not yet scheduled. Remaining items are still an idea backlog.
 
 ## Sources checked
 
 - Android SDK available APIs: https://github.com/crisp-im/crisp-sdk-android/wiki/2.-Available-APIs
 - Android SDK guide: https://docs.crisp.chat/guides/chatbox-sdks/android-sdk/
 - iOS SDK guide: https://docs.crisp.chat/guides/chatbox-sdks/ios-sdk/
+- Android SDK releases: https://github.com/crisp-im/crisp-sdk-android/releases
+- iOS SDK releases: https://github.com/crisp-im/crisp-sdk-ios/releases
+- Crisp Web SDK `$crisp` reference: https://docs.crisp.chat/guides/chatbox-sdks/web-sdk/dollar-crisp/
 - Current implementation: `android/src/main/java/com/alaminkarno/flutter_crisp_chat/FlutterCrispChatPlugin.java`, `CrispChatNotificationService.java`, `ios/crisp_chat/Sources/crisp_chat/FlutterCrispChatPlugin.swift`, `lib/crisp_chat.dart`, `lib/src/flutter_crisp_chat_platform_interface.dart`, `lib/src/config.dart`
+
+## SDK release check (2026-08-31)
+
+Checked both native SDKs' GitHub releases against the versions this plugin pins (`android/build.gradle`: `im.crisp:crisp-sdk:2.0.23`; `ios/crisp_chat.podspec` + `Package.swift`: `~> 2.13.0`).
+
+- **Android `2.0.24`** (released 2026-08-31, same day as this check) — bug-fix release, no new public API. Fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and — notably — **#242: both Helpdesk and Chat shown when calling `searchHelpdesk` before starting chatbox**, which directly affects this plugin's `openHelpdesk()`/`Crisp.searchHelpdesk()` call path. Also bumps `androidx.core:core` `1.17.0` → `1.18.0` (fixes an insets-related crash). **Recommended: bump to `2.0.24`** — see companion bump below/`fix/bump-android-sdk-2.0.24` branch.
+- **iOS `3.0.0-beta.1`–`3.0.0-beta.8`** (2026-08-03 → 2026-08-24, still beta, 8 betas deep) — major version bump: "Switch to new SDK architecture." No new public API disclosed in any beta's release notes; beta.7 fixes a static-linking issue, beta.8 adds an `Info.plist` usage-description validation that can block chat from starting unless explicitly disabled. **Not adopting** — this is a pre-GA major version with an architecture rewrite and a source-compat–relevant new failure mode (missing Info.plist keys now hard-blocks the chat by default); pinning to it now risks unannounced breaking changes before GA. Stay on `~> 2.13.0` (still receiving releases as of `2.13.0`, 2026-02-06) and revisit once `3.0.0` reaches a stable tag.
+
+## Codebase re-check for gap candidates (2026-08-31)
+
+Re-grepped `lib/`, `android/src`, `ios/crisp_chat/Sources` for every method named in the gap list below (`runBotScenario`, `showMessage`, `setSessionBool`, `getSDKVersion`, `pushSessionEvents`, `addLogger`/`setLogLevel`, `isCrispIntent`/`isSessionExist`) — none were present prior to this update, confirming the list was still accurate. Pinned SDK versions are unchanged from the #1 decompile (Android `2.0.23`, iOS `2.13.0`), so the decompiled signatures below remain valid.
+
+**New finding while implementing #2:** the Crisp Web SDK also exposes bot scenario execution — `$crisp.push(["do", "bot:scenario:run", [identifier, variables?]])` (per `docs.crisp.chat/guides/chatbox-sdks/web-sdk/dollar-crisp/`) — and local message injection — `$crisp.push(["do", "message:show", [type, content]])`, the web equivalent of #3's `showMessage`. Neither was checked in the original #2/#3 write-up below (which only covered Android/iOS). This means both #2 and #3 have **full four-platform parity** (Android, iOS, Web, desktop-via-WebView), not just mobile — worth keeping in mind when scoping #3 next: it should ship cross-platform too, using the same `Message.Content`/`message:show` shapes on both sides.
 
 ## Already covered in this plugin
 
@@ -51,9 +67,9 @@ The docs pages for both SDKs were incomplete, so the actual shipped API was veri
 
 See [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events) and `lib/src/crisp_event.dart`.
 
-### 2. `runBotScenario(String)` (Android) / iOS equivalent — confirmed feasible
+### 2. `runBotScenario(String)` — ✅ implemented (`feat/run-bot-scenario`)
 
-Confirmed via the same decompiles: **both platforms have this.** Android: `Crisp.runBotScenario(String)` (top-level, per the decompiled `Crisp.class`). iOS: `Session.runBotScenario(id:)` (i.e. `CrispSDK.session.runBotScenario(id:)`, per the `.swiftinterface`). Not yet implemented in this plugin, but no cross-platform-shape risk remains — both take a single scenario/id string.
+Confirmed via the same decompiles: **both mobile platforms have this.** Android: `Crisp.runBotScenario(String)` (top-level, per the decompiled `Crisp.class`). iOS: `Session.runBotScenario(id:)` (i.e. `CrispSDK.session.runBotScenario(id:)`, per the `.swiftinterface`). The Web SDK also has an equivalent (`$crisp.push(["do", "bot:scenario:run", [identifier]])`, found while implementing this), so it shipped with full Android/iOS/Web/desktop parity as `FlutterCrispChat.runBotScenario({required String scenarioId})`, matching the `pushSessionEvent`/`openHelpdesk` platform-interface + method-channel + JS-bridge pattern. Throws `ArgumentError` for an empty/whitespace `scenarioId`. Variables (the Web SDK's optional second `bot:scenario:run` argument) were deliberately left out of v1 scope since neither native SDK's single-string signature exposes them.
 
 ### 3. `showMessage(Content)` (Android `Crisp.showMessage`) — confirmed feasible
 
@@ -85,6 +101,6 @@ Android's `openChatboxFromNotification` (driven by `onNewIntent`) has no real iO
 
 ## Suggested starting point
 
-**#1 is done.** Next highest leverage: **#3 (`showMessage`)**, now that its `Content` shape is already documented above from the #1 decompile work, followed by **#2 (`runBotScenario`)**, which is a trivial single-string-argument addition on both platforms. Smaller wins (#4–#8) can be picked up independently and don't depend on any of the above.
+**#1 and #2 are done.** Next highest leverage: **#3 (`showMessage`)** — its `Content` shape is already documented above from the #1 decompile work, and #2's implementation confirmed the Web SDK has a parity `message:show` command, so #3 should also target all four platforms rather than mobile-only. Smaller wins (#4–#8) can be picked up independently and don't depend on any of the above.
 
 Revisit `docs/ios-unread-workaround-decision.md` now that #1 is implemented — a host app can listen for `messageReceived`/`messageSent` on `onCrispEvent` to track read state locally, which may reduce (but does not eliminate, since `origin`/read-receipt semantics on the REST side are unaffected) reliance on `markMessagesAsRead()`.

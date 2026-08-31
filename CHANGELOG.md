@@ -1,3 +1,21 @@
+# [Unreleased]
+
+# 2.8.0
+
+Added
+---
+* `FlutterCrispChat.runBotScenario({required String scenarioId})` — runs a Crisp Bot scenario (as configured in the Bot plugin on your Crisp website) on Android, iOS, Web, and desktop. Wraps `Crisp.runBotScenario(String)` (Android), `CrispSDK.session.runBotScenario(id:)` (iOS), and `$crisp.push(["do", "bot:scenario:run", [scenarioId]])` (Web/desktop). Throws `ArgumentError` for an empty/whitespace-only `scenarioId`.
+
+Changed
+---
+* Bumped the example app's Android build tooling — Gradle `8.11.1` → `8.14.5`, Android Gradle Plugin `8.9.1` → `8.11.1`, Kotlin `2.1.0` → `2.2.20` — to clear Flutter's deprecated-version-support warnings, and raised the example's Gradle daemon heap (`org.gradle.jvmargs`) from `1536M` to `3072M` to avoid an out-of-memory failure under the newer AGP.
+* Upgraded Crisp Android SDK from `2.0.23` to `2.0.24` — fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and both Helpdesk and Chat showing when calling `searchHelpdesk` before starting the chatbox (the latter directly affects this plugin's `openHelpdesk()`). Also bumps the transitive `androidx.core:core` dependency from `1.17.0` to `1.18.0`, fixing a crash on insets. See the [`2.0.24` release notes](https://github.com/crisp-im/crisp-sdk-android/releases/tag/v2.0.24).
+
+Fixed
+---
+* Fixed iOS Crisp blocking non-Crisp foreground notifications ([#78](https://github.com/alamin-karno/flutter-crisp-chat/issues/78), [#179](https://github.com/alamin-karno/flutter-crisp-chat/pull/179)) — `FlutterCrispChatPlugin` no longer unconditionally takes over `UNUserNotificationCenter.current().delegate`. If the existing delegate already conforms to `FlutterAppLifeCycleProvider` (i.e. `FlutterAppDelegate` itself, which already broadcasts `willPresent`/`didReceive` to every plugin registered via `addApplicationDelegate`, Crisp included), the plugin leaves it in place instead of replacing it — avoiding a fight over the delegate slot with other plugins. Also fixed a fallback path that silently swallowed non-Crisp foreground notifications (`completionHandler([])`) when no previous delegate existed; it now presents them with `.banner`/`.alert` + `.sound` like the system default.
+* Fixed an iOS stack-overflow crash on non-Crisp notifications (for example from `firebase_messaging`) when the app is in the foreground or a delivered notification is tapped ([#180](https://github.com/alamin-karno/flutter-crisp-chat/issues/180)) — when Crisp is reached through Flutter's plugin lifecycle fan-out rather than being the direct `UNUserNotificationCenter` delegate, forwarding a non-Crisp notification to `previousNotificationDelegate` could loop back into that same fan-out and call Crisp again, recursing until the stack guard page was hit. `userNotificationCenter(_:willPresent:withCompletionHandler:)` and `userNotificationCenter(_:didReceive:withCompletionHandler:)` now guard the forward call with a one-shot re-entrancy flag so a cycle falls back to presenting/completing the notification instead of recursing.
+
 # 2.7.0
 
 Added

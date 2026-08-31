@@ -69,6 +69,14 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
   Stream<CrispChatEvent> get onCrispEvent => const Stream.empty();
 
   @override
+  Future<void> runBotScenario({required String scenarioId}) async {
+    await CrispWebSdk.waitForSessionOngoing();
+    await CrispWebSdk.runScript(
+      CrispJsBridge.runBotScenario(scenarioId: scenarioId),
+    );
+  }
+
+  @override
   Future<void> openHelpdesk({required String websiteId}) async {
     await CrispWebSdk.ensureLoaded(websiteId: websiteId);
     await CrispWebSdk.runScript(CrispJsBridge.openHelpdeskSearch());

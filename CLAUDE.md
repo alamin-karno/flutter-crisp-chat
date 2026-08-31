@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.7.0**.
+`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.8.0**.
 
 - Mobile (Android/iOS): wraps the native Crisp SDKs via platform channels
 - Web: embeds the official Crisp Web Chat SDK in an iframe via a JavaScript bridge
@@ -70,7 +70,7 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 
 - **iOS**: Crisp iOS SDK 2.13.0, min iOS 13.0. Integrated via CocoaPods or SPM.
   - Optional WebRTC (video calls): set `$CrispChatWebRTC = true` in the app's `ios/Podfile` (CocoaPods) or `CRISP_CHAT_WEBRTC=true` env var (SPM). The Swift code uses `#if CRISP_WEBRTC` to switch imports.
-- **Android**: Crisp Android SDK 2.0.23, minSdkVersion 23, compileSdkVersion 36.
+- **Android**: Crisp Android SDK 2.0.24, minSdkVersion 23, compileSdkVersion 36.
 
 ### iOS UIWindow Architecture
 

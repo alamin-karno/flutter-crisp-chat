@@ -43,6 +43,22 @@ void main() {
     expect(await platform.isVideoCallsSupported(), isTrue);
   });
 
+  test('runBotScenario sends correct method name and scenarioId', () async {
+    MethodCall? captured;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        captured = methodCall;
+        return null;
+      },
+    );
+    await platform.runBotScenario(scenarioId: 'test-scenario-id');
+    expect(captured, isNotNull);
+    expect(captured!.method, equals('runBotScenario'));
+    expect(captured!.arguments, containsPair('scenarioId', 'test-scenario-id'));
+  });
+
   test('openHelpdesk sends correct method name and websiteId', () async {
     MethodCall? captured;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
