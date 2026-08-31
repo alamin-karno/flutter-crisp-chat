@@ -115,6 +115,11 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
         'isVideoCallsSupported() has not been implemented.');
   }
 
+  /// [runBotScenario] runs a Crisp Bot scenario identified by [scenarioId].
+  Future<void> runBotScenario({required String scenarioId}) {
+    throw UnimplementedError('runBotScenario() has not been implemented.');
+  }
+
   /// A broadcast stream of native Crisp SDK events (session loaded, chat
   /// opened/closed, message sent/received, and Android-only notification
   /// received).

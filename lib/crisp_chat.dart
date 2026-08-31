@@ -190,6 +190,25 @@ class FlutterCrispChat {
     );
   }
 
+  /// [runBotScenario] runs a Crisp Bot scenario identified by [scenarioId],
+  /// as configured in the Bot plugin on your Crisp website.
+  ///
+  /// {@category Session Events}
+  /// @param scenarioId The identifier of the Bot scenario to run.
+  /// @return A [Future] that completes when the scenario has been triggered.
+  static Future<void> runBotScenario({required String scenarioId}) async {
+    if (scenarioId.trim().isEmpty) {
+      throw ArgumentError.value(
+        scenarioId,
+        'scenarioId',
+        'Scenario ID must not be empty.',
+      );
+    }
+    await FlutterCrispChatPlatform.instance.runBotScenario(
+      scenarioId: scenarioId,
+    );
+  }
+
   static Map<String, String> _crispApiHeaders({
     required String identifier,
     required String key,

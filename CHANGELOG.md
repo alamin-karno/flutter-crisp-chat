@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Added
+---
+* `FlutterCrispChat.runBotScenario({required String scenarioId})` — runs a Crisp Bot scenario (as configured in the Bot plugin on your Crisp website) on Android, iOS, Web, and desktop. Wraps `Crisp.runBotScenario(String)` (Android), `CrispSDK.session.runBotScenario(id:)` (iOS), and `$crisp.push(["do", "bot:scenario:run", [scenarioId]])` (Web/desktop). Throws `ArgumentError` for an empty/whitespace-only `scenarioId`.
+
 Fixed
 ---
 * Fixed iOS Crisp blocking non-Crisp foreground notifications ([#78](https://github.com/alamin-karno/flutter-crisp-chat/issues/78), [#179](https://github.com/alamin-karno/flutter-crisp-chat/pull/179)) — `FlutterCrispChatPlugin` no longer unconditionally takes over `UNUserNotificationCenter.current().delegate`. If the existing delegate already conforms to `FlutterAppLifeCycleProvider` (i.e. `FlutterAppDelegate` itself, which already broadcasts `willPresent`/`didReceive` to every plugin registered via `addApplicationDelegate`, Crisp included), the plugin leaves it in place instead of replacing it — avoiding a fight over the delegate slot with other plugins. Also fixed a fallback path that silently swallowed non-Crisp foreground notifications (`completionHandler([])`) when no previous delegate existed; it now presents them with `.banner`/`.alert` + `.sound` like the system default.
