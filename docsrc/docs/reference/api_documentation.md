@@ -29,6 +29,7 @@ Complete reference for all public methods in the `FlutterCrispChat` class.
 | `resetCrispChatSession`                                     | Yes                 | Yes           | WebView only       |
 | `setSessionString` / `setSessionInt` / `setSessionSegments` | Yes                 | Yes           | WebView only       |
 | `pushSessionEvent`                                          | Yes                 | Yes           | WebView only       |
+| `runBotScenario`                                            | Yes                 | Yes           | WebView only       |
 | `getSessionIdentifier`                                      | Yes                 | Yes           | WebView only       |
 | `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*          | Yes*               |
 | `openHelpdesk`                                              | Native SDK UI       | Web chatbox   | WebView or browser |
@@ -160,6 +161,22 @@ static Future<void> pushSessionEvent({
 |-----------|---------------------|----------|---------|------------------------------|
 | `name`    | `String`            | Yes      | —       | Event name                   |
 | `color`   | `SessionEventColor` | No       | `blue`  | Event color in the dashboard |
+
+---
+
+### runBotScenario
+
+Runs a Crisp Bot scenario (as configured in the Bot plugin on your Crisp website) identified by `scenarioId`.
+
+```dart
+static Future<void> runBotScenario({required String scenarioId})
+```
+
+| Parameter    | Type     | Required | Default | Description                    |
+|--------------|----------|----------|---------|---------------------------------|
+| `scenarioId` | `String` | Yes      | —       | Identifier of the Bot scenario |
+
+Throws `ArgumentError` if `scenarioId` is empty or whitespace-only.
 
 ---
 

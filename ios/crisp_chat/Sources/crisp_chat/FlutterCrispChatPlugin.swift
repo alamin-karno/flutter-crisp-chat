@@ -207,6 +207,16 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             CrispSDK.session.pushEvents([event])
             result(nil)
 
+        case "runBotScenario":
+            guard let args = call.arguments as? [String: Any],
+                  let scenarioId = args["scenarioId"] as? String,
+                  !scenarioId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or empty 'scenarioId'.", details: nil))
+                return
+            }
+            CrispSDK.session.runBotScenario(id: scenarioId)
+            result(nil)
+
         case "openChatboxFromNotification":
             result(false)
 

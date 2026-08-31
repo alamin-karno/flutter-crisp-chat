@@ -277,6 +277,19 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
             }
+        } else if (call.method.equals("runBotScenario")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args != null) {
+                String scenarioId = (String) args.get("scenarioId");
+                if (scenarioId == null || scenarioId.trim().isEmpty()) {
+                    result.error("INVALID_ARGUMENTS", "Missing or empty 'scenarioId'", null);
+                    return;
+                }
+                Crisp.runBotScenario(scenarioId);
+                result.success(null);
+            } else {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+            }
         } else if (call.method.equals("openHelpdesk")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {
