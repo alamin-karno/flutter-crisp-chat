@@ -49,11 +49,11 @@ features:
 
   - icon: "\U0001F4F1"
     title: Cross-Platform
-    details: Android and iOS use the official native Crisp SDKs. Web and desktop use the Crisp Web Chat SDK. Optional iOS video/audio calls via build-time CrispWebRTC SDK opt-in.
+    details: Android and iOS use the official native Crisp SDKs. Web and desktop use the Crisp Web Chat SDK. Built-in iOS video/audio calls with Crisp iOS SDK 3.x.
 
   - icon: "\U0001F3A5"
     title: Video Calls (iOS)
-    details: Opt-in Crisp video and audio calls on iOS via CrispWebRTC (~10 MB). Check support with isVideoCallsSupported(). Web and desktop use the web chatbox.
+    details: Crisp video and audio calls are built into the iOS SDK on every build — no opt-in needed. Check support with isVideoCallsSupported(). Web and desktop use the web chatbox.
 
   - icon: "\U0001F514"
     title: Push Notifications

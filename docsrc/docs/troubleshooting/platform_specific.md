@@ -73,35 +73,51 @@ If the keyboard pushes the chat view up unexpectedly, ensure you're using Crisp 
 
 ### Minimum deployment target error
 
+```text
+# SPM
+The package product 'Crisp' requires minimum platform version 14.0 for the iOS platform, but this target supports 13.0
+
+# CocoaPods
+Specs satisfying the `Crisp (~> 3.0.1)` dependency were found, but they required a higher minimum deployment target.
 ```
-The iOS deployment target 'IPHONEOS_DEPLOYMENT_TARGET' is set to 11.0, but the range of supported deployment target versions is 13.0 to 18.0
-```
+
+The Crisp iOS SDK `~> 3.0.1` requires **iOS 14.0+** and **Xcode 16.3+** (Swift tools 6.1).
 
 **Fix:** Update your `ios/Podfile`:
 
 ```ruby
-platform :ios, '13.0'
+platform :ios, '14.0'
 ```
 
-Then delete `ios/Podfile.lock` and run `pod install --repo-update`.
+Set **Minimum Deployments** to **14.0** on the **Runner** target in Xcode too, then delete `ios/Podfile.lock` and run `pod install --repo-update` (CocoaPods) or `flutter clean && flutter pub get` (SPM).
 
 ### Push notifications not working in development
 
 Crisp iOS push notifications only work with **production APNs**. They will not be received when using development provisioning profiles or sandbox mode.
 
+### Chat shows a configuration error / doesn't start on iOS
+
+**Symptom:** `openCrispChat` presents a missing-configuration screen instead of the chat, or the chat never starts.
+
+**Cause:** Crisp iOS SDK 3.x refuses to start unless **both** `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are present in the app's `Info.plist`.
+
+**Fix:** Add the keys below (see [Missing privacy permissions](#missing-privacy-permissions)), then do a clean rebuild (`flutter clean && flutter run`).
+
 ### Missing privacy permissions
 
-If the app crashes when the user tries to take a photo or access the camera in chat:
+If the chat shows a configuration error on open, or the app crashes when the user tries to take a photo or access the camera in chat:
 
-**Fix:** Add the required keys to `ios/Runner/Info.plist`:
+**Fix:** Add the keys to `ios/Runner/Info.plist`. Camera and microphone descriptions are **required** by Crisp iOS SDK 3.x; the photo library key is recommended:
 
 ```xml
+<!-- Required -->
 <key>NSCameraUsageDescription</key>
-<string>Used to take photos for chat attachments</string>
+<string>Used to take photos and make video calls in chat</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Used for voice messages and audio/video calls in chat</string>
+<!-- Recommended -->
 <key>NSPhotoLibraryAddUsageDescription</key>
 <string>Used to save photos from chat</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Used for voice messages in chat</string>
 ```
 
 ### Reset session crash on iOS
@@ -130,6 +146,10 @@ Compare with Android using the same REST GET steps — if Android clears `unread
 
 The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS dependency management.
 
+::: warning CocoaPods deprecated upstream
+Crisp has deprecated CocoaPods distribution and stops publishing new versions there at the end of September 2026. Crisp iOS SDK `3.0.1` is on CocoaPods, so CocoaPods builds still work, but **SPM is the recommended path**.
+:::
+
 - **CocoaPods:** Uses [`ios/crisp_chat.podspec`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat.podspec). Still used when SPM is off, or when Flutter falls back for plugins without SPM support.
 - **SPM:** Uses [`ios/crisp_chat/Package.swift`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat/Package.swift) and sources in `ios/crisp_chat/Sources/crisp_chat/`.
 
@@ -139,9 +159,9 @@ The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS depen
 - Flutter **3.44+:** SPM is the **default** for iOS/macOS. Flutter uses SPM for plugins that ship a `Package.swift`; others fall back to CocoaPods with a warning.
 - Disable per project: `flutter: config: enable-swift-package-manager: false` in `pubspec.yaml`.
 
-**Video calls with SPM**
+**Video calls (CocoaPods and SPM)**
 
-Set `CRISP_CHAT_WEBRTC=true` before building (or in the Xcode scheme). See [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
+No build flag is needed — since Crisp iOS SDK 3.0, audio/video calls are built into the single `Crisp` SDK. The old `CrispWebRTC` product / `Crisp/CrispWebRTC` subspec no longer exist, and the plugin ignores `$CrispChatWebRTC` (Podfile) and `CRISP_CHAT_WEBRTC` (SPM env var); remove them if you set them before. See [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
 
 **Flutter framework dependency**
 
@@ -149,15 +169,15 @@ Flutter injects the Flutter framework when building through the CLI (pre-action 
 
 If SPM resolution fails, try `flutter clean`, delete `ios/Flutter/ephemeral`, and rebuild. See [Flutter SPM docs for app developers](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers).
 
-### Target Integrity: Firebase requires iOS 15.0 but target supports 13.0
+### Target Integrity: Firebase requires iOS 15.0 but target supports 14.0 {#firebase-requires-ios-15}
 
 **Symptom:** Xcode error when using SPM:
 
 ```text
-The package product 'firebase-core' requires minimum platform version 15.0 for the iOS platform, but this target supports 13.0
+The package product 'firebase-core' requires minimum platform version 15.0 for the iOS platform, but this target supports 14.0
 ```
 
-**Cause:** `firebase_core` / `firebase_messaging` (and recent Firebase iOS SDKs) require **iOS 15.0+** when resolved via Swift Package Manager. The app or Xcode project may still declare **13.0** (the minimum for Crisp alone).
+**Cause:** `firebase_core` / `firebase_messaging` (and recent Firebase iOS SDKs) require **iOS 15.0+** when resolved via Swift Package Manager. The app or Xcode project may still declare **14.0** (the minimum for Crisp alone).
 
 **Fix:**
 
@@ -166,7 +186,7 @@ The package product 'firebase-core' requires minimum platform version 15.0 for t
 3. In `ios/Runner.xcodeproj/project.pbxproj`, set `IPHONEOS_DEPLOYMENT_TARGET = 15.0` for Debug, Release, and Profile.
 4. Regenerate config: `flutter clean && flutter pub get && cd ios && pod install && cd ..`
 
-`crisp_chat` itself still supports iOS **13.0+** when you do not use Firebase. If your app includes Firebase push notifications, use **iOS 15.0+** as the app minimum.
+`crisp_chat` itself supports iOS **14.0+** when you do not use Firebase. If your app includes Firebase push notifications, use **iOS 15.0+** as the app minimum.
 
 ## Web
 

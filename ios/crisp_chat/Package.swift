@@ -1,38 +1,13 @@
 // swift-tools-version: 5.9
-import Foundation
 import PackageDescription
 
-// Build-time opt-in for Crisp video/audio calls when using Swift Package Manager.
-//
-// CocoaPods: set `$CrispChatWebRTC = true` in your app's ios/Podfile.
-// SPM: export before build:
-//   CRISP_CHAT_WEBRTC=true flutter build ios
-//
-// Or add `CRISP_CHAT_WEBRTC` = `true` to your Xcode scheme environment variables.
-private func environmentFlag(_ name: String) -> Bool {
-    guard let value = ProcessInfo.processInfo.environment[name] else {
-        return false
-    }
-    switch value.lowercased() {
-    case "1", "true", "yes":
-        return true
-    default:
-        return false
-    }
-}
-
-let useWebRTC = environmentFlag("CRISP_CHAT_WEBRTC")
-let crispSdkProduct = useWebRTC ? "CrispWebRTC" : "Crisp"
-
-var crispChatSwiftSettings: [SwiftSetting] = []
-if useWebRTC {
-    crispChatSwiftSettings.append(.define("CRISP_WEBRTC"))
-}
-
+// Crisp iOS SDK 3.x ships audio/video calls in the single `Crisp` product —
+// the 2.x `CrispWebRTC` product (and the `CRISP_CHAT_WEBRTC` opt-in) is gone.
+// Resolving it requires Xcode 16.3+ (the SDK uses swift-tools-version 6.1).
 let package = Package(
     name: "crisp_chat",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v14)
     ],
     products: [
         .library(
@@ -46,7 +21,7 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
         .package(
             url: "https://github.com/crisp-im/crisp-sdk-ios.git",
-            from: "2.13.0"
+            from: "3.0.1"
         )
     ],
     targets: [
@@ -54,10 +29,9 @@ let package = Package(
             name: "crisp_chat",
             dependencies: [
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
-                .product(name: crispSdkProduct, package: "crisp-sdk-ios")
+                .product(name: "Crisp", package: "crisp-sdk-ios")
             ],
             path: "Sources/crisp_chat",
-            swiftSettings: crispChatSwiftSettings,
             linkerSettings: [
                 .linkedFramework("UIKit")
             ]
