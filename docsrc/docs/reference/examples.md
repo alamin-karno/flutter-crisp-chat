@@ -142,6 +142,10 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
+      // Shown locally as an operator message the first time the chat opens.
+      localMessages: const [
+        CrispTextContent('👋 Hi! How can we help you today?'),
+      ],
     );
   }
 
@@ -201,6 +205,20 @@ class _MyAppState extends State<MyApp> {
                   });
                 },
                 child: const Text('Open Crisp Chat'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  await FlutterCrispChat.openCrispChat(config: config);
+                  await FlutterCrispChat.showMessage(
+                    const CrispFieldContent(
+                      id: 'email',
+                      text: 'What email can we reach you at?',
+                      explain: 'name@example.com',
+                    ),
+                  );
+                },
+                child: const Text('Show Local Message'),
               ),
               SizedBox(height: 20),
               Badge.count(

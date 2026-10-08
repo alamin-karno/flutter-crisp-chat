@@ -165,6 +165,7 @@ export default defineConfig({
           { text: 'Unread Messages', link: '/core_feature/unread_messages' },
           { text: 'Helpdesk / FAQ', link: '/core_feature/helpdesk' },
           { text: 'Chat Events', link: '/core_feature/chat_events' },
+          { text: 'Local Messages', link: '/core_feature/local_messages' },
         ],
       },
 

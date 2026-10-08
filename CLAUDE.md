@@ -50,6 +50,7 @@ CI runs `dart analyze lib test` and `flutter test` on Ubuntu via `.github/workfl
 | `lib/crisp_chat.dart`                                | Main public API — `FlutterCrispChat` class      |
 | `lib/src/config.dart`                                | `CrispConfig`, `User`, `Company`, enums         |
 | `lib/src/helper.dart`                                | `HelperExtensions` — `isEmail`/`isUrl` on `String?` |
+| `lib/src/crisp_message_content.dart`                 | Sealed `CrispMessageContent` types for `showMessage` / `CrispConfig.localMessages` |
 | `lib/src/flutter_crisp_chat_platform_interface.dart` | Abstract `FlutterCrispChatPlatform` base        |
 | `lib/src/flutter_crisp_chat_method_channel.dart`     | Method channel impl (mobile)                    |
 | `lib/src/flutter_crisp_chat_web.dart`                | Web impl (delegates to `CrispWebSdk`)           |

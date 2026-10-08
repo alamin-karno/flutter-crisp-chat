@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'config.dart';
 import 'crisp_event.dart';
 import 'crisp_js_bridge.dart';
+import 'crisp_message_content.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// Desktop implementation (macOS, Windows, Linux) via embedded WebView or browser fallback.
@@ -238,6 +239,11 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   @override
   Future<void> runBotScenario({required String scenarioId}) async {
     await _runInWebview(CrispJsBridge.runBotScenario(scenarioId: scenarioId));
+  }
+
+  @override
+  Future<void> showMessage({required CrispMessageContent content}) async {
+    await _runInWebview(CrispJsBridge.showMessage(content));
   }
 
   @override

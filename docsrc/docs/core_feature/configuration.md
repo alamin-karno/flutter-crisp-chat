@@ -31,6 +31,7 @@ CrispConfig config = CrispConfig(
   user: crispUser,                     // [optional] User details (see User & Company)
   enableNotifications: true,           // [optional] Enable push notifications (default: true)
   modalPresentationStyle: ModalPresentationStyle.fullScreen, // [optional] iOS modal style (default: fullScreen)
+  localMessages: const [CrispTextContent('Hi! 👋')], // [optional] Local messages shown on first open
 );
 ```
 
@@ -44,9 +45,10 @@ CrispConfig config = CrispConfig(
 | `user`                   | `User?`                   | No       | `null`       | User details like email, name, phone, avatar, and company                |
 | `enableNotifications`    | `bool`                    | No       | `true`       | Push notifications (Android/iOS native SDK only; ignored on Web/desktop) |
 | `modalPresentationStyle` | `ModalPresentationStyle?` | No       | `fullScreen` | iOS modal presentation style (ignored on Android, Web, desktop)          |
+| `localMessages`          | `List<CrispMessageContent>?` | No    | `null`       | Operator messages shown locally when the chat first opens. See [Local Messages](/core_feature/local_messages) |
 
 ::: info Web and desktop
-`websiteID`, `tokenId`, `sessionSegment`, and `user` apply on all platforms. See [Supported Platforms](/getting_started/supported_platforms) for API differences.
+`websiteID`, `tokenId`, `sessionSegment`, `user`, and `localMessages` apply on all platforms. See [Supported Platforms](/getting_started/supported_platforms) for API differences.
 :::
 
 ## Website ID

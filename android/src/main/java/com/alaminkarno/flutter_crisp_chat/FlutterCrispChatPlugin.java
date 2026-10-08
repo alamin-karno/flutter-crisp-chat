@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.alaminkarno.flutter_crisp_chat.config.CrispConfig;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -21,7 +22,13 @@ import im.crisp.client.external.Crisp;
 import im.crisp.client.external.EventsCallback;
 import im.crisp.client.external.data.SessionEvent.Color;
 import im.crisp.client.external.data.message.Message;
+import im.crisp.client.external.data.message.content.AnimationContent;
+import im.crisp.client.external.data.message.content.AudioContent;
+import im.crisp.client.external.data.message.content.CarouselContent;
 import im.crisp.client.external.data.message.content.Content;
+import im.crisp.client.external.data.message.content.FieldContent;
+import im.crisp.client.external.data.message.content.FileContent;
+import im.crisp.client.external.data.message.content.PickerContent;
 import im.crisp.client.external.data.message.content.TextContent;
 import im.crisp.client.external.notification.CrispNotificationClient;
 
@@ -290,6 +297,25 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
             }
+        } else if (call.method.equals("showMessage")) {
+            HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
+            if (args == null) {
+                result.error("INVALID_ARGUMENTS", "Arguments must be a map", null);
+                return;
+            }
+            Content content;
+            try {
+                content = contentFromMap(args);
+            } catch (RuntimeException e) {
+                result.error("INVALID_ARGUMENTS", "Invalid message content: " + e.getMessage(), null);
+                return;
+            }
+            if (content == null) {
+                result.error("INVALID_ARGUMENTS", "Unsupported message type: " + args.get("type"), null);
+                return;
+            }
+            Crisp.showMessage(content);
+            result.success(null);
         } else if (call.method.equals("openHelpdesk")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {
@@ -417,6 +443,89 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
         channel.setMethodCallHandler(null);
         context = null;
         activityBinding = null;
+    }
+
+    /// Builds a Crisp [Content] from the map produced by Dart's
+    /// `CrispMessageContent.toJson()`, or returns null for an unknown type.
+    @SuppressWarnings("unchecked")
+    private static Content contentFromMap(Map<String, Object> map) {
+        String type = (String) map.get("type");
+        if (type == null) {
+            return null;
+        }
+        switch (type) {
+            case "text":
+                return new TextContent((String) map.get("text"));
+            case "file":
+                return new FileContent(
+                        (String) map.get("name"),
+                        (String) map.get("url"),
+                        (String) map.get("mimeType"));
+            case "animation":
+                return new AnimationContent(
+                        (String) map.get("url"),
+                        (String) map.get("mimeType"));
+            case "audio":
+                return new AudioContent(
+                        (String) map.get("url"),
+                        (String) map.get("mimeType"),
+                        ((Number) map.get("duration")).intValue());
+            case "field": {
+                FieldContent.Builder builder = new FieldContent.Builder(
+                        (String) map.get("id"),
+                        (String) map.get("text"),
+                        (String) map.get("explain"));
+                String value = (String) map.get("value");
+                if (value != null) {
+                    builder.setValue(value);
+                }
+                builder.setRequired(Boolean.TRUE.equals(map.get("required")));
+                return builder.build();
+            }
+            case "picker": {
+                List<PickerContent.Choice> choices = new ArrayList<>();
+                for (Map<String, Object> choiceMap : (List<Map<String, Object>>) map.get("choices")) {
+                    PickerContent.Choice.Builder choice = new PickerContent.Choice.Builder(
+                            (String) choiceMap.get("value"),
+                            (String) choiceMap.get("label"));
+                    choice.setSelected(Boolean.TRUE.equals(choiceMap.get("selected")));
+                    String icon = (String) choiceMap.get("icon");
+                    if (icon != null) {
+                        choice.setIcon(icon);
+                    }
+                    choices.add(choice.build());
+                }
+                return new PickerContent.Builder(
+                        (String) map.get("id"),
+                        (String) map.get("text"),
+                        choices)
+                        .setRequired(Boolean.TRUE.equals(map.get("required")))
+                        .build();
+            }
+            case "carousel": {
+                List<CarouselContent.Target> targets = new ArrayList<>();
+                for (Map<String, Object> targetMap : (List<Map<String, Object>>) map.get("targets")) {
+                    List<CarouselContent.Target.Action> actions = new ArrayList<>();
+                    for (Map<String, Object> actionMap : (List<Map<String, Object>>) targetMap.get("actions")) {
+                        actions.add(new CarouselContent.Target.Action(
+                                (String) actionMap.get("label"),
+                                (String) actionMap.get("url")));
+                    }
+                    CarouselContent.Target.Builder target = new CarouselContent.Target.Builder(
+                            (String) targetMap.get("title"),
+                            (String) targetMap.get("description"),
+                            actions);
+                    String image = (String) targetMap.get("image");
+                    if (image != null) {
+                        target.setImage(image);
+                    }
+                    targets.add(target.build());
+                }
+                return new CarouselContent((String) map.get("text"), targets);
+            }
+            default:
+                return null;
+        }
     }
 
     private Map<String, Object> messageToMap(Message message) {
