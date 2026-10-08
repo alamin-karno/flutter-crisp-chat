@@ -68,8 +68,9 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 
 ### Native SDKs
 
-- **iOS**: Crisp iOS SDK 2.13.0, min iOS 13.0. Integrated via CocoaPods or SPM.
-  - Optional WebRTC (video calls): set `$CrispChatWebRTC = true` in the app's `ios/Podfile` (CocoaPods) or `CRISP_CHAT_WEBRTC=true` env var (SPM). The Swift code uses `#if CRISP_WEBRTC` to switch imports.
+- **iOS**: Crisp iOS SDK 3.0.1, min iOS 14.0, Xcode 16.3+. Integrated via SPM (preferred) or CocoaPods — Crisp stopped publishing new versions to CocoaPods after September 2026, so future bumps may be SPM-only.
+  - Video/audio calls are built into the single `Crisp` product since 3.0 (no `CrispWebRTC` variant); `isVideoCallsSupported` always returns `true` on iOS.
+  - The SDK refuses to start the chat unless `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are in the host app's `Info.plist`.
 - **Android**: Crisp Android SDK 2.0.24, minSdkVersion 23, compileSdkVersion 36.
 
 ### iOS UIWindow Architecture

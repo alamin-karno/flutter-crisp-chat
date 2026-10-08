@@ -444,15 +444,14 @@ class FlutterCrispChat {
 
   /// Returns whether Crisp video/audio calls are supported on this build.
   ///
-  /// - **iOS:** `true` only when the app was built with video support enabled:
-  ///   **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`;
-  ///   **SPM:** `CRISP_CHAT_WEBRTC=true` before `flutter build ios`.
-  ///   Default builds return `false`.
+  /// - **iOS:** always `true` — Crisp iOS SDK 3.x includes calls in every build.
+  ///   Requires `NSCameraUsageDescription` and `NSMicrophoneUsageDescription`
+  ///   in `Info.plist`.
   /// - **Android:** always `false` until Crisp ships native video support.
   /// - **Web / desktop:** `true` (calls are handled by the web chatbox when enabled
   ///   in your Crisp dashboard).
   ///
-  /// This is a build-time capability check, not a runtime toggle. See
+  /// This is a capability check, not a runtime toggle. See
   /// [Platform setup — Enable video calls (iOS)](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
   ///
   /// {@category General}

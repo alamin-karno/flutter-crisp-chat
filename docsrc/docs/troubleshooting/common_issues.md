@@ -45,7 +45,7 @@ java.net.SocketException: Permission denied
 CocoaPods could not find compatible versions for pod "Crisp"
 ```
 
-**Fix:** Delete `ios/Podfile.lock` and run `pod install --repo-update` in the `ios/` directory.
+**Fix:** Delete `ios/Podfile.lock` and run `pod install --repo-update` in the `ios/` directory. Crisp iOS SDK `~> 3.0.1` also needs `platform :ios, '14.0'` (or higher) in `ios/Podfile`.
 
 ### Firebase Messaging not found (SDK build)
 

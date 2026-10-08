@@ -1,5 +1,19 @@
 # [Unreleased]
 
+Changed
+---
+* **Breaking (iOS):** Upgraded Crisp iOS SDK from `2.13.0` to `3.0.1` — a ground-up rewrite with a lighter footprint. `3.0.1` ties chat sessions to a Crisp-issued token so only the device that started a conversation can reopen it; Crisp will start enforcing this in the coming months, after which 2.x SDKs can no longer reopen conversations. See the [`3.0.0`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.0.0) and [`3.0.1`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.0.1) release notes. Migration:
+  * Raise your iOS deployment target to **14.0** (was `13.0`) and build with **Xcode 16.3+**.
+  * Add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to `Info.plist` — the 3.x SDK refuses to start the chat without them.
+  * Remove `$CrispChatWebRTC` (Podfile) / `CRISP_CHAT_WEBRTC` (SPM) if set — they are no longer read.
+* Video/audio calls are now included in every iOS build, so `FlutterCrispChat.isVideoCallsSupported()` always returns `true` on iOS. The separate `CrispWebRTC` SDK variant, the `Crisp/CrispWebRTC` CocoaPods subspec, and the `CRISP_WEBRTC` compile flag are gone; the plugin now depends on the single `Crisp` pod / SPM product.
+* Replaced the deprecated `CrispSDK.session.segment` / `segments` setters with `CrispSDK.session.setSegments(_:overwrite:)` for `CrispConfig.sessionSegment` and `FlutterCrispChat.setSessionSegments()` on iOS.
+* Added the required camera, microphone, and photo-library usage descriptions to the example app's `Info.plist`.
+
+Documentation
+---
+* Documented the Crisp iOS SDK 3.x requirements (iOS 14+, Xcode 16.3+, required camera/microphone `Info.plist` keys), built-in video calls, and Crisp's CocoaPods deprecation in the README and docs site.
+
 # 2.8.0
 
 Added

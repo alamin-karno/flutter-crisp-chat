@@ -16,7 +16,7 @@ head:
         "@type": "FAQPage",
         "mainEntity": [
           { "@type": "Question", "name": "What platforms does this plugin support?", "acceptedAnswer": { "@type": "Answer", "text": "Android and iOS use the official native Crisp SDKs via method channel. Web uses the official Crisp Web Chat SDK. macOS, Windows, and Linux embed the same web chatbox in a desktop WebView, with a browser fallback when WebView is unavailable." } },
-          { "@type": "Question", "name": "What is the minimum Flutter version required?", "acceptedAnswer": { "@type": "Answer", "text": "For Web and desktop (2.5.0+): Flutter 3.24.0+ and Dart 3.5.0+. For mobile-only usage, Flutter 3.0+ and Dart 2.15.0+ may still work, with Android API 23+ and iOS 13.0+." } },
+          { "@type": "Question", "name": "What is the minimum Flutter version required?", "acceptedAnswer": { "@type": "Answer", "text": "For Web and desktop (2.5.0+): Flutter 3.24.0+ and Dart 3.5.0+. For mobile-only usage, Flutter 3.0+ and Dart 2.15.0+ may still work, with Android API 23+ and iOS 14.0+ (Xcode 16.3+)." } },
           { "@type": "Question", "name": "Is this an official Crisp plugin?", "acceptedAnswer": { "@type": "Answer", "text": "No. This is a community-maintained Flutter plugin created by Md. Al-Amin. It wraps the official native Crisp SDKs on mobile and the official Web Chat SDK on Web and desktop." } },
           { "@type": "Question", "name": "Do push notifications work on Web or desktop?", "acceptedAnswer": { "@type": "Answer", "text": "No. Firebase Cloud Messaging and APNs setup applies to Android and iOS only. openChatboxFromNotification and setOnNotificationTappedCallback are no-ops on Web and desktop." } },
           { "@type": "Question", "name": "Do I need Firebase for Web or desktop?", "acceptedAnswer": { "@type": "Answer", "text": "No. Firebase is only required for testing mobile push notifications in the example app. For Web and desktop, run with the websiteId dart-define only." } },
@@ -24,7 +24,7 @@ head:
           { "@type": "Question", "name": "Why does chat show 'Error starting chat' even with a valid Website ID?", "acceptedAnswer": { "@type": "Answer", "text": "On Android and iOS, the 'Lock the chatbox to website domain' setting must be disabled in the Crisp dashboard, since the native mobile SDK has no matching browser origin to validate against." } },
           { "@type": "Question", "name": "What is tokenId used for?", "acceptedAnswer": { "@type": "Answer", "text": "The tokenId identifies returning users. When a user opens the chat with the same tokenId, Crisp restores their previous conversation." } },
           { "@type": "Question", "name": "Do I need to set user details?", "acceptedAnswer": { "@type": "Answer", "text": "No. All fields in User and Company are optional. If you don't set them, the user appears as anonymous in the Crisp dashboard." } },
-          { "@type": "Question", "name": "Does this support video or audio calls?", "acceptedAnswer": { "@type": "Answer", "text": "On iOS, video and audio calls are supported when opted in at build time via CocoaPods or Swift Package Manager flags. Android does not support native video calls yet. Web and desktop support calls via the web chatbox when enabled in the Crisp dashboard." } },
+          { "@type": "Question", "name": "Does this support video or audio calls?", "acceptedAnswer": { "@type": "Answer", "text": "On iOS, video and audio calls are built into the Crisp iOS SDK 3.x on every build, with no opt-in flag needed. Android does not support native video calls yet. Web and desktop support calls via the web chatbox when enabled in the Crisp dashboard." } },
           { "@type": "Question", "name": "Can I open the Helpdesk / FAQ directly without live chat?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, on all platforms, using openHelpdesk() to open the helpdesk search screen or openHelpdeskArticle() to open a specific article directly." } },
           { "@type": "Question", "name": "When should I call resetCrispChatSession?", "acceptedAnswer": { "@type": "Answer", "text": "Call it when your app user logs out, to clear the chat session so the next user doesn't see the previous user's conversation history." } },
           { "@type": "Question", "name": "What's the difference between Option A and Option B for Android notifications?", "acceptedAnswer": { "@type": "Answer", "text": "Option A (CrispNotificationService) automatically opens the Crisp chat activity when a notification is tapped. Option B (CrispChatNotificationService) opens your app first, and you call openChatboxFromNotification() to open the chatbox when ready." } },
@@ -61,7 +61,7 @@ See [Supported platforms](/getting_started/supported_platforms) for the full API
 ### What is the minimum Flutter version required?
 
 - **Web and desktop (2.5.0+):** Flutter **3.24.0+**, Dart **3.5.0+**
-- **Mobile-only usage:** Flutter 3.0+, Dart 2.15.0+ may still work; Android API 23+, iOS 13.0+
+- **Mobile-only usage:** Flutter 3.0+, Dart 2.15.0+ may still work; Android API 23+, iOS 14.0+ (Xcode 16.3+)
 
 ### Is this an official Crisp plugin?
 
@@ -99,13 +99,13 @@ No. All fields in `User` and `Company` are optional. If you don't set them, the 
 
 **Platform summary:**
 
-| Platform          | Video/audio calls                                                                                                                                                                          |
-|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **iOS**           | Yes, when you opt in at build time — **CocoaPods:** `$CrispChatWebRTC = true` in `ios/Podfile`; **SPM:** `CRISP_CHAT_WEBRTC=true` before `flutter build ios` (~10 MB larger). Default builds use the standard `Crisp` SDK without calls. |
-| **Android**       | Not yet — [Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181).                                                                                              |
-| **Web / desktop** | Yes, via the web chatbox when enabled in your Crisp dashboard.                                                                                                                             |
+| Platform          | Video/audio calls                                                                                                                                                                                                                                          |
+|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **iOS**           | Yes, on every build — calls are built into Crisp iOS SDK 3.x. No Podfile flag or env var; `$CrispChatWebRTC` / `CRISP_CHAT_WEBRTC` are ignored and can be removed. Requires `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` in `Info.plist`. |
+| **Android**       | Not yet — [Crisp Android SDK #181](https://github.com/crisp-im/crisp-sdk-android/issues/181).                                                                                                                                                              |
+| **Web / desktop** | Yes, via the web chatbox when enabled in your Crisp dashboard.                                                                                                                                                                                             |
 
-There is **no** `CrispConfig` runtime flag for video. On iOS, the SDK variant is selected at compile time. Check your build with `FlutterCrispChat.isVideoCallsSupported()`.
+There is **no** `CrispConfig` runtime flag for video. `FlutterCrispChat.isVideoCallsSupported()` returns `true` on iOS and Web/desktop, `false` on Android.
 
 Setup guide: [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only).
 

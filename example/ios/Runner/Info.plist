@@ -59,5 +59,11 @@
     </dict>
     <key>NSUserNotificationUsageDescription</key>
     <string>We use notifications to keep you informed.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Crisp needs camera access to send photos and join video calls.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Crisp needs microphone access to send audio messages and join calls.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Crisp needs access to save photos from the conversation.</string>
 </dict>
 </plist>

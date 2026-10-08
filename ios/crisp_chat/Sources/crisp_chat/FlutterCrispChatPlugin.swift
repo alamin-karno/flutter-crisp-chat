@@ -1,10 +1,6 @@
 import Flutter
 import UIKit
-#if CRISP_WEBRTC
-import CrispWebRTC
-#else
 import Crisp
-#endif
 
 /// [FlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
@@ -106,7 +102,7 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 CrispSDK.setTokenID(tokenID: tokenId)
             }
             if let segment = crispConfig.sessionSegment {
-                CrispSDK.session.segment = segment
+                CrispSDK.session.setSegments([segment])
             }
 
             CrispSDK.user.email = crispConfig.user?.email
@@ -172,8 +168,7 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 return
             }
 
-            let previousSegments = CrispSDK.session.segments
-            CrispSDK.session.segments = overwrite ? segments : (previousSegments ?? []) + segments
+            CrispSDK.session.setSegments(segments, overwrite: overwrite)
             result(nil)
 
         case "pushSessionEvent":
@@ -255,11 +250,8 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             }
 
         case "isVideoCallsSupported":
-            #if CRISP_WEBRTC
+            // Crisp iOS SDK 3.x always includes audio/video calls.
             result(true)
-            #else
-            result(false)
-            #endif
 
         case "registerCrispEventListener":
             registerCrispEventCallbacks()
