@@ -16,6 +16,7 @@ Changed
 * Replaced the deprecated `CrispSDK.session.segment` / `segments` setters with `CrispSDK.session.setSegments(_:overwrite:)` for `CrispConfig.sessionSegment` and `FlutterCrispChat.setSessionSegments()` on iOS.
 * Added the required camera, microphone, and photo-library usage descriptions to the example app's `Info.plist`.
 * Migrated the example iOS app to Swift Package Manager only (removed CocoaPods: `Podfile`, Pods build phases, and the `Pods-Runner` xcconfig includes), adopted the UIScene lifecycle (`FlutterImplicitEngineDelegate` + `FlutterSceneDelegate` scene manifest), and set `version: 1.0.0+1` in its `pubspec.yaml` — clears the Flutter 3.47 build warnings for UIScene migration, non-standard Podfile, and missing build name/number.
+* Migrated the example macOS app to Swift Package Manager only — ran `pod deintegrate`, removed the `Podfile` and the Pods `#include`s from `Flutter-Debug.xcconfig` / `Flutter-Release.xcconfig`, dropped the Pods project from the workspace, committed the SPM `Package.resolved`, and raised the deployment target from `10.15` to `12.0` (set by Flutter's SPM migration). Clears Flutter's "your project still has CocoaPods integration" warning and the `pod install` step on macOS builds.
 
 Documentation
 ---
