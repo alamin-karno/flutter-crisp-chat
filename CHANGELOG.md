@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 3.0.0
+
 Added
 ---
 * `FlutterCrispChat.showMessage(CrispMessageContent content)` — shows a message as an operator in the local chatbox only (never sent to the Crisp inbox) on Android, iOS, Web, and desktop. Wraps `Crisp.showMessage(Content)` (Android), `CrispSDK.showMessage(with:)` (iOS), and `$crisp.push(["do", "message:show", [type, content]])` (Web/desktop). Supports `CrispTextContent`, `CrispPickerContent`, `CrispFieldContent`, `CrispCarouselContent`, `CrispFileContent`, `CrispAnimationContent`, and `CrispAudioContent`. Throws `ArgumentError` for an empty text, a picker without choices, or a carousel without targets.
@@ -17,6 +19,9 @@ Changed
 * Added the required camera, microphone, and photo-library usage descriptions to the example app's `Info.plist`.
 * Migrated the example iOS app to Swift Package Manager only (removed CocoaPods: `Podfile`, Pods build phases, and the `Pods-Runner` xcconfig includes), adopted the UIScene lifecycle (`FlutterImplicitEngineDelegate` + `FlutterSceneDelegate` scene manifest), and set `version: 1.0.0+1` in its `pubspec.yaml` — clears the Flutter 3.47 build warnings for UIScene migration, non-standard Podfile, and missing build name/number.
 * Migrated the example macOS app to Swift Package Manager only — ran `pod deintegrate`, removed the `Podfile` and the Pods `#include`s from `Flutter-Debug.xcconfig` / `Flutter-Release.xcconfig`, dropped the Pods project from the workspace, committed the SPM `Package.resolved`, and raised the deployment target from `10.15` to `12.0` (set by Flutter's SPM migration). Clears Flutter's "your project still has CocoaPods integration" warning and the `pod install` step on macOS builds.
+* Pinned the Flutter SDK to `3.47.6` via fvm (`.fvmrc`) so contributors build with the same Flutter version used to verify the Crisp iOS SDK 3.0.1 upgrade.
+* Excluded `build/` and the native platform folders from the analyzer in the plugin and example — Flutter 3.47's SPM integration copies third-party plugin Dart sources into `build/**/SourcePackages/`, which made a bare `flutter analyze` report ~160 unrelated issues.
+* Bumped docsrc dev dependencies (`vue` / `@vue/server-renderer` `3.5.33` → `3.5.43`, `source-map-js` `1.2.1` → `1.2.2`).
 
 Documentation
 ---

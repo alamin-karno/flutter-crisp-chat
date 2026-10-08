@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.8.0**.
+`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **3.0.0**.
 
 - Mobile (Android/iOS): wraps the native Crisp SDKs via platform channels
 - Web: embeds the official Crisp Web Chat SDK in an iframe via a JavaScript bridge
@@ -162,3 +162,6 @@ If a change affects user-facing behaviour, platform support, configuration, or A
 
 ### 4. Branch naming
 Feature branches: `feat/<topic>`. Bug fixes: `fix/<topic>`. Doc-only: `docs/<topic>`. Docsrc perf/SEO: `fix/docsrc-<topic>`.
+
+### 5. No `[Unreleased]` heading when publishing
+pub.dev renders `CHANGELOG.md` as-is, so before `dart pub publish` (and on every `release/*` branch) make sure the file has **no** `# [Unreleased]` heading or "Unreleased" text — roll its entries into the new version section and delete the heading entirely, don't leave it empty. Check with `grep -in unreleased CHANGELOG.md` (must print nothing) before publishing. Re-add `# [Unreleased]` on `dev` only after the release is merged back.

@@ -19,6 +19,24 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## 3.0.0
+
+### Added
+* `FlutterCrispChat.showMessage(CrispMessageContent content)` — shows a message as an operator in the local chatbox only (never sent to the Crisp inbox) on Android, iOS, Web, and desktop. Supports text, picker, field, carousel, file, animation, and audio content. See [Local Messages](/core_feature/local_messages).
+* `CrispConfig.localMessages` — local messages shown automatically right after the chat opens, once per app lifetime and again after `resetCrispChatSession`.
+
+### Changed
+* **Breaking (iOS):** Upgraded Crisp iOS SDK from `2.13.0` to `3.0.1`. Migration:
+  * Raise your iOS deployment target to **14.0** and build with **Xcode 16.3+**.
+  * Add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to `Info.plist` — the 3.x SDK refuses to start the chat without them.
+  * Remove `$CrispChatWebRTC` (Podfile) / `CRISP_CHAT_WEBRTC` (SPM) if set — they are no longer read.
+* Video/audio calls are now included in every iOS build; `FlutterCrispChat.isVideoCallsSupported()` always returns `true` on iOS.
+* Replaced the deprecated iOS `segment` / `segments` setters with `CrispSDK.session.setSegments(_:overwrite:)`.
+* Migrated the example iOS and macOS apps to Swift Package Manager only, and adopted the UIScene lifecycle on iOS.
+
+### Documentation
+* Added the [Local Messages](/core_feature/local_messages) page and documented the Crisp iOS SDK 3.x requirements, built-in video calls, and Crisp's CocoaPods deprecation.
+
 ## 2.8.0
 
 ### Added
