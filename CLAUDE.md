@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **2.8.0**.
+`crisp_chat` is a multi-platform Flutter plugin for the Crisp live chat SDK. It supports Android, iOS, Web, macOS, Windows, and Linux. Current version: **3.0.0**.
 
 - Mobile (Android/iOS): wraps the native Crisp SDKs via platform channels
 - Web: embeds the official Crisp Web Chat SDK in an iframe via a JavaScript bridge
@@ -50,6 +50,7 @@ CI runs `dart analyze lib test` and `flutter test` on Ubuntu via `.github/workfl
 | `lib/crisp_chat.dart`                                | Main public API — `FlutterCrispChat` class      |
 | `lib/src/config.dart`                                | `CrispConfig`, `User`, `Company`, enums         |
 | `lib/src/helper.dart`                                | `HelperExtensions` — `isEmail`/`isUrl` on `String?` |
+| `lib/src/crisp_message_content.dart`                 | Sealed `CrispMessageContent` types for `showMessage` / `CrispConfig.localMessages` |
 | `lib/src/flutter_crisp_chat_platform_interface.dart` | Abstract `FlutterCrispChatPlatform` base        |
 | `lib/src/flutter_crisp_chat_method_channel.dart`     | Method channel impl (mobile)                    |
 | `lib/src/flutter_crisp_chat_web.dart`                | Web impl (delegates to `CrispWebSdk`)           |
@@ -68,8 +69,9 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 
 ### Native SDKs
 
-- **iOS**: Crisp iOS SDK 2.13.0, min iOS 13.0. Integrated via CocoaPods or SPM.
-  - Optional WebRTC (video calls): set `$CrispChatWebRTC = true` in the app's `ios/Podfile` (CocoaPods) or `CRISP_CHAT_WEBRTC=true` env var (SPM). The Swift code uses `#if CRISP_WEBRTC` to switch imports.
+- **iOS**: Crisp iOS SDK 3.0.1, min iOS 14.0, Xcode 16.3+. Integrated via SPM (preferred) or CocoaPods — Crisp stopped publishing new versions to CocoaPods after September 2026, so future bumps may be SPM-only.
+  - Video/audio calls are built into the single `Crisp` product since 3.0 (no `CrispWebRTC` variant); `isVideoCallsSupported` always returns `true` on iOS.
+  - The SDK refuses to start the chat unless `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are in the host app's `Info.plist`.
 - **Android**: Crisp Android SDK 2.0.24, minSdkVersion 23, compileSdkVersion 36.
 
 ### iOS UIWindow Architecture
@@ -160,3 +162,6 @@ If a change affects user-facing behaviour, platform support, configuration, or A
 
 ### 4. Branch naming
 Feature branches: `feat/<topic>`. Bug fixes: `fix/<topic>`. Doc-only: `docs/<topic>`. Docsrc perf/SEO: `fix/docsrc-<topic>`.
+
+### 5. No `[Unreleased]` heading when publishing
+pub.dev renders `CHANGELOG.md` as-is, so before `dart pub publish` (and on every `release/*` branch) make sure the file has **no** `# [Unreleased]` heading or "Unreleased" text — roll its entries into the new version section and delete the heading entirely, don't leave it empty. Check with `grep -in unreleased CHANGELOG.md` (must print nothing) before publishing. Re-add `# [Unreleased]` on `dev` only after the release is merged back.

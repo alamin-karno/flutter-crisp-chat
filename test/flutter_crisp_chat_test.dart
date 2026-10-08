@@ -118,6 +118,12 @@ class MockFlutterCrispChatPlatform
     runBotScenarioCalled = true;
     runBotScenarioArgs = {'scenarioId': scenarioId};
   }
+
+  final List<CrispMessageContent> shownMessages = [];
+  @override
+  Future<void> showMessage({required CrispMessageContent content}) async {
+    shownMessages.add(content);
+  }
 }
 
 void main() {
@@ -309,6 +315,138 @@ void main() {
       expect(
         FlutterCrispChat.runBotScenario(scenarioId: '   '),
         throwsA(isA<ArgumentError>()),
+      );
+    });
+  });
+
+  group('showMessage', () {
+    test('calls platform method with the content', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      const content = CrispTextContent('Hello world');
+      await FlutterCrispChat.showMessage(content);
+      expect(fakePlatform.shownMessages, equals([content]));
+    });
+
+    test('throws ArgumentError for empty text', () {
+      expect(
+        FlutterCrispChat.showMessage(const CrispTextContent('  ')),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for a picker without choices', () {
+      expect(
+        FlutterCrispChat.showMessage(
+          const CrispPickerContent(id: 'id', text: 'Pick', choices: []),
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('throws ArgumentError for a carousel without targets', () {
+      expect(
+        FlutterCrispChat.showMessage(
+          const CrispCarouselContent(text: 'Browse', targets: []),
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+  });
+
+  group('CrispConfig.localMessages', () {
+    test('rejects invalid messages before opening the chat', () {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      expect(
+        FlutterCrispChat.openCrispChat(
+          config: CrispConfig(
+            websiteID: 'id',
+            localMessages: const [CrispTextContent('')],
+          ),
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+      expect(fakePlatform.shownMessages, isEmpty);
+    });
+
+    test('are shown once, and again after a session reset', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+      const welcome = CrispTextContent('Welcome!');
+      final localConfig = CrispConfig(
+        websiteID: 'id',
+        localMessages: const [welcome],
+      );
+
+      // Start from a clean state regardless of earlier tests.
+      await FlutterCrispChat.resetCrispChatSession();
+
+      await FlutterCrispChat.openCrispChat(config: localConfig);
+      expect(fakePlatform.shownMessages, equals([welcome]));
+
+      await FlutterCrispChat.openCrispChat(config: localConfig);
+      expect(fakePlatform.shownMessages, equals([welcome]));
+
+      await FlutterCrispChat.resetCrispChatSession();
+      await FlutterCrispChat.openCrispChat(config: localConfig);
+      expect(fakePlatform.shownMessages, equals([welcome, welcome]));
+    }, timeout: const Timeout(Duration(seconds: 30)));
+  });
+
+  group('CrispMessageContent.toJson', () {
+    test('serializes a picker with its choices', () {
+      const picker = CrispPickerContent(
+        id: 'plan',
+        text: 'Pick a plan',
+        required: true,
+        choices: [
+          CrispPickerChoice(value: 'pro', label: 'Pro', icon: '🚀'),
+        ],
+      );
+      expect(
+        picker.toJson(),
+        equals({
+          'type': 'picker',
+          'id': 'plan',
+          'text': 'Pick a plan',
+          'choices': [
+            {'value': 'pro', 'label': 'Pro', 'selected': false, 'icon': '🚀'},
+          ],
+          'required': true,
+        }),
+      );
+    });
+
+    test('serializes a carousel with targets and actions', () {
+      const carousel = CrispCarouselContent(
+        text: 'Our products',
+        targets: [
+          CrispCarouselTarget(
+            title: 'Pro',
+            description: 'For teams',
+            actions: [
+              CrispCarouselAction(label: 'Open', url: 'https://example.com'),
+            ],
+          ),
+        ],
+      );
+      expect(
+        carousel.toJson(),
+        equals({
+          'type': 'carousel',
+          'text': 'Our products',
+          'targets': [
+            {
+              'title': 'Pro',
+              'description': 'For teams',
+              'image': null,
+              'actions': [
+                {'label': 'Open', 'url': 'https://example.com'},
+              ],
+            },
+          ],
+        }),
       );
     });
   });

@@ -14,6 +14,7 @@
 - [Unread Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/unread_messages): Unread count REST helpers
 - [Helpdesk / FAQ](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/helpdesk): Opening the Crisp helpdesk in-app
 - [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events): The onCrispEvent native event stream
+- [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages): Showing local operator messages (welcome text, pickers, fields, carousels) with showMessage and CrispConfig.localMessages
 - [API Documentation](https://alamin-karno.github.io/flutter-crisp-chat/reference/api_documentation): Full API reference
 - [FAQ](https://alamin-karno.github.io/flutter-crisp-chat/reference/faq): Common questions and troubleshooting
 - [Changelog](https://alamin-karno.github.io/flutter-crisp-chat/reference/changelog): Version history and release notes

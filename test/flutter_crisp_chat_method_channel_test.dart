@@ -1,5 +1,6 @@
 import 'package:crisp_chat/src/config.dart';
 import 'package:crisp_chat/src/crisp_event.dart';
+import 'package:crisp_chat/src/crisp_message_content.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
@@ -57,6 +58,39 @@ void main() {
     expect(captured, isNotNull);
     expect(captured!.method, equals('runBotScenario'));
     expect(captured!.arguments, containsPair('scenarioId', 'test-scenario-id'));
+  });
+
+  test('showMessage sends correct method name and content', () async {
+    MethodCall? captured;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        captured = methodCall;
+        return null;
+      },
+    );
+    await platform.showMessage(
+      content: const CrispFieldContent(
+        id: 'email',
+        text: 'Your email?',
+        explain: 'name@example.com',
+        required: true,
+      ),
+    );
+    expect(captured, isNotNull);
+    expect(captured!.method, equals('showMessage'));
+    expect(
+      captured!.arguments,
+      equals({
+        'type': 'field',
+        'id': 'email',
+        'text': 'Your email?',
+        'explain': 'name@example.com',
+        'value': null,
+        'required': true,
+      }),
+    );
   });
 
   test('openHelpdesk sends correct method name and websiteId', () async {

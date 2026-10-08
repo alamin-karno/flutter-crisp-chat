@@ -31,7 +31,7 @@ Or manually add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  crisp_chat: ^2.8.0
+  crisp_chat: ^3.0.0
 ```
 
 For **Web and desktop** targets:
@@ -40,10 +40,11 @@ For **Web and desktop** targets:
 - No extra native Crisp SDK install
 - See [Platform Setup](/getting_started/platform_setup#web) and [Supported Platforms](/getting_started/supported_platforms) for WebView2, WebKitGTK, and macOS entitlements
 
-For **optional iOS video/audio calls** (CrispWebRTC SDK, build-time opt-in):
+For **iOS** (Crisp iOS SDK `~> 3.0.1`):
 
-- See [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only)
-- Not required for standard chat; Android native video is not supported yet by Crisp
+- Requires iOS 14.0+ and Xcode 16.3+; Swift Package Manager is recommended (Crisp has deprecated CocoaPods distribution)
+- `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are **required** in `Info.plist` — see [Platform Setup — iOS](/getting_started/platform_setup#ios-privacy-permissions)
+- Video/audio calls are built in — no opt-in needed. See [Enable video calls (iOS only)](/getting_started/platform_setup#enable-video-calls-ios-only); Android native video is not supported yet by Crisp
 
 Then run:
 

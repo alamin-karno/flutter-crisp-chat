@@ -20,6 +20,17 @@ Checked both native SDKs' GitHub releases against the versions this plugin pins 
 - **Android `2.0.24`** (released 2026-08-31, same day as this check) — bug-fix release, no new public API. Fixes a race condition between the `session:joined` event and `resetChatSession`, an NPE on `prelude`, and — notably — **#242: both Helpdesk and Chat shown when calling `searchHelpdesk` before starting chatbox**, which directly affects this plugin's `openHelpdesk()`/`Crisp.searchHelpdesk()` call path. Also bumps `androidx.core:core` `1.17.0` → `1.18.0` (fixes an insets-related crash). **Recommended: bump to `2.0.24`** — see companion bump below/`fix/bump-android-sdk-2.0.24` branch.
 - **iOS `3.0.0-beta.1`–`3.0.0-beta.8`** (2026-08-03 → 2026-08-24, still beta, 8 betas deep) — major version bump: "Switch to new SDK architecture." No new public API disclosed in any beta's release notes; beta.7 fixes a static-linking issue, beta.8 adds an `Info.plist` usage-description validation that can block chat from starting unless explicitly disabled. **Not adopting** — this is a pre-GA major version with an architecture rewrite and a source-compat–relevant new failure mode (missing Info.plist keys now hard-blocks the chat by default); pinning to it now risks unannounced breaking changes before GA. Stay on `~> 2.13.0` (still receiving releases as of `2.13.0`, 2026-02-06) and revisit once `3.0.0` reaches a stable tag.
 
+## SDK release check (2026-10-08)
+
+- **Android** — `2.0.24` is still the latest release; already pinned. No change.
+- **iOS `3.0.0`** (2026-09-15, stable) and **`3.0.1`** (2026-09-25, security: sessions bound to a Crisp-issued token; Crisp will enforce it "in the coming months", after which older SDKs can't reopen conversations). **Adopted `~> 3.0.1`** (`feat/ios-sdk-3`). Audit of the open-source 3.0.1 `Sources/Crisp` layer against every `CrispSDK.*` call in `ios/crisp_chat/Sources`:
+  - All used APIs (`configure`, `setTokenID`, `user.*`, `Company`/`Employment`/`Geolocation`, `session.setString`/`setInt`/`pushEvents`/`runBotScenario`/`reset`/`identifier`, `addCallback`/`removeCallback`, `Message.Content`/`Origin`/`Sender`, helpdesk, push) keep the same signatures. `Callback` handlers are now `@MainActor`.
+  - `session.segment` / `segments` setters are deprecated → switched to `setSegments(_:overwrite:)`.
+  - `CrispWebRTC` product and the `Crisp/Crisp` / `Crisp/CrispWebRTC` pod subspecs are gone → single `Crisp` dependency; calls are always available.
+  - Min iOS 14, Swift tools 6.1 (Xcode 16.3+). Chat is blocked unless `NSCameraUsageDescription` + `NSMicrophoneUsageDescription` exist (opt-out: `CrispSDK.unsafeDisableMissingUsageDescriptionWarnings()`, not exposed).
+  - `ChatViewController` still self-dismisses via `dismiss(animated:)` and presents camera/share sheets on top of itself, so the UIWindow + `CrispDismissalSentinel` presentation is unaffected.
+  - Crisp stopped publishing to CocoaPods at the end of September 2026; `3.0.1` is on trunk, later versions may be SPM-only.
+
 ## Codebase re-check for gap candidates (2026-08-31)
 
 Re-grepped `lib/`, `android/src`, `ios/crisp_chat/Sources` for every method named in the gap list below (`runBotScenario`, `showMessage`, `setSessionBool`, `getSDKVersion`, `pushSessionEvents`, `addLogger`/`setLogLevel`, `isCrispIntent`/`isSessionExist`) — none were present prior to this update, confirming the list was still accurate. Pinned SDK versions are unchanged from the #1 decompile (Android `2.0.23`, iOS `2.13.0`), so the decompiled signatures below remain valid.

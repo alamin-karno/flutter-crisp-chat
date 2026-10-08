@@ -1,10 +1,6 @@
 import Flutter
 import UIKit
-#if CRISP_WEBRTC
-import CrispWebRTC
-#else
 import Crisp
-#endif
 
 /// [FlutterCrispChatPlugin] manages the integration of Crisp Chat SDK with Flutter,
 /// handling all method channel callbacks and implementing UIApplicationDelegate methods.
@@ -106,7 +102,7 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 CrispSDK.setTokenID(tokenID: tokenId)
             }
             if let segment = crispConfig.sessionSegment {
-                CrispSDK.session.segment = segment
+                CrispSDK.session.setSegments([segment])
             }
 
             CrispSDK.user.email = crispConfig.user?.email
@@ -172,8 +168,7 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 return
             }
 
-            let previousSegments = CrispSDK.session.segments
-            CrispSDK.session.segments = overwrite ? segments : (previousSegments ?? []) + segments
+            CrispSDK.session.setSegments(segments, overwrite: overwrite)
             result(nil)
 
         case "pushSessionEvent":
@@ -217,6 +212,18 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             CrispSDK.session.runBotScenario(id: scenarioId)
             result(nil)
 
+        case "showMessage":
+            guard let args = call.arguments as? [String: Any] else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Arguments must be a map.", details: nil))
+                return
+            }
+            guard let content = Self.messageContent(from: args) else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid or unsupported message content of type '\(args["type"] ?? "nil")'.", details: nil))
+                return
+            }
+            CrispSDK.showMessage(with: content)
+            result(nil)
+
         case "openChatboxFromNotification":
             result(false)
 
@@ -255,11 +262,8 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
             }
 
         case "isVideoCallsSupported":
-            #if CRISP_WEBRTC
+            // Crisp iOS SDK 3.x always includes audio/video calls.
             result(true)
-            #else
-            result(false)
-            #endif
 
         case "registerCrispEventListener":
             registerCrispEventCallbacks()
@@ -308,6 +312,84 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
     private func unregisterCrispEventCallbacks() {
         eventCallbackTokens.forEach { CrispSDK.removeCallback(token: $0) }
         eventCallbackTokens.removeAll()
+    }
+
+    /// Builds a `Message.Content` from the map produced by Dart's
+    /// `CrispMessageContent.toJson()`. Returns `nil` for an unknown type,
+    /// a missing field, or a malformed URL.
+    private static func messageContent(from map: [String: Any]) -> Message.Content? {
+        switch map["type"] as? String {
+        case "text":
+            guard let text = map["text"] as? String else { return nil }
+            return .text(text)
+
+        case "file":
+            guard let name = map["name"] as? String,
+                  let mimeType = map["mimeType"] as? String,
+                  let url = (map["url"] as? String).flatMap(URL.init(string:)) else { return nil }
+            return .file(.init(name: name, mimeType: mimeType, url: url))
+
+        case "animation":
+            guard let mimeType = map["mimeType"] as? String,
+                  let url = (map["url"] as? String).flatMap(URL.init(string:)) else { return nil }
+            return .animation(.init(mimeType: mimeType, url: url))
+
+        case "audio":
+            guard let mimeType = map["mimeType"] as? String,
+                  let url = (map["url"] as? String).flatMap(URL.init(string:)),
+                  let duration = map["duration"] as? Int else { return nil }
+            return .audio(.init(mimeType: mimeType, url: url, duration: duration))
+
+        case "field":
+            // The iOS SDK has no `required` flag for fields.
+            guard let id = map["id"] as? String,
+                  let text = map["text"] as? String,
+                  let explain = map["explain"] as? String else { return nil }
+            return .field(.init(id: id, text: text, explain: explain, value: map["value"] as? String))
+
+        case "picker":
+            // The iOS SDK has no `required` flag for pickers.
+            guard let id = map["id"] as? String,
+                  let text = map["text"] as? String,
+                  let choiceMaps = map["choices"] as? [[String: Any]] else { return nil }
+            var choices: [Message.Content.PickerValue.Choice] = []
+            for choiceMap in choiceMaps {
+                guard let value = choiceMap["value"] as? String,
+                      let label = choiceMap["label"] as? String else { return nil }
+                choices.append(.init(
+                    label: label,
+                    icon: choiceMap["icon"] as? String,
+                    selected: choiceMap["selected"] as? Bool ?? false,
+                    value: value
+                ))
+            }
+            return .picker(.init(id: id, text: text, choices: choices))
+
+        case "carousel":
+            guard let text = map["text"] as? String,
+                  let targetMaps = map["targets"] as? [[String: Any]] else { return nil }
+            var targets: [Message.Content.CarouselValue.Target] = []
+            for targetMap in targetMaps {
+                guard let title = targetMap["title"] as? String,
+                      let description = targetMap["description"] as? String else { return nil }
+                var actions: [Message.Content.CarouselValue.Target.Action] = []
+                for actionMap in targetMap["actions"] as? [[String: Any]] ?? [] {
+                    guard let label = actionMap["label"] as? String,
+                          let url = (actionMap["url"] as? String).flatMap(URL.init(string:)) else { return nil }
+                    actions.append(.init(label: label, url: url))
+                }
+                targets.append(.init(
+                    title: title,
+                    description: description,
+                    image: (targetMap["image"] as? String).flatMap(URL.init(string:)),
+                    actions: actions
+                ))
+            }
+            return .carousel(.init(text: text, targets: targets))
+
+        default:
+            return nil
+        }
     }
 
     /// Builds the same payload shape produced by the Android side's

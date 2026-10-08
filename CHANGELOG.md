@@ -1,4 +1,30 @@
-# [Unreleased]
+# 3.0.0
+
+Added
+---
+* `FlutterCrispChat.showMessage(CrispMessageContent content)` — shows a message as an operator in the local chatbox only (never sent to the Crisp inbox) on Android, iOS, Web, and desktop. Wraps `Crisp.showMessage(Content)` (Android), `CrispSDK.showMessage(with:)` (iOS), and `$crisp.push(["do", "message:show", [type, content]])` (Web/desktop). Supports `CrispTextContent`, `CrispPickerContent`, `CrispFieldContent`, `CrispCarouselContent`, `CrispFileContent`, `CrispAnimationContent`, and `CrispAudioContent`. Throws `ArgumentError` for an empty text, a picker without choices, or a carousel without targets.
+* `CrispConfig.localMessages` — local messages shown automatically right after the chat opens, the first time `openCrispChat` is called in the app's lifetime and again after `resetCrispChatSession`, so reopening the chat doesn't duplicate them.
+* Example app: a welcome text and topic picker via `CrispConfig.localMessages`, and a "Show Local Message" button demonstrating `showMessage()` with an email field.
+
+Changed
+---
+* **Breaking (iOS):** Upgraded Crisp iOS SDK from `2.13.0` to `3.0.1` — a ground-up rewrite with a lighter footprint. `3.0.1` ties chat sessions to a Crisp-issued token so only the device that started a conversation can reopen it; Crisp will start enforcing this in the coming months, after which 2.x SDKs can no longer reopen conversations. See the [`3.0.0`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.0.0) and [`3.0.1`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.0.1) release notes. Migration:
+  * Raise your iOS deployment target to **14.0** (was `13.0`) and build with **Xcode 16.3+**.
+  * Add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to `Info.plist` — the 3.x SDK refuses to start the chat without them.
+  * Remove `$CrispChatWebRTC` (Podfile) / `CRISP_CHAT_WEBRTC` (SPM) if set — they are no longer read.
+* Video/audio calls are now included in every iOS build, so `FlutterCrispChat.isVideoCallsSupported()` always returns `true` on iOS. The separate `CrispWebRTC` SDK variant, the `Crisp/CrispWebRTC` CocoaPods subspec, and the `CRISP_WEBRTC` compile flag are gone; the plugin now depends on the single `Crisp` pod / SPM product.
+* Replaced the deprecated `CrispSDK.session.segment` / `segments` setters with `CrispSDK.session.setSegments(_:overwrite:)` for `CrispConfig.sessionSegment` and `FlutterCrispChat.setSessionSegments()` on iOS.
+* Added the required camera, microphone, and photo-library usage descriptions to the example app's `Info.plist`.
+* Migrated the example iOS app to Swift Package Manager only (removed CocoaPods: `Podfile`, Pods build phases, and the `Pods-Runner` xcconfig includes), adopted the UIScene lifecycle (`FlutterImplicitEngineDelegate` + `FlutterSceneDelegate` scene manifest), and set `version: 1.0.0+1` in its `pubspec.yaml` — clears the Flutter 3.47 build warnings for UIScene migration, non-standard Podfile, and missing build name/number.
+* Migrated the example macOS app to Swift Package Manager only — ran `pod deintegrate`, removed the `Podfile` and the Pods `#include`s from `Flutter-Debug.xcconfig` / `Flutter-Release.xcconfig`, dropped the Pods project from the workspace, committed the SPM `Package.resolved`, and raised the deployment target from `10.15` to `12.0` (set by Flutter's SPM migration). Clears Flutter's "your project still has CocoaPods integration" warning and the `pod install` step on macOS builds.
+* Pinned the Flutter SDK to `3.47.6` via fvm (`.fvmrc`) so contributors build with the same Flutter version used to verify the Crisp iOS SDK 3.0.1 upgrade.
+* Excluded `build/` and the native platform folders from the analyzer in the plugin and example — Flutter 3.47's SPM integration copies third-party plugin Dart sources into `build/**/SourcePackages/`, which made a bare `flutter analyze` report ~160 unrelated issues.
+* Bumped docsrc dev dependencies (`vue` / `@vue/server-renderer` `3.5.33` → `3.5.43`, `source-map-js` `1.2.1` → `1.2.2`).
+
+Documentation
+---
+* Added a [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html) docs page covering `showMessage()`, `CrispConfig.localMessages`, every message type, and platform differences; updated the Configuration, API Documentation, Supported Platforms, and Full Example pages, `llms.txt`, and the README.
+* Documented the Crisp iOS SDK 3.x requirements (iOS 14+, Xcode 16.3+, required camera/microphone `Info.plist` keys), built-in video calls, and Crisp's CocoaPods deprecation in the README and docs site.
 
 # 2.8.0
 

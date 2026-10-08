@@ -85,75 +85,64 @@ And in `res/xml/file_paths.xml`:
 
 ## iOS
 
-### 1. Privacy Permissions
+### 1. Privacy Permissions (required) {#ios-privacy-permissions}
 
-Add the following keys to `ios/Runner/Info.plist` for camera, photo library, and microphone access (required by the Crisp SDK for file uploads and media):
+Add the following keys to `ios/Runner/Info.plist`. Since Crisp iOS SDK 3.x, **`NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are required** — if either is missing, the SDK refuses to start the chat and shows a missing-configuration screen instead. `NSPhotoLibraryAddUsageDescription` is recommended so users can save photos from chat.
 
 ```xml
+<!-- Required -->
 <key>NSCameraUsageDescription</key>
-<string>Used to take photos for chat attachments</string>
+<string>Used to take photos and make video calls in chat</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Used for voice messages and audio/video calls in chat</string>
+<!-- Recommended -->
 <key>NSPhotoLibraryAddUsageDescription</key>
 <string>Used to save photos from chat</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Used for voice messages in chat</string>
 ```
 
 ### 2. Minimum Deployment Target
 
-The Crisp iOS SDK requires iOS 13.0+. Ensure your `ios/Podfile` has:
+The Crisp iOS SDK (`~> 3.0.1`) requires **iOS 14.0+** and **Xcode 16.3+** (the SDK is built with Swift tools 6.1). Ensure your `ios/Podfile` has:
 
 ```ruby
-platform :ios, '13.0'
+platform :ios, '14.0'
 ```
+
+Also set **Minimum Deployments** to **14.0** (or higher) on the **Runner** target in Xcode. If your app uses Firebase push notifications, use **15.0+** instead — see [Firebase requires iOS 15.0](/troubleshooting/platform_specific#firebase-requires-ios-15).
+
+::: tip Swift Package Manager recommended
+Crisp has deprecated CocoaPods distribution and stops publishing new versions there at the end of September 2026. Version `3.0.1` is available on CocoaPods, so CocoaPods builds keep working, but **Swift Package Manager** (the default in Flutter 3.44+) is the recommended path going forward. See [CocoaPods vs Swift Package Manager](/troubleshooting/platform_specific#cocoapods-vs-swift-package-manager).
+:::
+
+::: info Why upgrade to 3.x
+Crisp iOS SDK 3.0.1 ties chat sessions to a Crisp-issued token, so only the device that started a conversation can reopen it. Crisp will start requiring these tokens in the coming months; older SDKs (including 2.x) will not be able to reopen conversations after that.
+:::
 
 ### Enable video calls (iOS only) {#enable-video-calls-ios-only}
 
-Video and audio calls require the **`Crisp/CrispWebRTC`** CocoaPods subspec (or SPM product **`CrispWebRTC`**) instead of the default **`Crisp/Crisp`** / **`Crisp`** library. Both expose the same Swift API (`import CrispWebRTC` vs `import Crisp`); the WebRTC variant adds roughly **10 MB** to your iOS binary.
+Video and audio calls are **included automatically** on every iOS build. Since Crisp iOS SDK 3.0, calls are built into the single `Crisp` SDK — there is no separate WebRTC variant, no Podfile flag, and no environment variable to set. Calls are initiated from the Crisp chat UI when your Crisp workspace supports them.
 
-This is a **build-time** choice — there is no `CrispConfig` runtime flag. Check support with `FlutterCrispChat.isVideoCallsSupported()`.
+`FlutterCrispChat.isVideoCallsSupported()` always returns `true` on iOS. The only setup needed is the camera and microphone usage descriptions from [step 1](#ios-privacy-permissions), which are required for the chat to start at all.
 
-When enabled, update the microphone usage description in `ios/Runner/Info.plist` to cover calls (camera and photo keys from step 1 are still required):
+#### Migrating from 2.x
 
-```xml
-<key>NSMicrophoneUsageDescription</key>
-<string>Used for video and audio calls in chat</string>
-```
+If you previously enabled calls with the WebRTC variant, remove the old flags — the plugin no longer reads them and they are ignored:
 
-#### CocoaPods (Podfile)
+- **CocoaPods:** delete `$CrispChatWebRTC = true` from `ios/Podfile`.
+- **SPM:** stop setting `CRISP_CHAT_WEBRTC=true` (shell, CI, or Xcode scheme environment variables).
 
-Add the following to your `ios/Podfile` **before** `flutter_install_all_ios_pods`:
-
-```ruby
-$CrispChatWebRTC = true
-```
-
-Then reinstall pods:
+Then run a clean build so SPM/CocoaPods re-resolve dependencies:
 
 ```bash
+flutter clean && flutter pub get
+# CocoaPods only:
 cd ios && rm -f Podfile.lock && pod install --repo-update && cd ..
 ```
-
-#### Swift Package Manager (Flutter 3.24+, default in Flutter 3.44+)
-
-When your app uses SPM (`flutter config --enable-swift-package-manager`, or enabled by default on newer Flutter), set an environment variable **before** building:
-
-```bash
-CRISP_CHAT_WEBRTC=true flutter build ios
-# or
-CRISP_CHAT_WEBRTC=true flutter run
-```
-
-Alternatively, add `CRISP_CHAT_WEBRTC` = `true` under **Product → Scheme → Edit Scheme → Run → Arguments → Environment Variables** in Xcode.
-
-The plugin's [`ios/crisp_chat/Package.swift`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat/Package.swift) selects the `CrispWebRTC` product and defines `CRISP_WEBRTC` automatically when this variable is set. No manual edit of `Package.swift` is required.
-
-After changing the video setting, run a clean build (`flutter clean && flutter pub get`) so SPM/CocoaPods re-resolve dependencies.
 
 **Limitations:**
 
 - **Android:** native video/audio calls are [not supported yet](https://github.com/crisp-im/crisp-sdk-android/issues/181) by the Crisp Android SDK.
 - **Mac Catalyst:** Crisp calls are not supported.
-- **WebRTC conflicts:** if your app embeds another WebRTC library, you may hit symbol or module conflicts ([crisp-sdk-ios#103](https://github.com/crisp-im/crisp-sdk-ios/issues/103)).
 
 **Web / desktop:** video calls work through the web chatbox when enabled in your Crisp dashboard — no extra native setup.
 
