@@ -118,4 +118,85 @@ void main() {
     );
     expect(script, contains('["en","billing","Billing FAQ","Billing"]'));
   });
+
+  group('showMessage', () {
+    test('text', () {
+      expect(
+        CrispJsBridge.showMessage(const CrispTextContent('Can I help?')),
+        equals(r'$crisp.push(["do","message:show",["text","Can I help?"]]);'),
+      );
+    });
+
+    test('file maps mimeType to type', () {
+      expect(
+        CrispJsBridge.showMessage(const CrispFileContent(
+          name: 'Guide.pdf',
+          url: 'https://example.com/guide.pdf',
+          mimeType: 'application/pdf',
+        )),
+        equals(
+          r'$crisp.push(["do","message:show",["file",{"name":"Guide.pdf","url":"https://example.com/guide.pdf","type":"application/pdf"}]]);',
+        ),
+      );
+    });
+
+    test('animation defaults to image/gif', () {
+      expect(
+        CrispJsBridge.showMessage(
+          const CrispAnimationContent(url: 'https://example.com/a.gif'),
+        ),
+        equals(
+          r'$crisp.push(["do","message:show",["animation",{"url":"https://example.com/a.gif","type":"image/gif"}]]);',
+        ),
+      );
+    });
+
+    test('field omits unset optional keys', () {
+      expect(
+        CrispJsBridge.showMessage(const CrispFieldContent(
+          id: 'email',
+          text: 'Your email?',
+          explain: 'name@example.com',
+        )),
+        equals(
+          r'$crisp.push(["do","message:show",["field",{"id":"email","text":"Your email?","explain":"name@example.com"}]]);',
+        ),
+      );
+    });
+
+    test('picker includes choices and required flag', () {
+      expect(
+        CrispJsBridge.showMessage(const CrispPickerContent(
+          id: 'plan',
+          text: 'Pick a plan',
+          required: true,
+          choices: [CrispPickerChoice(value: 'pro', label: 'Pro', selected: true)],
+        )),
+        equals(
+          r'$crisp.push(["do","message:show",["picker",{"id":"plan","text":"Pick a plan","choices":[{"value":"pro","label":"Pro","selected":true}],"required":true}]]);',
+        ),
+      );
+    });
+
+    test('carousel includes targets and actions', () {
+      expect(
+        CrispJsBridge.showMessage(const CrispCarouselContent(
+          text: 'Our products',
+          targets: [
+            CrispCarouselTarget(
+              title: 'Pro',
+              description: 'For teams',
+              image: 'https://example.com/pro.png',
+              actions: [
+                CrispCarouselAction(label: 'Open', url: 'https://example.com'),
+              ],
+            ),
+          ],
+        )),
+        equals(
+          r'$crisp.push(["do","message:show",["carousel",{"text":"Our products","targets":[{"title":"Pro","description":"For teams","image":"https://example.com/pro.png","actions":[{"label":"Open","url":"https://example.com"}]}]}]]);',
+        ),
+      );
+    });
+  });
 }

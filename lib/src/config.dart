@@ -1,3 +1,5 @@
+import 'crisp_message_content.dart';
+
 /// Configuration for the Crisp chat SDK.
 ///
 /// This class holds all the necessary settings to initialize and customize the
@@ -42,6 +44,15 @@ class CrispConfig {
   /// [ModalPresentationStyle.overCurrentContext], [ModalPresentationStyle.popover].
   ModalPresentationStyle? modalPresentationStyle;
 
+  /// Local messages shown as an operator in the chatbox when it opens.
+  ///
+  /// They are shown only the first time [FlutterCrispChat.openCrispChat] is
+  /// called in the app's lifetime, and again after
+  /// [FlutterCrispChat.resetCrispChatSession]. They are never sent to your
+  /// Crisp inbox. Use [FlutterCrispChat.showMessage] to show one at any
+  /// other time.
+  List<CrispMessageContent>? localMessages;
+
   /// Creates a new [CrispConfig] instance.
   ///
   /// @param websiteID The Crisp website ID.
@@ -50,6 +61,7 @@ class CrispConfig {
   /// @param enableNotifications (Optional) Whether to enable notifications. Defaults to `true`.
   /// @param user (Optional) User information.
   /// @param modalPresentationStyle (Optional) iOS modal presentation style for the chat view controller.
+  /// @param localMessages (Optional) Local messages shown when the chat first opens.
   CrispConfig({
     required this.websiteID,
     this.tokenId,
@@ -57,6 +69,7 @@ class CrispConfig {
     this.enableNotifications = true,
     this.user,
     this.modalPresentationStyle,
+    this.localMessages,
   });
 
   /// Converts this [CrispConfig] object to a JSON map.

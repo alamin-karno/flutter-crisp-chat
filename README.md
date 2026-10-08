@@ -30,6 +30,7 @@ Chat with website visitors, integrate your favorite tools, and deliver a great c
 - **iOS video/audio calls** — built into the Crisp iOS SDK 3.x, no opt-in needed
 - **Helpdesk / FAQ** — open the Crisp helpdesk search or a specific article directly (Android, iOS, Web, and desktop)
 - **Bot Scenarios** — trigger a configured Crisp Bot scenario by ID (Android, iOS, Web, and desktop)
+- **Local Messages** — show a welcome text, picker, field, or carousel as an operator message in the chatbox (Android, iOS, Web, and desktop)
 - Android, iOS, Web, macOS, Windows, and Linux
 
 ## Platform overview
@@ -720,6 +721,21 @@ await FlutterCrispChat.runBotScenario(scenarioId: 'YOUR_SCENARIO_ID');
 ```
 
 The scenario ID can be found in the Crisp dashboard under **Settings** → **Chatbot**. Throws `ArgumentError` if `scenarioId` is empty.
+
+### Local Messages
+
+Show a message as an operator in the visitor's chatbox — for example, a welcome message the first time the chat opens. Local messages stay on the device and are never sent to your Crisp inbox.
+
+> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux.
+
+```dart
+CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  localMessages: const [CrispTextContent('👋 Hi! How can we help?')],
+);
+```
+
+Pickers, fields, carousels, files, GIFs, and audio are supported too, as is `FlutterCrispChat.showMessage()` for showing a message at any time. Read the **[Local Messages guide](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html)** for when messages are shown, every message type, and the platform differences.
 
 ## Screenshot (GIF)
 

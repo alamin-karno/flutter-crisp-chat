@@ -13,8 +13,8 @@ prev:
   link: '/core_feature/helpdesk'
 
 next:
-  text: 'Firebase Setup'
-  link: '/notifications/firebase_setup'
+  text: 'Local Messages'
+  link: '/core_feature/local_messages'
 ---
 
 # Chat Events

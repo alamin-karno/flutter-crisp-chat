@@ -4,6 +4,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'config.dart';
 import 'crisp_event.dart';
+import 'crisp_message_content.dart';
 import 'flutter_crisp_chat_method_channel.dart';
 
 abstract class FlutterCrispChatPlatform extends PlatformInterface {
@@ -118,6 +119,12 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   /// [runBotScenario] runs a Crisp Bot scenario identified by [scenarioId].
   Future<void> runBotScenario({required String scenarioId}) {
     throw UnimplementedError('runBotScenario() has not been implemented.');
+  }
+
+  /// [showMessage] shows [content] as an operator message in the local
+  /// chatbox only.
+  Future<void> showMessage({required CrispMessageContent content}) {
+    throw UnimplementedError('showMessage() has not been implemented.');
   }
 
   /// A broadcast stream of native Crisp SDK events (session loaded, chat

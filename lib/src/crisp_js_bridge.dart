@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'config.dart';
+import 'crisp_message_content.dart';
 
 /// Builds JavaScript snippets for the Crisp Web Chat SDK (`$crisp`).
 ///
@@ -211,6 +212,70 @@ class CrispJsBridge {
   /// Runs a Bot scenario by [scenarioId] via the web SDK.
   static String runBotScenario({required String scenarioId}) {
     return '\$crisp.push(${jsonEncode(["do", "bot:scenario:run", [scenarioId]])});';
+  }
+
+  /// Shows [content] as an operator message in the local chatbox.
+  ///
+  /// Format: `$crisp.push(["do", "message:show", [type, content]])`
+  static String showMessage(CrispMessageContent content) {
+    return '\$crisp.push(${jsonEncode([
+      "do",
+      "message:show",
+      [content.type, _messageShowPayload(content)],
+    ])});';
+  }
+
+  static Object _messageShowPayload(CrispMessageContent content) {
+    return switch (content) {
+      CrispTextContent(:final text) => text,
+      CrispFileContent(:final name, :final url, :final mimeType) => {
+          'name': name,
+          'url': url,
+          'type': mimeType,
+        },
+      CrispAnimationContent(:final url, :final mimeType) => {
+          'url': url,
+          'type': mimeType,
+        },
+      CrispAudioContent(:final url, :final mimeType, :final duration) => {
+          'url': url,
+          'type': mimeType,
+          'duration': duration,
+        },
+      CrispFieldContent() => {
+          'id': content.id,
+          'text': content.text,
+          'explain': content.explain,
+          if (content.value != null) 'value': content.value,
+          if (content.required) 'required': true,
+        },
+      CrispPickerContent() => {
+          'id': content.id,
+          'text': content.text,
+          'choices': [
+            for (final choice in content.choices)
+              {
+                'value': choice.value,
+                'label': choice.label,
+                'selected': choice.selected,
+                if (choice.icon != null) 'icon': choice.icon,
+              },
+          ],
+          if (content.required) 'required': true,
+        },
+      CrispCarouselContent() => {
+          'text': content.text,
+          'targets': [
+            for (final target in content.targets)
+              {
+                'title': target.title,
+                'description': target.description,
+                if (target.image != null) 'image': target.image,
+                'actions': [for (final a in target.actions) a.toJson()],
+              },
+          ],
+        },
+    };
   }
 
   /// Reads session id; always returns a string for desktop WebView bridges.

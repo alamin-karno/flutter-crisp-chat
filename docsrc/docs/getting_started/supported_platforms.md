@@ -39,6 +39,7 @@ next:
 | `setSessionString` / `setSessionInt` | Yes                                             | Yes              | Yes (WebView only)       |
 | `setSessionSegments`                 | Yes                                             | Yes              | Yes (WebView only)       |
 | `pushSessionEvent`                   | Yes                                             | Yes              | Yes (WebView only)       |
+| `showMessage` / `CrispConfig.localMessages` | Yes                                      | Yes              | Yes (WebView only)       |
 | `getSessionIdentifier`               | Yes                                             | Yes              | Yes (WebView only)       |
 | `getUnreadMessageCount`              | Yes                                             | Yes*             | Yes*                     |
 | `markMessagesAsRead`                 | Yes                                             | Yes*             | Yes*                     |

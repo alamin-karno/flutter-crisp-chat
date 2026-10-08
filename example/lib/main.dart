@@ -145,6 +145,20 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
+      // Shown locally as an operator message the first time the chat opens
+      // (and again after resetCrispChatSession). Never sent to your inbox.
+      localMessages: const [
+        CrispTextContent('👋 Hi! How can we help you today?'),
+        CrispPickerContent(
+          id: 'topic',
+          text: 'What is your question about?',
+          choices: [
+            CrispPickerChoice(value: 'billing', label: 'Billing', icon: '💳'),
+            CrispPickerChoice(value: 'technical', label: 'Technical', icon: '🛠️'),
+            CrispPickerChoice(value: 'other', label: 'Something else'),
+          ],
+        ),
+      ],
     );
   }
 
@@ -229,6 +243,26 @@ class _MyAppState extends State<MyApp> {
                   });
                 },
                 child: const Text('Open Crisp Chat'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    // Local messages show in the open chatbox, so open it first.
+                    await FlutterCrispChat.openCrispChat(config: config);
+                    await FlutterCrispChat.showMessage(
+                      const CrispFieldContent(
+                        id: 'email',
+                        text: 'What email can we reach you at?',
+                        explain: 'name@example.com',
+                        required: true,
+                      ),
+                    );
+                  } catch (e) {
+                    if (kDebugMode) print('showMessage error: $e');
+                  }
+                },
+                child: const Text('Show Local Message'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(

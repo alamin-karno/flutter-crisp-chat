@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'config.dart';
 import 'crisp_event.dart';
 import 'crisp_js_bridge.dart';
+import 'crisp_message_content.dart';
 import 'crisp_web_sdk.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
@@ -74,6 +75,11 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
     await CrispWebSdk.runScript(
       CrispJsBridge.runBotScenario(scenarioId: scenarioId),
     );
+  }
+
+  @override
+  Future<void> showMessage({required CrispMessageContent content}) async {
+    await CrispWebSdk.runScript(CrispJsBridge.showMessage(content));
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 
 import 'config.dart';
 import 'crisp_event.dart';
+import 'crisp_message_content.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// An implementation of [FlutterCrispChatPlatform] that uses method channels.
@@ -203,6 +204,13 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     await methodChannel.invokeMethod('runBotScenario', <String, String>{
       'scenarioId': scenarioId,
     });
+  }
+
+  /// [showMessage] is used to invoke the Method Channel and call native
+  /// code with the serialized [content].
+  @override
+  Future<void> showMessage({required CrispMessageContent content}) async {
+    await methodChannel.invokeMethod('showMessage', content.toJson());
   }
 
   /// Returns whether the native build supports Crisp video/audio calls.

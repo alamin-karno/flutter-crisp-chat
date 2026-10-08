@@ -1,5 +1,11 @@
 # [Unreleased]
 
+Added
+---
+* `FlutterCrispChat.showMessage(CrispMessageContent content)` — shows a message as an operator in the local chatbox only (never sent to the Crisp inbox) on Android, iOS, Web, and desktop. Wraps `Crisp.showMessage(Content)` (Android), `CrispSDK.showMessage(with:)` (iOS), and `$crisp.push(["do", "message:show", [type, content]])` (Web/desktop). Supports `CrispTextContent`, `CrispPickerContent`, `CrispFieldContent`, `CrispCarouselContent`, `CrispFileContent`, `CrispAnimationContent`, and `CrispAudioContent`. Throws `ArgumentError` for an empty text, a picker without choices, or a carousel without targets.
+* `CrispConfig.localMessages` — local messages shown automatically right after the chat opens, the first time `openCrispChat` is called in the app's lifetime and again after `resetCrispChatSession`, so reopening the chat doesn't duplicate them.
+* Example app: a welcome text and topic picker via `CrispConfig.localMessages`, and a "Show Local Message" button demonstrating `showMessage()` with an email field.
+
 Changed
 ---
 * **Breaking (iOS):** Upgraded Crisp iOS SDK from `2.13.0` to `3.0.1` — a ground-up rewrite with a lighter footprint. `3.0.1` ties chat sessions to a Crisp-issued token so only the device that started a conversation can reopen it; Crisp will start enforcing this in the coming months, after which 2.x SDKs can no longer reopen conversations. See the [`3.0.0`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.0.0) and [`3.0.1`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.0.1) release notes. Migration:
@@ -13,6 +19,7 @@ Changed
 
 Documentation
 ---
+* Added a [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html) docs page covering `showMessage()`, `CrispConfig.localMessages`, every message type, and platform differences; updated the Configuration, API Documentation, Supported Platforms, and Full Example pages, `llms.txt`, and the README.
 * Documented the Crisp iOS SDK 3.x requirements (iOS 14+, Xcode 16.3+, required camera/microphone `Info.plist` keys), built-in video calls, and Crisp's CocoaPods deprecation in the README and docs site.
 
 # 2.8.0

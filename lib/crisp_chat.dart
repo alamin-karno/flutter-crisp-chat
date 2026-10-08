@@ -6,12 +6,14 @@ import 'package:http/http.dart' as http;
 
 import 'src/config.dart';
 import 'src/crisp_event.dart';
+import 'src/crisp_message_content.dart';
 import 'src/flutter_crisp_chat_platform_interface.dart';
 import 'src/helper.dart';
 import 'src/platform_register.dart';
 
 export 'src/config.dart';
 export 'src/crisp_event.dart';
+export 'src/crisp_message_content.dart';
 
 /// [FlutterCrispChat] to call the native platform method.
 class FlutterCrispChat {
@@ -24,6 +26,10 @@ class FlutterCrispChat {
   /// The cached session identifier.
   static String? _sessionIdentifier;
 
+  /// Whether [CrispConfig.localMessages] were already shown since app start
+  /// or the last [resetCrispChatSession].
+  static bool _localMessagesShown = false;
+
   /// Opens the Crisp chat interface.
   ///
   /// This method initializes and displays the Crisp chat view using the
@@ -34,6 +40,7 @@ class FlutterCrispChat {
   /// @return A [Future] that completes when the chat is opened.
   /// @throws Exception if the user email in [config] is invalid.
   /// @throws Exception if the company URL in [config] is invalid.
+  /// @throws Exception if a message in [CrispConfig.localMessages] is invalid.
   static Future<void> openCrispChat({required CrispConfig config}) async {
     // Validate email if provided. This ensures that any email passed to the
     // native Crisp SDK is in a recognizable format.
@@ -57,8 +64,26 @@ class FlutterCrispChat {
       );
     }
 
+    final localMessages = config.localMessages ?? const [];
+    localMessages.forEach(_validateMessageContent);
+
     // Call the platform-specific method to open Crisp chat
     await FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+
+    // Show the configured local messages once, so they don't pile up in the
+    // chatbox every time it is reopened.
+    if (localMessages.isNotEmpty && !_localMessagesShown) {
+      _localMessagesShown = true;
+      try {
+        for (final message in localMessages) {
+          await FlutterCrispChatPlatform.instance.showMessage(content: message);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error showing local messages: $e");
+        }
+      }
+    }
 
     // After opening, get and cache the session identifier.
     await Future.delayed(const Duration(seconds: 3));
@@ -85,6 +110,7 @@ class FlutterCrispChat {
   static Future<void> resetCrispChatSession() async {
     await FlutterCrispChatPlatform.instance.resetCrispChatSession();
     _sessionIdentifier = null;
+    _localMessagesShown = false;
   }
 
   /// Sets a string value in the current session data.
@@ -207,6 +233,47 @@ class FlutterCrispChat {
     await FlutterCrispChatPlatform.instance.runBotScenario(
       scenarioId: scenarioId,
     );
+  }
+
+  /// [showMessage] shows [content] as an operator message in the local
+  /// chatbox. The message is never sent to your Crisp inbox, so operators
+  /// don't see it.
+  ///
+  /// Call it after [openCrispChat]. To show messages automatically when the
+  /// chat first opens, use [CrispConfig.localMessages] instead.
+  ///
+  /// {@category Local Messages}
+  /// @param content The message to show (e.g. [CrispTextContent]).
+  /// @return A [Future] that completes when the message has been shown.
+  /// @throws Exception if [content] is invalid (e.g. empty text).
+  static Future<void> showMessage(CrispMessageContent content) async {
+    _validateMessageContent(content);
+    await FlutterCrispChatPlatform.instance.showMessage(content: content);
+  }
+
+  static void _validateMessageContent(CrispMessageContent content) {
+    switch (content) {
+      case CrispTextContent(:final text) when text.trim().isEmpty:
+        throw ArgumentError.value(
+          text,
+          'content.text',
+          'Message text must not be empty.',
+        );
+      case CrispPickerContent(:final choices) when choices.isEmpty:
+        throw ArgumentError.value(
+          choices,
+          'content.choices',
+          'Picker choices must not be empty.',
+        );
+      case CrispCarouselContent(:final targets) when targets.isEmpty:
+        throw ArgumentError.value(
+          targets,
+          'content.targets',
+          'Carousel targets must not be empty.',
+        );
+      default:
+        break;
+    }
   }
 
   static Map<String, String> _crispApiHeaders({
