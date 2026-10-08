@@ -9,6 +9,7 @@ Changed
 * Video/audio calls are now included in every iOS build, so `FlutterCrispChat.isVideoCallsSupported()` always returns `true` on iOS. The separate `CrispWebRTC` SDK variant, the `Crisp/CrispWebRTC` CocoaPods subspec, and the `CRISP_WEBRTC` compile flag are gone; the plugin now depends on the single `Crisp` pod / SPM product.
 * Replaced the deprecated `CrispSDK.session.segment` / `segments` setters with `CrispSDK.session.setSegments(_:overwrite:)` for `CrispConfig.sessionSegment` and `FlutterCrispChat.setSessionSegments()` on iOS.
 * Added the required camera, microphone, and photo-library usage descriptions to the example app's `Info.plist`.
+* Migrated the example iOS app to Swift Package Manager only (removed CocoaPods: `Podfile`, Pods build phases, and the `Pods-Runner` xcconfig includes), adopted the UIScene lifecycle (`FlutterImplicitEngineDelegate` + `FlutterSceneDelegate` scene manifest), and set `version: 1.0.0+1` in its `pubspec.yaml` — clears the Flutter 3.47 build warnings for UIScene migration, non-standard Podfile, and missing build name/number.
 
 Documentation
 ---
