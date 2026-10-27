@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Security
+---
+* Bumped the docsrc `vite` override from `^6.4.3` to `^6.4.4` (resolves to `6.4.5`), fixing five Dependabot alerts: three `launch-editor` advisories (GHSA-698v-4r3x-3vcv, GHSA-r825-w8mm-5pxw, GHSA-587h-7wmj-h5pm) plus GHSA-9jrq-w75r-8gcw and GHSA-rq7h-c2jc-7f22. Dev-server only; the published docs site and the plugin are unaffected.
+
 # 3.0.0
 
 Added
