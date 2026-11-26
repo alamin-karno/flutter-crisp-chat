@@ -23,6 +23,8 @@ Security
 
 Documentation
 ---
+* Rewrote the README to be compact: a feature-by-platform table, a setup checklist per platform, a short quick start, and links to the documentation site for full guides. Fixed the Android minimums it listed (`minSdkVersion 23`, `compileSdkVersion 36`), removed docs-site-only syntax that rendered as plain text, and added pub.dev likes, points, downloads, CI, and docs badges.
+* Updated the pub.dev description and topics (`live-chat`, `customer-support`) so the package is easier to find.
 * Documented `isSessionOngoing()` in the README and on the Session Management, Supported Platforms, and API Documentation pages.
 * Documented `CrispConfig.colorMode` in the README and on the Configuration, Supported Platforms, and API Documentation pages.
 * Updated the native SDK versions (Android `2.0.25`, iOS `~> 3.1.1`) in the README and docs site, and corrected the CocoaPods note: Crisp has deprecated CocoaPods but still published `3.1.x` there, so it no longer claims publishing stopped in September 2026.

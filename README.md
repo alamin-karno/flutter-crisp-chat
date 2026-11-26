@@ -1,821 +1,151 @@
-# Crisp Chat
-
-A Flutter plugin for Crisp live chat on **Android, iOS, Web, and desktop** (macOS, Windows, Linux).
+# Crisp Chat for Flutter
 
 ![Crisp Chat](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_banner.png?raw=true)
 
 [![pub version](https://img.shields.io/pub/v/crisp_chat?color=%2300b0ff&label=crisp_chat&style=flat-square)](https://pub.dev/packages/crisp_chat)
-[![Last Commit](https://img.shields.io/github/last-commit/alamin-karno/flutter-crisp-chat?color=%23ffa000&style=flat-square)](https://github.com/alamin-karno/flutter-crisp-chat/commits/main/)
-[![License](https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square)](https://github.com/alamin-karno/flutter-crisp-chat?tab=MIT-1-ov-file)
-[![GitHub Contributors](https://img.shields.io/github/contributors/alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors)
-[![Stars](https://img.shields.io/github/stars/alamin-karno/flutter-crisp-chat?style=social)](https://pub.dev/packages/crisp_chat)
-[![GitHub Closed Issues](https://img.shields.io/github/issues-closed-raw/alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/issues?q=is%3Aissue+is%3Aclosed)
-[![Sponsors](https://img.shields.io/github/sponsors/alamin-karno)](https://patreon.com/alamin_karno)
-[![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://buymeacoffee.com/alaminkarno)
+[![pub likes](https://img.shields.io/pub/likes/crisp_chat?style=flat-square)](https://pub.dev/packages/crisp_chat/score)
+[![pub points](https://img.shields.io/pub/points/crisp_chat?style=flat-square)](https://pub.dev/packages/crisp_chat/score)
+[![monthly downloads](https://img.shields.io/pub/dm/crisp_chat?style=flat-square)](https://pub.dev/packages/crisp_chat/score)
+[![CI](https://img.shields.io/github/actions/workflow/status/alamin-karno/flutter-crisp-chat/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/alamin-karno/flutter-crisp-chat/actions/workflows/ci.yml)
+[![Docs](https://img.shields.io/badge/docs-online-5c6bc0?style=flat-square)](https://alamin-karno.github.io/flutter-crisp-chat/)
+[![License: MIT](https://img.shields.io/github/license/alamin-karno/flutter-crisp-chat?style=flat-square)](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/LICENSE)
 
-Chat with website visitors, integrate your favorite tools, and deliver a great customer experience. On **mobile**, the plugin uses the official Crisp Android and iOS SDKs. On **Web and desktop**, it uses the official Crisp Web Chat SDK (embedded chatbox or desktop WebView). The same Dart API covers session data, events, and REST helpers where supported.
+**Add [Crisp](https://crisp.chat/) live chat to your Flutter app on Android, iOS, Web, macOS, Windows, and Linux, with one Dart API.**
 
-📖 **[Full Documentation](https://alamin-karno.github.io/flutter-crisp-chat/)** — Comprehensive guides, API reference, and examples.
+On mobile, the plugin wraps the official native Crisp SDKs. On Web and desktop, it embeds the official Crisp Web Chat SDK. Push notifications, a helpdesk, bot scenarios, chat events, and session data work across platforms with the same code.
 
-**Note:** Contributions are highly appreciated. If you have an idea or suggestion to improve this package, feel free to reach out. Before contributing, please review the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines and setup instructions.
+📖 **[Documentation](https://alamin-karno.github.io/flutter-crisp-chat/)** · 🚀 **[Quick start](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/quick_start.html)** · 📚 **[API reference](https://alamin-karno.github.io/flutter-crisp-chat/reference/api_documentation.html)** · 🧪 **[Example app](https://github.com/alamin-karno/flutter-crisp-chat/tree/main/example)** · 📝 **[Changelog](https://pub.dev/packages/crisp_chat/changelog)**
 
+## Highlights
 
-## Features
+- 💬 **Live chat everywhere:** the native Crisp UI on Android and iOS, the official chatbox on Web, and an embedded WebView on desktop.
+- 👤 **Know your users:** email (with identity verification), nickname, phone, avatar, company, session data, and segments.
+- 🔔 **Push notifications:** Firebase on Android and APNs on iOS, with an option to open your app first and then the chatbox.
+- 📖 **Helpdesk:** open the Crisp knowledge base search, or go straight to an article.
+- 🤖 **Bots and local messages:** trigger Crisp Bot scenarios, and greet visitors with welcome texts, pickers, or carousels.
+- 📡 **Chat events:** react when a session loads, the chat opens or closes, or a message is sent or received.
+- 🎨 **Make it yours:** light, dark, or automatic color mode, and iOS presentation styles.
+- 📞 **Video and audio calls:** built into the iOS SDK, with no extra setup.
 
-- Null-safety enable
-- Easy to use
-- Customizable
-- User configuration with company and geoLocation
-- Send user notification about missing messages
-- **iOS video/audio calls** — built into the Crisp iOS SDK 3.x, no opt-in needed
-- **Helpdesk / FAQ** — open the Crisp helpdesk search or a specific article directly (Android, iOS, Web, and desktop)
-- **Bot Scenarios** — trigger a configured Crisp Bot scenario by ID (Android, iOS, Web, and desktop)
-- **Local Messages** — show a welcome text, picker, field, or carousel as an operator message in the chatbox (Android, iOS, Web, and desktop)
-- Android, iOS, Web, macOS, Windows, and Linux
+## Platform support
 
-## Platform overview
+| Feature | Android | iOS | Web | Desktop¹ |
+|---|:---:|:---:|:---:|:---:|
+| Live chat, user and session data, helpdesk, bot scenarios, local messages | ✅ | ✅ | ✅ | ✅ |
+| Session identifier and unread count (REST) | ✅ | ✅ | ✅² | ✅² |
+| `isSessionOngoing()` and `CrispConfig.colorMode` | — | ✅ | ✅ | ✅ |
+| Chat events (`onCrispEvent`) and push notifications | ✅ | ✅ | — | — |
+| Video and audio calls | — | ✅ | ✅ | ✅ |
 
-| Platform                    | How chat opens                  | Extra setup                                                                                                  |
-|-----------------------------|---------------------------------|--------------------------------------------------------------------------------------------------------------|
-| **Android**                 | Native Crisp SDK                | Internet permission, `compileSdk` / `minSdk`                                                                 |
-| **iOS**                     | Native Crisp SDK                | iOS 14+, Xcode 16.3+; camera + microphone privacy keys in `Info.plist` (required)                            |
-| **Web**                     | Crisp Web Chat SDK (`$crisp`)   | Valid `websiteID`; optional CSP for `client.crisp.chat`                                                      |
-| **macOS / Windows / Linux** | Web SDK in WebView (or browser) | Desktop `main()` helper; macOS network entitlement; WebView2 / WebKitGTK                                     |
+¹ macOS, Windows, and Linux, in an embedded WebView. Without WebView support, the chat opens in the system browser and most other APIs do nothing.
+² On Web, keep your Crisp REST credentials on a backend proxy, not in the app.
 
-Full API differences: [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
+The [full API matrix](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) lists every method.
 
 ## Installation
 
-### 1. Add Crisp dependency
----
-
-First, add `crisp_chat` as a [dependency in your pubspec.yaml file](https://flutter.dev/using-packages/).
-
-To use the Flutter Crisp Chat, simply import the `crisp_chat` package:
-
-Run this on your project terminal:
-
-```yaml
+```bash
 flutter pub add crisp_chat
 ```
 
-or manually configure pubspec.yml file
+Then complete the setup for each platform you target:
 
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  crisp_chat: ^3.0.0
+| Platform | What you need | Guide |
+|---|---|---|
+| **Android** | `minSdkVersion 23`, `compileSdkVersion 36`, and the `INTERNET` permission | [Android setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#android) |
+| **iOS** | iOS 14+ and Xcode 16.3+. Add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to `Info.plist`; **without them the chat won't start.** | [iOS setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#ios) |
+| **Web** | Nothing to install; the Crisp script loads at runtime. Allow `*.crisp.chat` if you use a Content Security Policy. | [Web setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#web) |
+| **Desktop** | Call the WebView title-bar helper in `main()`. macOS needs the network client entitlement, Windows needs WebView2, and Linux needs WebKitGTK. | [Desktop setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#desktop-macos-windows-linux) |
+
+> **Important:** On Android and iOS, turn off **Lock the chatbox to website domain** in your Crisp dashboard (**Settings → Website Settings → Chatbox & Email Settings → Chatbox Security**). Otherwise the chat fails with "Error starting chat". [Learn more](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html#crisp-dashboard-chatbox-security).
+
+## Quick start
+
+Copy your **Website ID** from the [Crisp dashboard](https://app.crisp.chat/) (**Settings → Website Settings**), then open the chat:
+
+```dart
+import 'package:crisp_chat/crisp_chat.dart';
+
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  user: User(email: 'jane@example.com', nickName: 'Jane'), // optional
+);
+
+await FlutterCrispChat.openCrispChat(config: config);
 ```
 
-**Web / desktop:** No native Crisp SDK install. Web loads `client.crisp.chat` at runtime. Desktop uses an embedded WebView (`desktop_webview_window`) or opens your browser if WebView is unavailable. See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) in the docs.
+When the user logs out, reset the session so the next user doesn't see their conversation:
 
-### 2. Setup platform specific settings
----
-
-#### iOS and Android
-
-Configure permissions and push as below. **Web and desktop** only need a valid `websiteID` unless you use REST unread helpers (prefer a backend proxy on web).
-
-#### iOS
-
-Add three rows to the `ios/Runner/Info.plist`:
-
-* key `Privacy - Camera Usage Description` and a usage description.
-* key `Privacy - Photo Library Additions Usage Description` and a usage description.
-* key `Privacy - Microphone Usage Description` and a usage description.
-
-If editing `Info.plist` as text, add:
-
-```html
-<key>NSCameraUsageDescription</key>
-<string>your usage description here</string>
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>your usage description here</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>your usage description here</string>
+```dart
+await FlutterCrispChat.resetCrispChatSession();
 ```
 
-**Required on iOS:** the Crisp iOS SDK 3.x will not start the chat unless both `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are present. The iOS deployment target must be **14.0+** and you need **Xcode 16.3+**.
+Each feature has its own guide:
 
-**Video/audio calls (iOS):** included in every build — no Podfile flag or env var needed. If you previously set `$CrispChatWebRTC` or `CRISP_CHAT_WEBRTC`, you can remove it. Android native video is not supported yet by Crisp. See [Platform setup — Enable video calls](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
+| Feature | API | Guide |
+|---|---|---|
+| Configuration | `CrispConfig` (token ID, segment, color mode, iOS presentation style) | [Configuration](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html) |
+| Users and companies | `User`, `Company`, identity verification | [User & Company](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/user_and_company.html) |
+| Sessions | `setSessionString`, `setSessionSegments`, `pushSessionEvent`, `getSessionIdentifier`, `isSessionOngoing` | [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management.html) |
+| Helpdesk | `openHelpdesk`, `openHelpdeskArticle` | [Helpdesk](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/helpdesk.html) |
+| Bots and local messages | `runBotScenario`, `showMessage`, `CrispConfig.localMessages` | [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html) |
+| Chat events | `onCrispEvent` stream | [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events.html) |
+| Unread messages | `getUnreadMessageCount`, `markMessagesAsRead` (Crisp REST API) | [Unread Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/unread_messages.html) |
+| iOS extras | Presentation styles, video calls | [iOS Features](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/ios_features.html) |
 
-#### Android
+## Push notifications
 
-Add Internet permission on `AndroidManifest.xml` in your `android/app/src/main/AndroidManifest.xml` file.
+Crisp sends push notifications through Firebase Cloud Messaging on Android and APNs on iOS. Setup takes four steps:
 
-```html
-<uses-permission android:name="android.permission.INTERNET"/>
-```
+1. [Connect Firebase and upload your credentials to Crisp](https://alamin-karno.github.io/flutter-crisp-chat/notifications/firebase_setup.html)
+2. [Register the notification service on Android](https://alamin-karno.github.io/flutter-crisp-chat/notifications/android.html)
+3. [Enable push and register for remote notifications on iOS](https://alamin-karno.github.io/flutter-crisp-chat/notifications/ios.html)
+4. [Open the chat when a notification is tapped](https://alamin-karno.github.io/flutter-crisp-chat/notifications/handling.html)
 
-Change the minimum Compile SDK version to 35 (or higher) in your `android/app/build.gradle` file.
-
-```groovy
-compileSdkVersion 36
-```
-
-Change the minimum Android SDK version to 21 (or higher) in your `android/app/build.gradle` file.
-
-
-```groovy
-minSdkVersion 23
-```
----
-##### *(Optional)* Add Crisp authority and path to your FileProvider in `AndroidManifest.xml` (If your app declares a FileProvider in its AndroidManifest.xml)
-
-```html
-<provider android:name="androidx.core.content.FileProvider"
-  android:authorities="${applicationId}.fileprovider;${applicationId}.im.crisp.client.uploadfileprovider"
-  android:exported="false"
-  android:grantUriPermissions="true"
-  tools:replace="android:authorities">
-  <meta-data android:name="android.support.FILE_PROVIDER_PATHS" 
-    android:resource="@xml/file_paths"
-    tools:replace="android:resource" />
-</provider>
-```
-
-and `res/xml/file_paths.xml` add this 
-
-```html
-<files-path name="crisp_sdk_attachments" path="im.crisp.client/attachments/" />
-```
-
-#### Web
-
-No native SDK install. The plugin loads `https://client.crisp.chat/l.js` when you call `openCrispChat`.
-
-1. Enable Web if needed: `flutter create . --platforms=web`
-2. Use your real **Website ID** from the [Crisp Dashboard](https://app.crisp.chat/)
-3. **Identity verification:** only pass `User.signature` when it is a real HMAC-SHA256 hex string from your server (32+ hex characters). Placeholder values can leave the chat stuck on the loading skeleton.
-4. If you use a **Content-Security-Policy**, allow `https://client.crisp.chat` and `https://*.crisp.chat`
-5. For REST unread helpers on Web, do not ship API secrets in the client — use a **backend proxy** in production
-
-Run the example:
+## Try the example app
 
 ```bash
-cd example && flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID
+git clone https://github.com/alamin-karno/flutter-crisp-chat.git
+cd flutter-crisp-chat/example
+flutter run -d chrome --dart-define=websiteId=YOUR_WEBSITE_ID   # or -d macos, -d windows, -d linux
 ```
 
-#### Desktop (macOS, Windows, Linux)
+Running the example on Android or iOS also needs Firebase config files; the [contributing guide](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CONTRIBUTING.md) explains how to add them.
 
-Uses the same Crisp Web Chat SDK in an embedded window (`desktop_webview_window`), or opens the system browser if WebView is unavailable.
+Stuck? Check [common issues](https://alamin-karno.github.io/flutter-crisp-chat/troubleshooting/common_issues.html) and the [FAQ](https://alamin-karno.github.io/flutter-crisp-chat/reference/faq.html), or [open an issue](https://github.com/alamin-karno/flutter-crisp-chat/issues).
 
-1. Enable desktop targets: `flutter create . --platforms=macos,windows,linux`
-2. Add the title-bar helper to `main()` **before** `runApp` (required for embedded WebView):
+## Native SDK versions
 
-```dart
-import 'package:desktop_webview_window/desktop_webview_window.dart';
-import 'package:flutter/foundation.dart';
+| SDK | Version |
+|---|---|
+| Crisp Android SDK | `2.0.25` |
+| Crisp iOS SDK | `~> 3.1.1` (Swift Package Manager or CocoaPods) |
+| Crisp Web Chat SDK | Loaded at runtime from `client.crisp.chat` |
+| Flutter / Dart | `>= 3.24.0` / `>= 3.5.0` |
 
-Future<void> main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.linux)) {
-    if (runWebViewTitleBarWidget(args)) return;
-  }
-  runApp(const MyApp());
-}
-```
-
-3. **macOS (sandbox):** add outgoing network client to `macos/Runner/DebugProfile.entitlements` and `Release.entitlements`:
-
-```xml
-<key>com.apple.security.network.client</key>
-<true/>
-```
-
-4. **Windows:** install [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/)
-5. **Linux:** `sudo apt install libwebkit2gtk-4.1-dev`
-
-`openChatboxFromNotification`, `setOnNotificationTappedCallback`, `onCrispEvent`, and `CrispConfig.enableNotifications` do **not** apply on Web/desktop.
-
-See [Supported platforms](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) for the API matrix and troubleshooting.
-
-### 3. Configure your app to receive Crisp notifications (Android & iOS only)
----
-
-> **Note:** Sections 3–ix below are for **mobile push notifications** only. Web and desktop do not use FCM/APNs through this plugin.
-
-#### i). Create a Firebase project and add it to your Flutter project
-
-- In order to complete this step, follow the Firebase [Get started](https://firebase.google.com/docs/android/setup) guide.
-
-- At the end of it, also add the following dependency to your project.
-  ```yaml
-  flutter pub add firebase_core
-  flutter pub add firebase_messaging
-  ```
-
-#### ii). Enable Push notifications in Crisp dashboard for your Android app
-
-- Go to your Firebase **Project settings**,
-- Go to the **Cloud Messaging** tab,
-- In the Firebase **Cloud Messaging API (V1)** section, copy your **Sender ID (1)**, you will need it later.
-
-![Copy your Firebase Cloud Messaging Sender ID](https://github.com/user-attachments/assets/778fcfdd-a9ad-465b-b425-a0b45bf5f0eb)
-
-- Copy your Firebase Cloud Messaging **Sender ID**
-- Go to the **Service accounts** tab,
-- In the **Firebase Admin SDK** section, click on the **Generate new private key (2)** button and save it for later.
-  
-![Generate and download your Firebase Admin private key](https://github.com/user-attachments/assets/99d7faf3-c1db-41b4-afc9-4bbd64bec1f7)
-
-- Generate and download your Firebase Admin private key
-- Go to your **[Crisp Dashboard](https://app.crisp.chat/)**,
-- Select your Workspace,
-- Go to **Settings** > **ChatBox Settings** > **Push Notifications**,
-- Under the **Firebase Cloud Messaging** section :
-    - Enable the **Notify users using Android (3)** option,
-    - Paste the **Sender ID** you have copied previously into the **Project ID (4)** field,
-    - Select or drag your **Firebase Admin private key** file you have downloaded earlier in the **Certificate (5)** box,
-    - Click on the Verify **Credentials (6)** button.
-  
-![Enable Push Notifications in Crisp dashboard](https://github.com/user-attachments/assets/1fe0225e-4a1b-49bd-8814-c4d662fbf703)
-
-- Crisp will notify you that it is checking FCM Credentials in order to send notifications to your users.
-  
-![Crisp checking FCM Credentials](https://github.com/user-attachments/assets/66623e73-3b92-4c79-b6ed-9db696ff1bd9)
-
-- Finally, if FCM Credentials are valid, Crisp will update the Push Notifications status to **live**.
-  
-![Crisp checking FCM Credentials](https://github.com/user-attachments/assets/9e6f902a-f37b-4d79-a5d6-8fe25e6a8e7f)
-
-#### iii). Handle Push notifications in your Android app
-
-You have two options for handling Crisp push notifications:
-
-##### Option A: Auto-open ChatActivity (Crisp only)
-
-Declare the Crisp `CrispNotificationService` in the `<application>` tag of your `AndroidManifest.xml`.
-
-```xml
-<service
-    android:name="im.crisp.client.external.notification.CrispNotificationService"
-    android:exported="false">
-    <intent-filter>
-      <action android:name="com.google.firebase.MESSAGING_EVENT" />
-    </intent-filter>
-</service>
-```
-
-Notifications will be handled by **Crisp** `CrispNotificationService` and a tap on it will launch your `MainActivity` and **automatically open** the Crisp `ChatActivity` with the corresponding session.
-
-##### Option B: Open app first, then chatbox (recommended)
-
-If you want your app to open first (so the user sees your app UI) and then open the Crisp chatbox programmatically, use the SDK's `CrispChatNotificationService` instead:
-
-```xml
-<service
-    android:name="com.alaminkarno.flutter_crisp_chat.CrispChatNotificationService"
-    android:exported="false">
-    <intent-filter>
-      <action android:name="com.google.firebase.MESSAGING_EVENT" />
-    </intent-filter>
-</service>
-```
-
-Then in your Flutter code, handle the notification tap to open the chatbox:
-
-```dart
-@override
-void initState() {
-  super.initState();
-
-  // Handle app launched from a Crisp notification (terminated state)
-  FlutterCrispChat.openChatboxFromNotification();
-
-  // Handle notification tap while app is in the background
-  FlutterCrispChat.setOnNotificationTappedCallback(() {
-    FlutterCrispChat.openChatboxFromNotification();
-  });
-}
-```
-
-- `openChatboxFromNotification()` — Checks if the app was launched from a Crisp notification and opens the chatbox. Returns `true` if successful, `false` otherwise.
-- `setOnNotificationTappedCallback(callback)` — Sets a callback that fires when a Crisp notification is tapped while the app is already running in the background.
-
-#### iv). Customize Push notifications for android app
-
-Crisp Push notifications customizable in 3 ways: color, icon and sound.
-
-For the first two, you can update them from your `AndroidManifest.xml` as you would do with Firebase.
-
-```xml
-  <application>
-    <meta-data
-      android:name="com.google.firebase.messaging.default_notification_icon"
-      android:resource="@drawable/my_notification_icon"
-      tools:replace="android:resource" />
-    <meta-data
-      android:name="com.google.firebase.messaging.default_notification_color"
-      android:resource="@color/my_notification_color"
-      tools:replace="android:resource" />
-  </application>
-```
-
-For the sound, you can add a `raw` resource named `crisp_chat_message_receive` to your app which will be played upon notification receipt.
-
-#### v). Enable Push notifications in Crisp dashboard for your iOS app
-
-- Create an **APNs-enabled** private key in your Apple Developer account. See the [Apple documentation](https://developer.apple.com/help/account/manage-keys/create-a-private-key/) for detailed instructions.
-- Upload your key and configure push notifications in the Crisp web app at **Settings** > **Chatbox Settings** > **Push Notifications**.
-- Add the **“Push Notifications”** capability to your app:
-    - Open your project in **Xcode**
-    - Select your target
-    - Go to the **“Signing & Capabilities”** tab
-    - Click the **“+”** button and add **“Push Notifications”**
- 
-![Push Notifications](https://github.com/user-attachments/assets/8581c872-f836-45f6-9a8c-7a5c5a998cea)
-
-#### vi). 🔔 iOS Push Notification Setup
-
-To enable Crisp push notifications on iOS, **you must register for remote notifications in your app's `AppDelegate.swift`**.
-
-➡️ **Step: Add the following inside `didFinishLaunchingWithOptions`**:
-
-```swift
-DispatchQueue.main.async {
-    UIApplication.shared.registerForRemoteNotifications()
-}
-```
-- Important
-    - `Currently, push notifications are only sent to production APNs channels. Notifications will not be received when testing with development provisioning profiles or in sandbox mode. This limitation will be resolved in a future update.`
-
-
-#### vii). Ensure Firebase initialization in your Flutter project
-
-```dart
-import 'package:firebase_core/firebase_core.dart';
-
-import 'firebase_options.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
-}
-```
-
-#### viii). Request permission to receive messages
-
-On iOS, and Android 13 (or newer), before FCM payloads can be received on your device, you must first ask the user's permission.
-
-```dart
-FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-NotificationSettings settings = await messaging.requestPermission(
-  alert: true,
-  announcement: false,
-  badge: true,
-  carPlay: false,
-  criticalAlert: false,
-  provisional: false,
-  sound: true,
-);
-
-print('User granted permission: ${settings.authorizationStatus}');
-```
-
-#### ix). Background messages
-
-The process of handling background messages is different on native Android and Apple platforms.
-
-There are a few things to keep in mind about your background message handler:
-
-- It must not be an anonymous function.
-- It must be a top-level function (e.g. not a class method which requires initialization).
-- When using Flutter version 3.3.0 or higher, the message handler must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
-
-```dart
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-
-import 'firebase_options.dart';
-
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
-
-  print("Handling a background message: ${message.messageId}");
-}
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  runApp(const MyApp());
-}
-```
-
-### 4. Get your Website ID:
----
-Go to your [Crisp Dashboard](https://app.crisp.chat/), and copy your Website ID:
-
-![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
-
-- **Android / iOS:** disable **Lock the chatbox to website domain (and subdomains)** under **Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**. With domain lock enabled, chat fails with **"Error starting chat"** even when the Website ID is valid. See [docs — Chatbox Security](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html#crisp-dashboard-chatbox-security).
-
-### 5. Setup your flutter app to use Crisp
----
-
-
-Here's a more detailed example of how to configure CrispConfig and use the plugin methods. To open ChatView for crisp, use the `openCrispChat` method of the `FlutterCrispChat` class:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:crisp_chat/crisp_chat.dart';
-import 'package:flutter/foundation.dart'; // For kDebugMode
-
-class CrispChatPage extends StatefulWidget {
-  const CrispChatPage({super.key});
-
-  @override
-  State<CrispChatPage> createState() => _CrispChatPageState();
-}
-
-class _CrispChatPageState extends State<CrispChatPage> {
-  final String websiteID = 'YOUR_WEBSITE_ID'; // Replace with your actual Website ID
-  final String identifier = 'YOUR_CRISP_API_IDENTIFIER'; // Replace with your actual Crisp API Identifier
-  final String crispApiKey = 'YOUR_CRISP_API_KEY'; // Replace with your actual Crisp API Key
-  int count = 0;
-  
-  late CrispConfig _crispConfig;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Handle Crisp notification tap (Option B only - see section 3.iii)
-    // Opens the chatbox if the app was launched from a Crisp notification (terminated state)
-    FlutterCrispChat.openChatboxFromNotification();
-
-    // Listen for Crisp notification taps while the app is in the background
-    FlutterCrispChat.setOnNotificationTappedCallback(() {
-      FlutterCrispChat.openChatboxFromNotification();
-    });
-
-    // Configure Crisp User (Optional)
-    // All user fields are optional. Only provide what you have.
-    final crispUser = User(
-      email: "user@example.com",
-      signature: "USER_EMAIL_HMAC_SHA256_SIGNATURE",
-      nickName: "John Doe",
-      phone: "1234567890", 
-      avatar: "https://example.com/avatar.png", 
-      company: Company(
-        name: "Example Corp",
-        url: "https://example.com", 
-        companyDescription: "A sample company providing excellent services.",
-        employment: Employment(title: "Lead Developer", role: "Software Engineer"),
-        geoLocation: GeoLocation(city: "New York", country: "USA"),
-      ),
-    );
-
-    // 1. Initialize CrispConfig with all desired parameters.
-    _crispConfig = CrispConfig(
-      websiteID: websiteID, // [required] Your Crisp website ID.
-      tokenId: "your_user_token_id_optional", // Optional: Assign a unique token to this session.
-      sessionSegment: "beta_testers", // Optional: Assign a segment to categorize users (e.g., "premium", "trial").
-      user: crispUser, // Optional: Provide user details.
-      enableNotifications: true, // Optional: Enable or disable push notifications. Defaults to true.
-      modalPresentationStyle: ModalPresentationStyle.fullScreen, // Optional: iOS modal presentation style. Defaults to fullScreen.
-      colorMode: CrispColorMode.auto, // Optional: override the dashboard color mode (light, dark, auto). iOS, Web and desktop only.
-    );
-
-    // 2. Optionally, set additional session data *before* opening the chat.
-    // This data is associated with the session when it's created or next resumed.
-    // Useful for sending custom attributes that might not fit into the User object.
-    FlutterCrispChat.setSessionString(key: "custom_data_point", value: "some_important_value");
-    FlutterCrispChat.setSessionInt(key: "user_score", value: 120);
-    FlutterCrispChat.setSessionSegments(segments: ["registered_user", "newsletter_subscriber"], overwrite: false);
-  }
-
-  void _openChat() async {
-    // 3. Open the Crisp Chat UI using the prepared configuration.
-    await FlutterCrispChat.openCrispChat(config: _crispConfig);
-
-    // 4. Optionally, retrieve the session identifier after the chat is opened.
-    // This can be useful for logging or internal tracking.
-    String? sessionId = await FlutterCrispChat.getSessionIdentifier();
-    if (sessionId != null) {
-      if (kDebugMode) {
-        print('Crisp Session ID: $sessionId');
-      }
-    } else {
-      if (kDebugMode) {
-        print('No active Crisp session found or an error occurred while retrieving the ID.');
-      }
-    }
-  }
-
-  void _resetSession() async {
-    // Call resetCrispChatSession, for example, when your app user logs out.
-    // This is crucial for privacy and ensuring that the next user (or a guest)
-    // does not see or interact with the previous user's chat history and data
-    // within the Crisp SDK session on the device.
-    await FlutterCrispChat.resetCrispChatSession();
-    if (kDebugMode) {
-      print('Crisp session has been reset. The previous user\'s data is cleared from the local SDK session.');
-    }
-  }
-
-  void _checkUnreadMessages() async {
-    // Call getUnreadMessageCount to check for unread messages.
-    int? unreadCount = await FlutterCrispChat.getUnreadMessageCount(
-      websiteId: websiteID,
-      identifier: identifier,
-      key: crispApiKey,
-    );
-
-    if (unreadCount != null && unreadCount > 0) {
-      if (kDebugMode) {
-        print('You have $unreadCount unread messages.');
-      }
-      setState(() {
-        count = unreadCount;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crisp Chat Example'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: _openChat,
-              child: const Text('Open Crisp Chat (Full Config)'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _resetSession,
-              child: const Text('Reset Crisp Session'),
-            ),
-            const SizedBox(height: 20),
-            Badge.count(
-              count: count,
-              isLabelVisible: count != 0,
-              maxCount: 9,
-              child: ElevatedButton(
-                onPressed: _checkUnreadMessages,
-                child: Text('Unread'),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
-
-To use this code, replace `YOUR_WEBSITE_ID` with your own website ID from the Crisp dashboard. The example demonstrates initializing `CrispConfig` with detailed user and company information, setting additional session data, opening the chat interface, retrieving the session ID, and resetting the session. Adjust the configuration and data according to your application's needs.
-
-### iOS Modal Presentation Styles
-
-The `modalPresentationStyle` parameter in `CrispConfig` allows you to control how the Crisp chat view is presented on iOS devices. This is particularly important for preventing touch events from passing through to the underlying Flutter UI.
-
-#### Available Modal Presentation Styles:
-
-- **`ModalPresentationStyle.fullScreen`** (Default) - The view controller covers the entire screen. This prevents touch events from passing through to the underlying UI.
-- **`ModalPresentationStyle.pageSheet`** - The view controller is displayed as a page sheet with a dimmed background.
-- **`ModalPresentationStyle.formSheet`** - The view controller is displayed as a form sheet, centered on the screen.
-- **`ModalPresentationStyle.overFullScreen`** - The view controller covers the screen but allows underlying content to show through.
-- **`ModalPresentationStyle.overCurrentContext`** - The view controller is displayed over the parent view controller's content.
-- **`ModalPresentationStyle.popover`** - Popover on iPad (centered); on iPhone UIKit adapts to full screen.
-
-#### Example Usage:
-
-```dart
-// Using pageSheet presentation style
-final config = CrispConfig(
-  websiteID: 'YOUR_WEBSITE_ID',
-  modalPresentationStyle: ModalPresentationStyle.pageSheet,
-);
-
-// Using formSheet presentation style
-final formSheetConfig = CrispConfig(
-  websiteID: 'YOUR_WEBSITE_ID',
-  modalPresentationStyle: ModalPresentationStyle.formSheet,
-);
-```
-
-**Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior. On **Web and desktop**, it is ignored.
-
-### Color Mode
-
-The `colorMode` parameter in `CrispConfig` overrides the chatbox color mode set in the Crisp dashboard:
-
-- **`CrispColorMode.light`** - Always light, regardless of the device appearance.
-- **`CrispColorMode.dark`** - Always dark, regardless of the device appearance.
-- **`CrispColorMode.auto`** - Follows the device appearance.
-- **`null`** (Default) - Keeps the color mode set in the Crisp dashboard.
-
-```dart
-final config = CrispConfig(
-  websiteID: 'YOUR_WEBSITE_ID',
-  colorMode: CrispColorMode.dark,
-);
-```
-
-**Note:** Supported on **iOS** (Crisp iOS SDK 3.1+), **Web** and **desktop**. On **Android** it is ignored, because the Crisp Android SDK 2.x has no color mode setting. On Web and desktop the mode applies to the current page, so a mode you set stays until you set another one.
-
-### iOS video and audio calls
-
-Since Crisp iOS SDK 3.0, video/audio calls are **included in every iOS build** — there is no separate `CrispWebRTC` SDK and no build-time flag. Calls are started from the Crisp chat UI when your Crisp workspace supports them. `$CrispChatWebRTC` (CocoaPods) and `CRISP_CHAT_WEBRTC` (SPM) are no longer read and can be removed.
-
-Check at runtime:
-
-```dart
-final supported = await FlutterCrispChat.isVideoCallsSupported();
-// true on iOS, Web, and desktop; false on Android
-```
-
-Android native video is [not supported yet by Crisp](https://github.com/crisp-im/crisp-sdk-android/issues/181). Full setup: [Enable video calls (iOS only)](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#enable-video-calls-ios-only).
-
-### Helpdesk / FAQ
-
-Open the Crisp Helpdesk/FAQ interface directly without going through the live chat. Useful when you want to direct users to self-service help content.
-
-> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux. Android/iOS use the native SDK; Web and desktop use the Crisp Web Chat SDK (`$crisp.push`).
-
-#### Open the helpdesk search screen
-
-```dart
-await FlutterCrispChat.openHelpdesk(websiteId: 'YOUR_WEBSITE_ID');
-```
-
-#### Open a specific helpdesk article
-
-```dart
-await FlutterCrispChat.openHelpdeskArticle(
-  websiteId: 'YOUR_WEBSITE_ID',
-  locale: 'en',               // article language code
-  slug: 'article-slug',       // article slug from your Crisp Helpdesk dashboard
-  title: 'Optional title',    // optional
-  category: 'Optional cat',   // optional
-);
-```
-
-The `slug` for an article can be found in the Crisp dashboard under **Helpdesk** → open the article → the URL contains the slug. Both methods throw `ArgumentError` if required fields are empty.
-
-For every request that you make to `getUnreadMessageCount` or `markMessagesAsRead`, you must submit your authentication token (`identifier` and `key`), as well as your `website_id`.
-
-::: tip iOS unread count
-On iOS, `unread.visitor` may not reset after reading chat in the native SDK. Call `FlutterCrispChat.markMessagesAsRead()` after the visitor closes chat. See [docs/unread-count-verification.md](docs/unread-count-verification.md).
-:::
-
-**Obtaining `Identifier` & `Key`:**
-
-1. Head over to the [Crisp Marketplace](https://marketplace.crisp.chat/)
-2. Sign in or create an account (this account is different from your main Crisp account)
-3. Once logged-in, go to **Plugins** and click on the **New Plugin button**
-4. Select the plugin type, in this case Private
-5. Name your plugin a name, eg. "My First Crisp Plugin", and hit **Create**
-6. On the plugin tab, go to **Tokens** and scroll down to **Development Token** to view (and manage) your token `identifier`/`key` pair 
-7. Obtaining a production token is the next natural step once you are ready to step into production with your plugin or if your usage requires higher quotas.
-
-Before using your development token, you now need to associate your marketplace account to your Crisp workspace. This is done by specifying a **Trusted Workspace**:
-
-1. Go to the **Settings** of your **Crisp Marketplace** account
-2. Click on **Add Trusted Workspace** and submit your `website_id`
-3. Enter the credentials of your main Crisp account (the ones you use to access your main Crisp account) and then submit your 2FA token (if any is enabled)
-4. You're all done! You are now ready to use REST API and start building your plugin
-
-### Chat Events
-
-Listen to native Crisp SDK events — useful for updating an unread badge in real time instead of polling `getUnreadMessageCount()`.
-
-> **Platform support:** Android and iOS only. The stream never emits on Web/desktop.
-
-```dart
-final subscription = FlutterCrispChat.onCrispEvent.listen((event) {
-  switch (event.type) {
-    case CrispEventType.sessionLoaded:
-      print('Session loaded: ${event.sessionId}');
-    case CrispEventType.chatOpened:
-      print('Chat opened');
-    case CrispEventType.chatClosed:
-      print('Chat closed');
-    case CrispEventType.messageSent:
-    case CrispEventType.messageReceived:
-      print('Message from ${event.message?.from}: ${event.message?.text}');
-    case CrispEventType.notificationReceived:
-      print('Notification data: ${event.notificationData}'); // Android-only
-  }
-});
-
-// Later, when no longer needed:
-await subscription.cancel();
-```
-
-The native event callback is registered on the first `.listen()` call and unregistered once the last listener cancels, so it's safe to listen and cancel freely.
-
-`CrispMessage` (carried by `messageSent`/`messageReceived` events) is a minimal summary — `isMe`, `from`, `origin`, `timestamp`, `fingerprint`, `contentType`, and `text` (only populated when `contentType` is `CrispMessageContentType.text`). Rich content (carousel targets, picker choices, file/audio metadata) is not mapped in this version.
-
-`CrispEventType.notificationReceived` is Android-only — the iOS Crisp SDK has no matching callback, so iOS never emits it.
-
-### Bot Scenarios
-
-Run a Bot scenario configured in the Bot plugin on your Crisp website — useful for kicking off an automated flow (e.g. onboarding, FAQ triage) from within your app.
-
-> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux.
-
-```dart
-await FlutterCrispChat.runBotScenario(scenarioId: 'YOUR_SCENARIO_ID');
-```
-
-The scenario ID can be found in the Crisp dashboard under **Settings** → **Chatbot**. Throws `ArgumentError` if `scenarioId` is empty.
-
-### Session Ongoing Check
-
-Find out whether messages have been sent or received in the current session, e.g. to show "Continue conversation" to a returning visitor.
-
-> **Platform support:** iOS, Web, and desktop (WebView). On **Android** it always returns `null`, because the Crisp Android SDK 2.x has no such check.
-
-```dart
-final ongoing = await FlutterCrispChat.isSessionOngoing();
-final label = switch (ongoing) {
-  true => 'Continue conversation',
-  false || null => 'Chat with us',
-};
-```
-
-Returns `null` when it can't tell, including before the session has loaded. Open the chat first, or wait for a `sessionLoaded` event on `FlutterCrispChat.onCrispEvent`.
-
-### Local Messages
-
-Show a message as an operator in the visitor's chatbox — for example, a welcome message the first time the chat opens. Local messages stay on the device and are never sent to your Crisp inbox.
-
-> **Platform support:** All platforms — Android, iOS, Web, macOS, Windows, and Linux.
-
-```dart
-CrispConfig(
-  websiteID: 'YOUR_WEBSITE_ID',
-  localMessages: const [CrispTextContent('👋 Hi! How can we help?')],
-);
-```
-
-Pickers, fields, carousels, files, GIFs, and audio are supported too, as is `FlutterCrispChat.showMessage()` for showing a message at any time. Read the **[Local Messages guide](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html)** for when messages are shown, every message type, and the platform differences.
-
-## Screenshot (GIF)
-
-![Crisp Chat SDK for Android](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
-
-
-## Examples of companies using Crisp Chat
+## Used by
 
 - [Rokomari.com](https://rkmri.co/32ESMmTSAeIe/)
 - [L'Algo de Paulo](https://lalgodepaulo.com/)
 
+Using `crisp_chat` in production? [Open a pull request](https://github.com/alamin-karno/flutter-crisp-chat/edit/dev/README.md) to add your app here.
 
-## Additional information
+## Support the project
 
-- [Flutter Crisp Chat (pub.dev)](https://pub.dev/packages/crisp_chat)
-- [Flutter Crisp Chat (GitHub)](https://github.com/alamin-karno/flutter-crisp-chat)
+If `crisp_chat` saves you time, you can help keep it maintained:
 
-## Supported SDK Versions
-This plugin aims to stay compatible with the latest Crisp SDKs. As of the latest update, it has been tested with:
+- ⭐ Star the [GitHub repository](https://github.com/alamin-karno/flutter-crisp-chat) and 👍 like it on [pub.dev](https://pub.dev/packages/crisp_chat)
+- ☕ [Buy me a coffee](https://buymeacoffee.com/alaminkarno) or become a [Patreon supporter](https://patreon.com/alamin_karno)
+- 🛠️ Contribute a fix or feature: start with the [contributing guide](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CONTRIBUTING.md)
 
-- Crisp Android SDK version: `2.0.25`
-- Crisp iOS SDK version: ~> `3.1.1` (iOS 14+, Xcode 16.3+)
-- Crisp Web Chat SDK: loaded from `https://client.crisp.chat/l.js` at runtime (Web and desktop)
+## Maintainer and contributors
 
-**Minimum for Web/desktop (v2.5.0+):** Flutter 3.24.0+, Dart 3.5.0+
-
-While the plugin may work with other versions, using versions close to these is recommended for optimal compatibility. Please refer to the official Crisp SDK documentation for the most current SDK details.
-
-### Project Maintainer ❤️
-
-| <img src="https://avatars.githubusercontent.com/alamin-karno" width="100px"> |
-|:----------------------------------------------------------------------------:|
-|              [**Md. Al-Amin**](https://github.com/alamin-karno)              |
-
-### ✨VALUABLE CONTRIBUTORS✨
+Maintained by [**Md. Al-Amin**](https://github.com/alamin-karno), with help from these contributors:
 
 [![Contributors](https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors)
 
-### Happy Coding 👨‍💻
+## Credits and license
 
-## Credits
-* Crisp Android, iOS, and Web Chat SDKs are owned and maintained by [Crisp IM SAS](https://crisp.chat/en/).
+The Crisp Android, iOS, and Web Chat SDKs are owned and maintained by [Crisp IM SAS](https://crisp.chat/). This plugin is an independent, community-maintained project.
 
- You can chat with them on [crisp](https://crisp.chat/) or follow them on Twitter at [Crisp_im](https://twitter.com/crisp_im).
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Released under the [MIT License](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/LICENSE).
