@@ -19,16 +19,30 @@ class CrispJsBridge {
     return RegExp(r'^[a-fA-F0-9]{32,}$').hasMatch(signature);
   }
 
-  /// Script injected before `l.js` to configure the website (and optional token).
+  /// Returns [locale] trimmed, or `null` when it is null or blank.
+  static String? normalizeLocale(String? locale) {
+    final trimmed = locale?.trim();
+    return (trimmed == null || trimmed.isEmpty) ? null : trimmed;
+  }
+
+  /// Script injected before `l.js` to configure the website, the optional
+  /// token, and the optional chatbox [locale] (`CRISP_RUNTIME_CONFIG`).
   static String bootstrapScript({
     required String websiteId,
     String? tokenId,
+    String? locale,
   }) {
     final buffer = StringBuffer()
       ..writeln('window.\$crisp=[];')
       ..writeln('window.CRISP_WEBSITE_ID=${_escapeJs(websiteId)};');
     if (tokenId != null && tokenId.isNotEmpty) {
       buffer.writeln('window.CRISP_TOKEN_ID=${_escapeJs(tokenId)};');
+    }
+    final runtimeLocale = normalizeLocale(locale);
+    if (runtimeLocale != null) {
+      buffer.writeln(
+        'window.CRISP_RUNTIME_CONFIG={locale:${_escapeJs(runtimeLocale)}};',
+      );
     }
     return buffer.toString();
   }
@@ -327,6 +341,7 @@ class CrispJsBridge {
     final bootstrap = bootstrapScript(
       websiteId: config.websiteID,
       tokenId: config.tokenId,
+      locale: config.locale,
     );
     final afterLoad = applyConfigAndOpenChat(config);
     return '''

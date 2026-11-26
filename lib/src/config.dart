@@ -63,6 +63,23 @@ class CrispConfig {
   /// does not support it yet.
   CrispColorMode? colorMode;
 
+  /// Overrides the chatbox language, as a Crisp locale code such as `'fr'`,
+  /// `'de'` or `'pt-br'`.
+  ///
+  /// Defaults to `null`, which lets Crisp pick the language from the
+  /// browser or device.
+  ///
+  /// Supported on Web and desktop. On desktop the chat follows the latest
+  /// value every time it opens. On Web the Crisp script reads it once, when
+  /// the chat first loads on the page, so a later change only applies after
+  /// the page reloads.
+  ///
+  /// Ignored on Android and iOS, whose Crisp SDKs have no language setting:
+  /// the chat follows the app's language instead. Set it with the per-app
+  /// language API on Android (`AppCompatDelegate.setApplicationLocales`), or
+  /// in the iOS Settings app (Settings › your app › Language).
+  String? locale;
+
   /// Creates a new [CrispConfig] instance.
   ///
   /// @param websiteID The Crisp website ID.
@@ -73,6 +90,7 @@ class CrispConfig {
   /// @param modalPresentationStyle (Optional) iOS modal presentation style for the chat view controller.
   /// @param localMessages (Optional) Local messages shown when the chat first opens.
   /// @param colorMode (Optional) Overrides the dashboard color mode (iOS, Web, desktop).
+  /// @param locale (Optional) Overrides the chatbox language (Web, desktop).
   CrispConfig({
     required this.websiteID,
     this.tokenId,
@@ -82,6 +100,7 @@ class CrispConfig {
     this.modalPresentationStyle,
     this.localMessages,
     this.colorMode,
+    this.locale,
   });
 
   /// Converts this [CrispConfig] object to a JSON map.

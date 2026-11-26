@@ -14,6 +14,34 @@ void main() {
     expect(script, contains('user-token'));
   });
 
+  test('bootstrapScript sets CRISP_RUNTIME_CONFIG locale when provided', () {
+    final script = CrispJsBridge.bootstrapScript(
+      websiteId: 'site-id',
+      locale: ' pt-br ',
+    );
+    expect(script, contains('window.CRISP_RUNTIME_CONFIG={locale:"pt-br"};'));
+  });
+
+  test('bootstrapScript omits CRISP_RUNTIME_CONFIG for null or blank locale',
+      () {
+    for (final locale in [null, '', '   ']) {
+      final script = CrispJsBridge.bootstrapScript(
+        websiteId: 'site-id',
+        locale: locale,
+      );
+      expect(script, isNot(contains('CRISP_RUNTIME_CONFIG')));
+    }
+  });
+
+  test('embedHtml sets the locale before loading l.js', () {
+    final html = CrispJsBridge.embedHtml(
+      CrispConfig(websiteID: 'site-id', locale: 'fr'),
+    );
+    final localeIndex = html.indexOf('CRISP_RUNTIME_CONFIG={locale:"fr"}');
+    expect(localeIndex, isNonNegative);
+    expect(localeIndex, lessThan(html.indexOf('client.crisp.chat/l.js')));
+  });
+
   test('applyConfigAndOpenChat includes user email and chat open', () {
     final config = CrispConfig(
       websiteID: 'site-id',

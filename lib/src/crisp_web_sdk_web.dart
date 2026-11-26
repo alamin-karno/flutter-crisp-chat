@@ -41,6 +41,19 @@ class CrispWebSdk {
     }
   }
 
+  /// Sets `CRISP_RUNTIME_CONFIG.locale`, which `l.js` reads once when it
+  /// boots, so it only takes effect before the script first loads.
+  static void _setRuntimeLocale(String? locale) {
+    final runtimeLocale = CrispJsBridge.normalizeLocale(locale);
+    if (runtimeLocale == null) {
+      _window.delete('CRISP_RUNTIME_CONFIG'.toJS);
+      return;
+    }
+    final runtimeConfig = JSObject()
+      ..setProperty('locale'.toJS, runtimeLocale.toJS);
+    _window.setProperty('CRISP_RUNTIME_CONFIG'.toJS, runtimeConfig);
+  }
+
   static Future<void> _injectLoaderScript() {
     if (_loaderCompleter != null) {
       return _loaderCompleter!.future;
@@ -131,6 +144,7 @@ class CrispWebSdk {
     final needsQueue = !_scriptInjected || _loadedWebsiteId != websiteId;
 
     _setBootstrap(websiteId: websiteId, tokenId: config.tokenId);
+    _setRuntimeLocale(config.locale);
 
     if (needsQueue) {
       // Queue pushes before l.js so Crisp processes them when the SDK boots.
