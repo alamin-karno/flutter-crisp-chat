@@ -27,15 +27,15 @@ On mobile, the plugin wraps the official native Crisp SDKs. On Web and desktop, 
 - 🎨 **Make it yours:** light, dark, or automatic color mode, and iOS presentation styles.
 - 📞 **Video and audio calls:** built into the iOS SDK, with no extra setup.
 
-## Platform support
+## Platform Support
 
-| Feature | Android | iOS | Web | Desktop¹ |
-|---|:---:|:---:|:---:|:---:|
-| Live chat, user and session data, helpdesk, bot scenarios, local messages | ✅ | ✅ | ✅ | ✅ |
-| Session identifier and unread count (REST) | ✅ | ✅ | ✅² | ✅² |
-| `isSessionOngoing()` and `CrispConfig.colorMode` | — | ✅ | ✅ | ✅ |
-| Chat events (`onCrispEvent`) and push notifications | ✅ | ✅ | — | — |
-| Video and audio calls | — | ✅ | ✅ | ✅ |
+| Feature                                                                   | Android | iOS | Web | Desktop¹ |
+|---------------------------------------------------------------------------|:-------:|:---:|:---:|:--------:|
+| Live chat, user and session data, helpdesk, bot scenarios, local messages |   ✅    | ✅  | ✅  |    ✅    |
+| Session identifier and unread count (REST)                                |   ✅    | ✅  | ✅² |   ✅²    |
+| `isSessionOngoing()` and `CrispConfig.colorMode`                          |    —    | ✅  | ✅  |    ✅    |
+| Chat events (`onCrispEvent`) and push notifications                       |   ✅    | ✅  |  —  |    —     |
+| Video and audio calls                                                     |    —    | ✅  | ✅  |    ✅    |
 
 ¹ macOS, Windows, and Linux, in an embedded WebView. Without WebView support, the chat opens in the system browser and most other APIs do nothing.
 ² On Web, keep your Crisp REST credentials on a backend proxy, not in the app.
@@ -50,16 +50,16 @@ flutter pub add crisp_chat
 
 Then complete the setup for each platform you target:
 
-| Platform | What you need | Guide |
-|---|---|---|
-| **Android** | `minSdkVersion 23`, `compileSdkVersion 36`, and the `INTERNET` permission | [Android setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#android) |
-| **iOS** | iOS 14+ and Xcode 16.3+. Add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to `Info.plist`; **without them the chat won't start.** | [iOS setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#ios) |
-| **Web** | Nothing to install; the Crisp script loads at runtime. Allow `*.crisp.chat` if you use a Content Security Policy. | [Web setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#web) |
-| **Desktop** | Call the WebView title-bar helper in `main()`. macOS needs the network client entitlement, Windows needs WebView2, and Linux needs WebKitGTK. | [Desktop setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#desktop-macos-windows-linux) |
+| Platform    | What you need                                                                                                                                      | Guide                                                                                                                              |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| **Android** | `minSdkVersion 23`, `compileSdkVersion 36`, and the `INTERNET` permission                                                                          | [Android setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#android)                     |
+| **iOS**     | iOS 14+ and Xcode 16.3+. Add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to `Info.plist`; **without them the chat won't start.** | [iOS setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#ios)                             |
+| **Web**     | Nothing to install; the Crisp script loads at runtime. Allow `*.crisp.chat` if you use a Content Security Policy.                                  | [Web setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#web)                             |
+| **Desktop** | No code changes. macOS needs the network client entitlement, Windows needs WebView2, and Linux needs WebKitGTK.                                    | [Desktop setup](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/platform_setup.html#desktop-macos-windows-linux) |
 
 > **Important:** On Android and iOS, turn off **Lock the chatbox to website domain** in your Crisp dashboard (**Settings → Website Settings → Chatbox & Email Settings → Chatbox Security**). Otherwise the chat fails with "Error starting chat". [Learn more](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html#crisp-dashboard-chatbox-security).
 
-## Quick start
+## Quick Start
 
 Copy your **Website ID** from the [Crisp dashboard](https://app.crisp.chat/) (**Settings → Website Settings**), then open the chat:
 
@@ -82,18 +82,18 @@ await FlutterCrispChat.resetCrispChatSession();
 
 Each feature has its own guide:
 
-| Feature | API | Guide |
-|---|---|---|
-| Configuration | `CrispConfig` (token ID, segment, color mode, iOS presentation style) | [Configuration](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html) |
-| Users and companies | `User`, `Company`, identity verification | [User & Company](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/user_and_company.html) |
-| Sessions | `setSessionString`, `setSessionSegments`, `pushSessionEvent`, `getSessionIdentifier`, `isSessionOngoing` | [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management.html) |
-| Helpdesk | `openHelpdesk`, `openHelpdeskArticle` | [Helpdesk](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/helpdesk.html) |
-| Bots and local messages | `runBotScenario`, `showMessage`, `CrispConfig.localMessages` | [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html) |
-| Chat events | `onCrispEvent` stream | [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events.html) |
-| Unread messages | `getUnreadMessageCount`, `markMessagesAsRead` (Crisp REST API) | [Unread Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/unread_messages.html) |
-| iOS extras | Presentation styles, video calls | [iOS Features](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/ios_features.html) |
+| Feature                 | API                                                                                                      | Guide                                                                                                        |
+|-------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Configuration           | `CrispConfig` (token ID, segment, color mode, iOS presentation style)                                    | [Configuration](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html)           |
+| Users and companies     | `User`, `Company`, identity verification                                                                 | [User & Company](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/user_and_company.html)       |
+| Sessions                | `setSessionString`, `setSessionSegments`, `pushSessionEvent`, `getSessionIdentifier`, `isSessionOngoing` | [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management.html) |
+| Helpdesk                | `openHelpdesk`, `openHelpdeskArticle`                                                                    | [Helpdesk](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/helpdesk.html)                     |
+| Bots and local messages | `runBotScenario`, `showMessage`, `CrispConfig.localMessages`                                             | [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html)         |
+| Chat events             | `onCrispEvent` stream                                                                                    | [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events.html)               |
+| Unread messages         | `getUnreadMessageCount`, `markMessagesAsRead` (Crisp REST API)                                           | [Unread Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/unread_messages.html)       |
+| iOS extras              | Presentation styles, video calls                                                                         | [iOS Features](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/ios_features.html)             |
 
-## Push notifications
+## Push Notifications
 
 Crisp sends push notifications through Firebase Cloud Messaging on Android and APNs on iOS. Setup takes four steps:
 
@@ -102,7 +102,7 @@ Crisp sends push notifications through Firebase Cloud Messaging on Android and A
 3. [Enable push and register for remote notifications on iOS](https://alamin-karno.github.io/flutter-crisp-chat/notifications/ios.html)
 4. [Open the chat when a notification is tapped](https://alamin-karno.github.io/flutter-crisp-chat/notifications/handling.html)
 
-## Try the example app
+## Try the Example App
 
 ```bash
 git clone https://github.com/alamin-karno/flutter-crisp-chat.git
@@ -114,23 +114,23 @@ Running the example on Android or iOS also needs Firebase config files; the [con
 
 Stuck? Check [common issues](https://alamin-karno.github.io/flutter-crisp-chat/troubleshooting/common_issues.html) and the [FAQ](https://alamin-karno.github.io/flutter-crisp-chat/reference/faq.html), or [open an issue](https://github.com/alamin-karno/flutter-crisp-chat/issues).
 
-## Native SDK versions
+## Native SDK Versions
 
-| SDK | Version |
-|---|---|
-| Crisp Android SDK | `2.0.25` |
-| Crisp iOS SDK | `~> 3.1.1` (Swift Package Manager or CocoaPods) |
-| Crisp Web Chat SDK | Loaded at runtime from `client.crisp.chat` |
-| Flutter / Dart | `>= 3.24.0` / `>= 3.5.0` |
+| SDK                | Version                                         |
+|--------------------|-------------------------------------------------|
+| Crisp Android SDK  | `2.0.25`                                        |
+| Crisp iOS SDK      | `~> 3.1.1` (Swift Package Manager or CocoaPods) |
+| Crisp Web Chat SDK | Loaded at runtime from `client.crisp.chat`      |
+| Flutter / Dart     | `>= 3.44.0` / `>= 3.5.0`                        |
 
-## Used by
+## Used By
 
 - [Rokomari.com](https://rkmri.co/32ESMmTSAeIe/)
 - [L'Algo de Paulo](https://lalgodepaulo.com/)
 
 Using `crisp_chat` in production? [Open a pull request](https://github.com/alamin-karno/flutter-crisp-chat/edit/dev/README.md) to add your app here.
 
-## Support the project
+## Support the Project
 
 If `crisp_chat` saves you time, you can help keep it maintained:
 
@@ -138,13 +138,13 @@ If `crisp_chat` saves you time, you can help keep it maintained:
 - ☕ [Buy me a coffee](https://buymeacoffee.com/alaminkarno) or become a [Patreon supporter](https://patreon.com/alamin_karno)
 - 🛠️ Contribute a fix or feature: start with the [contributing guide](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CONTRIBUTING.md)
 
-## Maintainer and contributors
+## Maintainer and Contributors
 
 Maintained by [**Md. Al-Amin**](https://github.com/alamin-karno), with help from these contributors:
 
 [![Contributors](https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat)](https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors)
 
-## Credits and license
+## Credits and License
 
 The Crisp Android, iOS, and Web Chat SDKs are owned and maintained by [Crisp IM SAS](https://crisp.chat/). This plugin is an independent, community-maintained project.
 

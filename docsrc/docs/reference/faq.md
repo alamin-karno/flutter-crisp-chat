@@ -16,7 +16,7 @@ head:
         "@type": "FAQPage",
         "mainEntity": [
           { "@type": "Question", "name": "What platforms does this plugin support?", "acceptedAnswer": { "@type": "Answer", "text": "Android and iOS use the official native Crisp SDKs via method channel. Web uses the official Crisp Web Chat SDK. macOS, Windows, and Linux embed the same web chatbox in a desktop WebView, with a browser fallback when WebView is unavailable." } },
-          { "@type": "Question", "name": "What is the minimum Flutter version required?", "acceptedAnswer": { "@type": "Answer", "text": "For Web and desktop (2.5.0+): Flutter 3.24.0+ and Dart 3.5.0+. For mobile-only usage, Flutter 3.0+ and Dart 2.15.0+ may still work, with Android API 23+ and iOS 14.0+ (Xcode 16.3+)." } },
+          { "@type": "Question", "name": "What is the minimum Flutter version required?", "acceptedAnswer": { "@type": "Answer", "text": "Flutter 3.44.0+ (crisp_chat 3.1.0+; 3.24.0+ for 3.0.x), with Android API 23+ and iOS 14.0+ (Xcode 16.3+)." } },
           { "@type": "Question", "name": "Is this an official Crisp plugin?", "acceptedAnswer": { "@type": "Answer", "text": "No. This is a community-maintained Flutter plugin created by Md. Al-Amin. It wraps the official native Crisp SDKs on mobile and the official Web Chat SDK on Web and desktop." } },
           { "@type": "Question", "name": "Do push notifications work on Web or desktop?", "acceptedAnswer": { "@type": "Answer", "text": "No. Firebase Cloud Messaging and APNs setup applies to Android and iOS only. openChatboxFromNotification and setOnNotificationTappedCallback are no-ops on Web and desktop." } },
           { "@type": "Question", "name": "Do I need Firebase for Web or desktop?", "acceptedAnswer": { "@type": "Answer", "text": "No. Firebase is only required for testing mobile push notifications in the example app. For Web and desktop, run with the websiteId dart-define only." } },
@@ -60,8 +60,8 @@ See [Supported platforms](/getting_started/supported_platforms) for the full API
 
 ### What is the minimum Flutter version required?
 
-- **Web and desktop (2.5.0+):** Flutter **3.24.0+**, Dart **3.5.0+**
-- **Mobile-only usage:** Flutter 3.0+, Dart 2.15.0+ may still work; Android API 23+, iOS 14.0+ (Xcode 16.3+)
+- **crisp_chat 3.1.0+:** Flutter **3.44.0+** on every platform (required by `desktop_webview_window` 0.4); Android API 23+, iOS 14.0+ (Xcode 16.3+)
+- **crisp_chat 3.0.x:** Flutter 3.24.0+. On an older Flutter, pub keeps resolving 3.0.x automatically.
 
 ### Is this an official Crisp plugin?
 

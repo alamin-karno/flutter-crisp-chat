@@ -25,7 +25,7 @@ This is the working example app from the plugin's `example/` directory.
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Android / iOS** | Firebase, push notification hooks, user config, sessions, unread REST API; built-in iOS video calls (camera + microphone keys in `Info.plist`) |
 | **Web**           | Web Chat SDK, sessions, events (no Firebase)                                                                                                   |
-| **Desktop**       | `runWebViewTitleBarWidget` in `main`, embedded WebView chat (no Firebase)                                                                      |
+| **Desktop**       | Embedded WebView chat in a native window (no Firebase)                                                                                         |
 
 ### Run without Firebase (Web / desktop)
 
@@ -39,7 +39,7 @@ flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
 
 Use `--dart-define-from-file=config.json` as shown below. Firebase config files are gitignored.
 
-The snippet below shows the **mobile-oriented** `main()`; the repository example also gates Firebase and desktop `main()` for other platforms — see [Platform Setup](/getting_started/platform_setup).
+The snippet below shows the **mobile-oriented** `main()`; the repository example also skips Firebase on Web and desktop — see [Platform Setup](/getting_started/platform_setup).
 
 ## main.dart
 

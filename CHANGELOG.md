@@ -7,10 +7,13 @@ Added
 
 Changed
 ---
+* **Breaking (desktop):** Upgraded `desktop_webview_window` to `^0.4.3`, so the package now requires **Flutter 3.44.0+** on every platform (apps on an older Flutter keep resolving crisp_chat 3.0.x). The chat now opens in a native window with a plain title bar (no navigation or reload buttons). Migration: delete the `runWebViewTitleBarWidget(args)` check from your app's `main()`, since 0.4 removed it and the chat window no longer runs Flutter. Also fixes the plugin failing to compile against 0.4, which the dependency range on `dev` (from #194) already allowed.
 * Bumped the pinned Flutter SDK (`.fvmrc`) from `3.47.6` to `3.47.9`, the latest 3.47 patch release.
 * `FlutterCrispChat.openCrispChat()` no longer blocks its caller for 3 seconds after the chat opens. The session identifier is now cached in the background from the `sessionLoaded` event on Android and iOS (reliable since Crisp iOS SDK 3.1.1), falling back to querying the platform after 10 seconds without an event, or after 3 seconds on Web and desktop, which emit no events.
 * Upgraded Crisp iOS SDK from `3.0.1` to `3.1.1` (no code changes needed; still iOS 14+ / Xcode 16.3+). `CrispSDK.session.identifier` is now available once the session loads (including inside `sessionLoaded`), the chat opens directly into the user's conversation after login, the previous conversation no longer comes back after a logout, and a registered device token moves to the new session after a reset. See the [`3.1.0`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.1.0) and [`3.1.1`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.1.1) release notes.
 * Aligned the CocoaPods constraint with SPM: the podspec's `~> 3.0.1` capped CocoaPods users below `3.1` while SPM (`from: "3.0.1"`) already resolved newer versions; both now require `3.1.1`.
+* Example app: upgraded `firebase_core` to `^5.2.0`, `firebase_messaging` to `^17.1.0`, and `cupertino_icons` to `^2.0.0`; dropped its direct `desktop_webview_window` dependency and the `runWebViewTitleBarWidget` hook from `main()`.
+* Example app (Android): upgraded Gradle to `9.3.1`, the Android Gradle Plugin to `9.1.0`, Kotlin to `2.4.0`, and the Google services plugin to `4.4.4` (the versions Flutter 3.47.9's template uses), set Java to 17, and removed the unused `kotlin-android` plugin from the Java-only app module. This clears Flutter's Gradle, AGP, Kotlin, and built-in Kotlin warnings.
 
 Fixed
 ---

@@ -241,9 +241,9 @@ See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashb
 
 `resetCrispChatSession`, `setSessionString`, and `getSessionIdentifier` require an active desktop WebView. They are no-ops (or return `null`) when chat was opened in an external browser.
 
-### `runWebViewTitleBarWidget` in `main`
+### `runWebViewTitleBarWidget` isn't defined
 
-When using `desktop_webview_window`, add the title-bar helper to your app `main` — see [Supported platforms](/getting_started/supported_platforms).
+`desktop_webview_window` 0.4, which crisp_chat uses since 3.1.0, removed this function. The chat window no longer runs Flutter, so delete the `runWebViewTitleBarWidget(args)` check from your `main()`; nothing replaces it.
 
 ## Need More Help?
 

@@ -49,8 +49,8 @@ next:
 
 | Platform          | Minimum Version                                                 |
 |-------------------|-----------------------------------------------------------------|
-| Flutter           | 3.24.0+ (3.0+ for mobile-only usage)                            |
-| Dart              | 3.5.0+ (2.15.0+ for mobile-only usage)                          |
+| Flutter           | 3.44.0+                                                         |
+| Dart              | 3.5.0+                                                          |
 | Android           | API 23 (Android 6.0)                                            |
 | iOS               | 14.0+ (Xcode 16.3+)                                             |
 | compileSdkVersion | 36                                                              |
