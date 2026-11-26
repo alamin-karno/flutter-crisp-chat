@@ -28,22 +28,36 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
 
     if (await WebviewWindow.isWebviewAvailable()) {
       try {
-        _webview?.close();
+        await _closeWebview();
         await _disposeEmbedDirectory();
 
         final webview = await WebviewWindow.create(
-          configuration: CreateConfiguration(
+          configuration: const CreateConfiguration(
             title: 'Crisp Chat',
-            titleBarTopPadding: 0,
             windowWidth: 420,
             windowHeight: 720,
+            // A chat window, not a browser: keep the native title bar plain.
+            // The host would also show the temporary file:// page below.
+            titleBar: TitleBarOptions(
+              showNavigation: false,
+              showReload: false,
+              showHost: false,
+            ),
           ),
         );
         _webview = webview;
+        // Forget the window once the user closes it, so later calls fall
+        // back to their no-WebView behavior instead of failing.
+        unawaited(webview.onClose.then((_) {
+          if (identical(_webview, webview)) {
+            _webview = null;
+            _crispReadyInWebview = false;
+          }
+        }));
 
         // WKWebView / WebView2 block external scripts on data: URLs — use file://.
         final pageUrl = await _writeEmbedPage(html);
-        webview.launch(pageUrl);
+        await webview.launch(pageUrl);
         unawaited(_waitForCrispReady());
         return;
       } catch (e, stackTrace) {
@@ -52,6 +66,22 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
     }
 
     await _openInBrowser(config);
+  }
+
+  /// Closes the current chat window, if any.
+  Future<void> _closeWebview() async {
+    final webview = _webview;
+    _webview = null;
+    if (webview == null) {
+      return;
+    }
+    try {
+      await webview.close();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Crisp WebView close: $e');
+      }
+    }
   }
 
   /// Writes embed HTML to a temp file and returns a `file://` URI string.
@@ -116,7 +146,8 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
     await _waitForCrispReady();
   }
 
-  /// Runs [javaScript] in the WebView; wraps scripts so the native bridge always gets a string.
+  /// Runs [javaScript] in the WebView; scripts are wrapped to always return a
+  /// string, which `evaluateJavaScript` hands back already decoded.
   Future<String?> _evaluateInWebview(String javaScript) async {
     final webview = _webview;
     if (webview == null) {
@@ -126,7 +157,8 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
         ? javaScript
         : CrispJsBridge.forDesktopEvaluation(javaScript);
     try {
-      return await webview.evaluateJavaScript(wrapped);
+      final result = await webview.evaluateJavaScript(wrapped);
+      return result?.toString();
     } on PlatformException catch (e) {
       if (kDebugMode) {
         final msg = e.message ?? '';
@@ -135,6 +167,13 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
         if (!msg.startsWith('can not find webview')) {
           debugPrint('Crisp WebView evaluateJavaScript: $msg');
         }
+      }
+      return null;
+    } catch (e) {
+      // 0.4 reports a closed window or an unsupported operation as other
+      // errors (e.g. StateError, UnsupportedError).
+      if (kDebugMode) {
+        debugPrint('Crisp WebView evaluateJavaScript: $e');
       }
       return null;
     }

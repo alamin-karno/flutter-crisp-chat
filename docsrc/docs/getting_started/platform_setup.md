@@ -171,32 +171,13 @@ More detail: [Supported Platforms — Web](/getting_started/supported_platforms#
 
 Desktop uses the same Crisp Web Chat SDK inside an embedded window (`desktop_webview_window`), or opens the system browser if WebView is unavailable.
 
-### 1. `main()` — title bar helper (embedded WebView)
+No `main()` changes are needed: the chat opens in a native window with its own title bar.
 
-Add this **before** `runApp` when you target desktop:
+::: tip Upgrading from crisp_chat 3.0.x
+Remove the `runWebViewTitleBarWidget(args)` check from your `main()`. `desktop_webview_window` 0.4 no longer runs Flutter in the chat window, and the function no longer exists.
+:::
 
-```dart
-import 'package:desktop_webview_window/desktop_webview_window.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
-Future<void> main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  if (!kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.linux)) {
-    if (runWebViewTitleBarWidget(args)) {
-      return;
-    }
-  }
-
-  runApp(const MyApp());
-}
-```
-
-### 2. macOS — network entitlement (embedded chat)
+### 1. macOS — network entitlement (embedded chat)
 
 If your macOS app uses the **App Sandbox**, enable **Outgoing Connections (Client)** in `macos/Runner/DebugProfile.entitlements` and `Release.entitlements`:
 
@@ -207,11 +188,11 @@ If your macOS app uses the **App Sandbox**, enable **Outgoing Connections (Clien
 
 Without this, the WebView stays blank. The plugin loads embed HTML from a temporary `file://` page so external `l.js` can load (WKWebView blocks scripts on `data:` URLs).
 
-### 3. Windows — WebView2
+### 2. Windows — WebView2
 
 Install the [WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/) for an embedded chat window. Without it, chat opens in the default browser.
 
-### 4. Linux — WebKitGTK
+### 3. Linux — WebKitGTK
 
 ```bash
 sudo apt install libwebkit2gtk-4.1-dev
@@ -219,7 +200,7 @@ sudo apt install libwebkit2gtk-4.1-dev
 
 (Or `libwebkit2gtk-4.0-dev` on older distributions.)
 
-### 5. Domain lock
+### 4. Domain lock
 
 Disable **Lock the chatbox to website domain** for desktop chat:
 
