@@ -18,6 +18,11 @@ class CrispWebSdk {
   static String? _loadedWebsiteId;
   static Completer<void>? _loaderCompleter;
 
+  /// Set when the session was reset before the Crisp script was loaded on
+  /// this page. Crisp keeps the session in a cookie across page loads, so
+  /// the reset runs as soon as the script loads.
+  static bool _resetPending = false;
+
   static bool get isAvailable => true;
 
   /// Whether the Crisp script has loaded and `$crisp` accepts commands.
@@ -134,6 +139,24 @@ class CrispWebSdk {
 
     _loadedWebsiteId = websiteId;
     await _waitForCrispSdk();
+    _runPendingReset();
+  }
+
+  /// Resets the Crisp session. When the script hasn't been loaded on this
+  /// page, it doesn't wait for it: the reset runs when the script loads.
+  static Future<void> resetSession() async {
+    if (_loaderCompleter == null) {
+      _resetPending = true;
+      return;
+    }
+    await runScript(CrispJsBridge.resetSession());
+  }
+
+  static void _runPendingReset() {
+    if (_resetPending) {
+      _resetPending = false;
+      _globalEval(CrispJsBridge.resetSession().toJS);
+    }
   }
 
   static Future<void> runScript(String javaScript) async {
@@ -150,6 +173,22 @@ class CrispWebSdk {
 
     _setBootstrap(websiteId: websiteId, tokenId: config.tokenId);
     _setRuntimeLocale(config.locale);
+
+    if (needsQueue && _resetPending) {
+      // Reset the session from a previous page load first, then apply the
+      // config, so the user and session details go to the new session.
+      _globalEval(CrispJsBridge.queueSetupBeforeLoad().toJS);
+      if (!_scriptInjected) {
+        await _injectLoaderScript();
+        _scriptInjected = true;
+      }
+      _loadedWebsiteId = websiteId;
+      await _waitForCrispSdk();
+      _runPendingReset();
+      await runScript(CrispJsBridge.applyConfigAndOpenChat(config));
+      await _waitForSessionOngoing();
+      return;
+    }
 
     if (needsQueue) {
       // Queue pushes before l.js so Crisp processes them when the SDK boots.

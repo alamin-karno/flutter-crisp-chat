@@ -24,11 +24,19 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   /// Token and user details to apply to the next chat opening.
   final _pending = CrispPendingIdentity();
 
+  /// Set when the session was reset while no chat window was open. The
+  /// WebView keeps Crisp's session cookie, so the next chat page resets it
+  /// before applying its config.
+  bool _resetPending = false;
+
   @override
   Future<void> openCrispChat({required CrispConfig config}) async {
     _crispReadyInWebview = false;
     _cachedSessionId = null;
-    final html = CrispJsBridge.embedHtml(_pending.applyTo(config));
+    final html = CrispJsBridge.embedHtml(
+      _pending.applyTo(config),
+      resetSessionFirst: _resetPending,
+    );
 
     if (await WebviewWindow.isWebviewAvailable()) {
       try {
@@ -62,6 +70,7 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
         // WKWebView / WebView2 block external scripts on data: URLs — use file://.
         final pageUrl = await _writeEmbedPage(html);
         await webview.launch(pageUrl);
+        _resetPending = false;
         unawaited(_waitForCrispReady());
         return;
       } catch (e, stackTrace) {
@@ -236,8 +245,14 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   @override
   Future<void> resetCrispChatSession() async {
     _pending.clearUser();
-    await _runInWebview(CrispJsBridge.resetSession());
     _cachedSessionId = null;
+    if (_webview == null) {
+      // No chat window to run it in: don't wait for one, reset when the
+      // chat next opens.
+      _resetPending = true;
+      return;
+    }
+    await _runInWebview(CrispJsBridge.resetSession());
   }
 
   @override

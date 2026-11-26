@@ -19,6 +19,7 @@ Changed
 
 Fixed
 ---
+* Web and desktop: `resetCrispChatSession()` no longer waits for a chat that isn't loaded. Before, it waited about 15 seconds and then threw on Web, or waited about 10 seconds on desktop, when called before the chat had been opened, for example on logout. The reset now runs as soon as the chat next loads, before the user and session details are applied, so a session Crisp kept from an earlier visit is still cleared.
 * iOS: `openCrispChat()` without a `CrispConfig.user` no longer clears the user's email, nickname, phone, avatar and company, so details set with the new user setters are kept.
 * A session identifier cached in the background by `openCrispChat()` is no longer restored after `resetCrispChatSession()` is called while it's still loading.
 * Pointed the Patreon funding link in `pubspec.yaml`, the README and the docs at `https://www.patreon.com/cw/alamin_karno`. The old URL redirects there, and pub.dev's analysis reported it as unreachable.

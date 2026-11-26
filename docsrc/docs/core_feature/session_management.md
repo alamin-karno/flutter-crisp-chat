@@ -189,7 +189,7 @@ The Android SDK ignores a new token while the chat is connected. Close the chat 
 :::
 
 ::: info Web and desktop
-The token is applied right away if the chat is loaded, otherwise when it next opens.
+The token is applied right away if the chat is loaded, otherwise when it next opens. The same goes for `resetCrispChatSession`: if the chat isn't loaded, it returns at once and the reset runs when the chat next opens, before your config is applied.
 :::
 
 ## Typical Flow

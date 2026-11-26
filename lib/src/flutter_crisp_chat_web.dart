@@ -66,7 +66,7 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
   @override
   Future<void> resetCrispChatSession() async {
     _pending.clearUser();
-    await CrispWebSdk.runScript(CrispJsBridge.resetSession());
+    await CrispWebSdk.resetSession();
   }
 
   @override

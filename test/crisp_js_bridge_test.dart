@@ -296,4 +296,38 @@ void main() {
           r'$crisp.push(["set", "user:avatar", ["https://example.com/a.png"]]);');
     });
   });
+
+  group('reset before load', () {
+    test('queueSetupBeforeLoad has no user or open commands', () {
+      final script = CrispJsBridge.queueSetupBeforeLoad();
+      expect(script, contains('session:loaded'));
+      expect(script, isNot(contains('user:')));
+      expect(script, isNot(contains('chat:open')));
+    });
+
+    test('queueBeforeLoad still starts with the setup commands', () {
+      final script = CrispJsBridge.queueBeforeLoad(
+        CrispConfig(websiteID: 'site-id'),
+      );
+      expect(script, startsWith(CrispJsBridge.queueSetupBeforeLoad()));
+      expect(script, contains('chat:open'));
+    });
+
+    test('embedHtml resets the session before applying the config', () {
+      final config = CrispConfig(
+        websiteID: 'site-id',
+        user: User(nickName: 'Ann'),
+      );
+      final html = CrispJsBridge.embedHtml(config, resetSessionFirst: true);
+      final reset = html.indexOf('session:reset');
+      expect(reset, isNonNegative);
+      expect(reset, lessThan(html.indexOf('user:nickname')));
+      expect(reset, lessThan(html.indexOf('chat:open')));
+    });
+
+    test('embedHtml does not reset by default', () {
+      final html = CrispJsBridge.embedHtml(CrispConfig(websiteID: 'site-id'));
+      expect(html, isNot(contains('session:reset')));
+    });
+  });
 }

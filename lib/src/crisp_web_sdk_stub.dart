@@ -13,6 +13,8 @@ class CrispWebSdk {
 
   static Future<void> runScript(String javaScript) async {}
 
+  static Future<void> resetSession() async {}
+
   static Future<void> waitForSessionOngoing() async {}
 
   static Future<void> applyConfigAndOpen(CrispConfig config) async {}

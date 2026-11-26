@@ -62,15 +62,22 @@ class CrispJsBridge {
   /// See https://docs.crisp.chat/guides/chatbox-sdks/web-sdk/dollar-crisp/#use-crisp-before-it-is-ready
   static String queueBeforeLoad(CrispConfig config) {
     final lines = <String>[
-      r'$crisp.push(["safe", true]);',
-      r'$crisp.push(["config", "container:index", [999999]]);',
-      r'$crisp.push(["on", "session:loaded", function(session_id) { window.__crispSessionId = session_id; }]);',
+      queueSetupBeforeLoad(),
       ..._userAndSessionCommands(config),
       r'$crisp.push(["do", "chat:show"]);',
       r'$crisp.push(["do", "chat:open"]);',
     ];
     return lines.join('\n');
   }
+
+  /// Queues only the setup commands before `l.js` loads: safe mode, the
+  /// container index and the `session:loaded` hook. Used when the session
+  /// must be reset before the user and session details are applied.
+  static String queueSetupBeforeLoad() => [
+        r'$crisp.push(["safe", true]);',
+        r'$crisp.push(["config", "container:index", [999999]]);',
+        r'$crisp.push(["on", "session:loaded", function(session_id) { window.__crispSessionId = session_id; }]);',
+      ].join('\n');
 
   static List<String> _userAndSessionCommands(CrispConfig config) {
     final commands = <String>[];
@@ -356,13 +363,20 @@ class CrispJsBridge {
   ''';
 
   /// Full HTML page for desktop WebView embedding.
-  static String embedHtml(CrispConfig config) {
+  ///
+  /// With [resetSessionFirst], the page resets the Crisp session once the
+  /// script loads, before applying [config].
+  static String embedHtml(CrispConfig config,
+      {bool resetSessionFirst = false}) {
     final bootstrap = bootstrapScript(
       websiteId: config.websiteID,
       tokenId: config.tokenId,
       locale: config.locale,
     );
-    final afterLoad = applyConfigAndOpenChat(config);
+    final afterLoad = [
+      if (resetSessionFirst) resetSession(),
+      applyConfigAndOpenChat(config),
+    ].join('\n');
     return '''
 <!DOCTYPE html>
 <html lang="en">
