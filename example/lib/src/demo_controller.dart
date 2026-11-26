@@ -69,6 +69,9 @@ class DemoController extends ChangeNotifier {
 
   StreamSubscription<CrispChatEvent>? _events;
 
+  /// Whether the chat is on screen, from the chatOpened/chatClosed events.
+  bool _chatVisible = false;
+
   // ---------------------------------------------------------------------------
   // Start-up
   // ---------------------------------------------------------------------------
@@ -114,11 +117,21 @@ class DemoController extends ChangeNotifier {
       CrispEventType.notificationReceived => event.notificationData?.toString(),
       _ => null,
     };
-    if (event.type == CrispEventType.sessionLoaded) {
-      sessionId = event.sessionId ?? sessionId;
-    }
-    if (event.type == CrispEventType.messageReceived) {
-      unreadCount = (unreadCount ?? 0) + 1;
+    switch (event.type) {
+      case CrispEventType.sessionLoaded:
+        sessionId = event.sessionId ?? sessionId;
+      case CrispEventType.chatOpened:
+        _chatVisible = true;
+        unreadCount = 0;
+      case CrispEventType.chatClosed:
+        _chatVisible = false;
+      // Only count messages the visitor hasn't seen: ones that arrive
+      // while the chat is closed. Local messages shown with
+      // showMessage() also arrive here, while the chat is open.
+      case CrispEventType.messageReceived when !_chatVisible:
+        unreadCount = (unreadCount ?? 0) + 1;
+      default:
+        break;
     }
     _log(ActivityKind.event, event.type.name, detail);
   }

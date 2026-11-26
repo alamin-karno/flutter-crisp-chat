@@ -408,11 +408,13 @@ class _Appearance extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text('Color mode', style: theme.textTheme.labelLarge),
-          const SizedBox(height: 2),
-          Text(
-            'Default keeps the mode set in your Crisp dashboard.',
-            style: theme.textTheme.bodySmall,
-          ),
+          if (PlatformSupport.colorMode) ...[
+            const SizedBox(height: 2),
+            Text(
+              'Default keeps the mode set in your Crisp dashboard.',
+              style: theme.textTheme.bodySmall,
+            ),
+          ],
           const SizedBox(height: 8),
           if (PlatformSupport.colorMode)
             SegmentedButton<CrispColorMode?>(

@@ -23,7 +23,9 @@ class MessagesPage extends StatelessWidget {
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Show welcome messages'),
-            subtitle: const Text('Only on this device. Never sent to Crisp.'),
+            subtitle: const Text(
+              'Only the visitor sees them. Not sent to your Crisp inbox.',
+            ),
             value: c.welcomeMessages,
             onChanged: (value) =>
                 c.updateOptions(() => c.welcomeMessages = value),
