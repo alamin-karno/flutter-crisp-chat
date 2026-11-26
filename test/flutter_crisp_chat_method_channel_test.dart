@@ -44,6 +44,33 @@ void main() {
     expect(await platform.isVideoCallsSupported(), isTrue);
   });
 
+  test('isSessionOngoing returns the native value', () async {
+    for (final value in [true, false, null]) {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        channel,
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'isSessionOngoing') {
+            return value;
+          }
+          return null;
+        },
+      );
+      expect(await platform.isSessionOngoing(), value);
+    }
+  });
+
+  test('isSessionOngoing returns null on a PlatformException', () async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        throw PlatformException(code: 'ERROR');
+      },
+    );
+    expect(await platform.isSessionOngoing(), isNull);
+  });
+
   test('runBotScenario sends correct method name and scenarioId', () async {
     MethodCall? captured;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

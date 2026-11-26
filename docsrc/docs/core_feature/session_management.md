@@ -125,6 +125,30 @@ if (sessionId != null) {
 The session identifier is cached internally after `openCrispChat` is called. If the native SDK returns `null` (e.g., the chat was closed), the cached value is returned instead.
 :::
 
+## Check if the Session Is Ongoing
+
+Find out whether messages have been sent or received in the current session, e.g. to show "Continue conversation" instead of "Chat with us" to a returning visitor.
+
+```dart
+final ongoing = await FlutterCrispChat.isSessionOngoing();
+final label = switch (ongoing) {
+  true => 'Continue conversation',
+  false || null => 'Chat with us',
+};
+```
+
+`isSessionOngoing()` returns `true` or `false`, or `null` when it can't tell:
+
+| Platform        | Behavior                                                                                         |
+|-----------------|--------------------------------------------------------------------------------------------------|
+| iOS             | `CrispSDK.session.isOngoing` (Crisp iOS SDK 3.1.1+); `null` until the session has loaded          |
+| Web / desktop   | `$crisp.is("session:ongoing")`; `null` until Crisp and its session have loaded (desktop: WebView only) |
+| Android         | Always `null` — the Crisp Android SDK 2.x has no such check                                       |
+
+::: tip
+The session loads when the chat is opened. To check right after opening, wait for a `sessionLoaded` event on [`FlutterCrispChat.onCrispEvent`](/reference/api_documentation#oncrispevent) first.
+:::
+
 ## Reset Session
 
 Reset the current chat session. This clears all session data and starts fresh. **Call this when your app user logs out** to ensure the next user doesn't see the previous user's chat history.

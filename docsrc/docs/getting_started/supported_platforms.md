@@ -41,6 +41,7 @@ next:
 | `pushSessionEvent`                   | Yes                                             | Yes              | Yes (WebView only)       |
 | `showMessage` / `CrispConfig.localMessages` | Yes                                      | Yes              | Yes (WebView only)       |
 | `getSessionIdentifier`               | Yes                                             | Yes              | Yes (WebView only)       |
+| `isSessionOngoing`                   | iOS only (Android: always `null`)               | Yes              | Yes (WebView only)       |
 | `getUnreadMessageCount`              | Yes                                             | Yes*             | Yes*                     |
 | `markMessagesAsRead`                 | Yes                                             | Yes*             | Yes*                     |
 | `openHelpdesk`                       | Yes                                             | Yes              | Yes (WebView only)       |

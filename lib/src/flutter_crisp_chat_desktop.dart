@@ -196,6 +196,19 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   }
 
   @override
+  Future<bool?> isSessionOngoing() async {
+    if (_webview == null) {
+      return null;
+    }
+    await _ensureCrispReady();
+    return switch (await _evaluateInWebview(CrispJsBridge.isSessionOngoing())) {
+      'true' => true,
+      'false' => false,
+      _ => null,
+    };
+  }
+
+  @override
   void setSessionSegments({
     required List<String> segments,
     bool overwrite = false,

@@ -232,6 +232,9 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.error("NO_SESSION", "No active session found", null);
             }
+        } else if (call.method.equals("isSessionOngoing")) {
+            // The Crisp Android SDK 2.x has no way to tell; answer null (unknown).
+            result.success(null);
         } else if (call.method.equals("setSessionSegments")) {
             HashMap<String, Object> args = (HashMap<String, Object>) call.arguments;
             if (args != null) {

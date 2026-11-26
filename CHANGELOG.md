@@ -2,6 +2,7 @@
 
 Added
 ---
+* `FlutterCrispChat.isSessionOngoing()` — returns whether messages have been sent or received in the current session, or `null` when it can't tell. Wraps `CrispSDK.session.isOngoing` (iOS, Crisp iOS SDK 3.1.1+) and `$crisp.is("session:ongoing")` (Web/desktop). Always `null` on Android, whose Crisp SDK 2.x has no such check, and before the session has loaded. Platform implementations that `implements FlutterCrispChatPlatform` must add `isSessionOngoing()`; those that `extends` it inherit a default.
 * `CrispConfig.colorMode` and the `CrispColorMode` enum (`light`, `dark`, `auto`) — override the chatbox color mode set in the Crisp dashboard. Wraps `ChatViewConfiguration.colorMode` (iOS, Crisp iOS SDK 3.1+) and `$crisp.push(["config", "color:mode", [mode]])` (Web/desktop). Ignored on Android, whose Crisp SDK 2.x has no color mode setting. `null` (default) keeps the dashboard's color mode.
 
 Changed
@@ -21,6 +22,7 @@ Security
 
 Documentation
 ---
+* Documented `isSessionOngoing()` in the README and on the Session Management, Supported Platforms, and API Documentation pages.
 * Documented `CrispConfig.colorMode` in the README and on the Configuration, Supported Platforms, and API Documentation pages.
 * Updated the native SDK versions (Android `2.0.25`, iOS `~> 3.1.1`) in the README and docs site, and corrected the CocoaPods note: Crisp has deprecated CocoaPods but still published `3.1.x` there, so it no longer claims publishing stopped in September 2026.
 

@@ -58,6 +58,12 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
         'getSessionIdentifier() has not been implemented.');
   }
 
+  /// [isSessionOngoing] returns whether messages have been exchanged in the
+  /// current session, or `null` if the platform can't tell.
+  Future<bool?> isSessionOngoing() {
+    throw UnimplementedError('isSessionOngoing() has not been implemented.');
+  }
+
   /// [setSessionSegments] Sets a collection of session segments
   /// and optionally overwrite existing ones (default is false)
   void setSessionSegments({

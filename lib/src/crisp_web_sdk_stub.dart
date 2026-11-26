@@ -16,4 +16,6 @@ class CrispWebSdk {
   static Future<void> applyConfigAndOpen(CrispConfig config) async {}
 
   static Future<String?> getSessionIdentifier() async => null;
+
+  static Future<bool?> isSessionOngoing() async => null;
 }
