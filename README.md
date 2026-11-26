@@ -488,6 +488,7 @@ class _CrispChatPageState extends State<CrispChatPage> {
       user: crispUser, // Optional: Provide user details.
       enableNotifications: true, // Optional: Enable or disable push notifications. Defaults to true.
       modalPresentationStyle: ModalPresentationStyle.fullScreen, // Optional: iOS modal presentation style. Defaults to fullScreen.
+      colorMode: CrispColorMode.auto, // Optional: override the dashboard color mode (light, dark, auto). iOS, Web and desktop only.
     );
 
     // 2. Optionally, set additional session data *before* opening the chat.
@@ -614,6 +615,24 @@ final formSheetConfig = CrispConfig(
 ```
 
 **Note:** This parameter is iOS-specific and will only affect iOS devices. On Android, the chat will always use the platform's default presentation behavior. On **Web and desktop**, it is ignored.
+
+### Color Mode
+
+The `colorMode` parameter in `CrispConfig` overrides the chatbox color mode set in the Crisp dashboard:
+
+- **`CrispColorMode.light`** - Always light, regardless of the device appearance.
+- **`CrispColorMode.dark`** - Always dark, regardless of the device appearance.
+- **`CrispColorMode.auto`** - Follows the device appearance.
+- **`null`** (Default) - Keeps the color mode set in the Crisp dashboard.
+
+```dart
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  colorMode: CrispColorMode.dark,
+);
+```
+
+**Note:** Supported on **iOS** (Crisp iOS SDK 3.1+), **Web** and **desktop**. On **Android** it is ignored, because the Crisp Android SDK 2.x has no color mode setting. On Web and desktop the mode applies to the current page, so a mode you set stays until you set another one.
 
 ### iOS video and audio calls
 

@@ -48,6 +48,7 @@ next:
 | `openChatboxFromNotification`        | Android (primarily)                             | No-op (`false`)  | No-op (`false`)          |
 | `setOnNotificationTappedCallback`    | Android                                         | No-op            | No-op                    |
 | `CrispConfig.modalPresentationStyle` | iOS only                                        | Ignored          | Ignored                  |
+| `CrispConfig.colorMode`              | iOS only (ignored on Android)                   | Yes              | Yes (WebView only)       |
 | `CrispConfig.enableNotifications`    | Android/iOS native                              | Ignored          | Ignored                  |
 | `isVideoCallsSupported()`            | iOS: always `true`; Android: `false` (upstream) | Yes (web widget) | Yes (web widget)         |
 

@@ -1,5 +1,9 @@
 # [Unreleased]
 
+Added
+---
+* `CrispConfig.colorMode` and the `CrispColorMode` enum (`light`, `dark`, `auto`) — override the chatbox color mode set in the Crisp dashboard. Wraps `ChatViewConfiguration.colorMode` (iOS, Crisp iOS SDK 3.1+) and `$crisp.push(["config", "color:mode", [mode]])` (Web/desktop). Ignored on Android, whose Crisp SDK 2.x has no color mode setting. `null` (default) keeps the dashboard's color mode.
+
 Changed
 ---
 * Upgraded Crisp iOS SDK from `3.0.1` to `3.1.1` (no code changes needed; still iOS 14+ / Xcode 16.3+). `CrispSDK.session.identifier` is now available once the session loads (including inside `sessionLoaded`), the chat opens directly into the user's conversation after login, the previous conversation no longer comes back after a logout, and a registered device token moves to the new session after a reset. See the [`3.1.0`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.1.0) and [`3.1.1`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.1.1) release notes.
@@ -12,6 +16,7 @@ Security
 
 Documentation
 ---
+* Documented `CrispConfig.colorMode` in the README and on the Configuration, Supported Platforms, and API Documentation pages.
 * Updated the native SDK versions (Android `2.0.25`, iOS `~> 3.1.1`) in the README and docs site, and corrected the CocoaPods note: Crisp has deprecated CocoaPods but still published `3.1.x` there, so it no longer claims publishing stopped in September 2026.
 
 # 3.0.0

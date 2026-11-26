@@ -117,6 +117,12 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
 
             CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany()
 
+            // The SDK reads `ChatViewConfiguration.default` (it has no public
+            // initializer). Set it on every openCrispChat so a `nil` colorMode
+            // restores the dashboard's; helpdesk and notification opens keep
+            // the last value.
+            ChatViewConfiguration.default.colorMode = crispConfig.colorMode
+
             if openChat(modalPresentationStyle: crispConfig.modalPresentationStyle) {
                 result(nil)
             } else {

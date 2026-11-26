@@ -32,6 +32,7 @@ CrispConfig config = CrispConfig(
   enableNotifications: true,           // [optional] Enable push notifications (default: true)
   modalPresentationStyle: ModalPresentationStyle.fullScreen, // [optional] iOS modal style (default: fullScreen)
   localMessages: const [CrispTextContent('Hi! 👋')], // [optional] Local messages shown on first open
+  colorMode: CrispColorMode.dark,      // [optional] Override the dashboard color mode (iOS, Web, desktop)
 );
 ```
 
@@ -46,6 +47,7 @@ CrispConfig config = CrispConfig(
 | `enableNotifications`    | `bool`                    | No       | `true`       | Push notifications (Android/iOS native SDK only; ignored on Web/desktop) |
 | `modalPresentationStyle` | `ModalPresentationStyle?` | No       | `fullScreen` | iOS modal presentation style (ignored on Android, Web, desktop)          |
 | `localMessages`          | `List<CrispMessageContent>?` | No    | `null`       | Operator messages shown locally when the chat first opens. See [Local Messages](/core_feature/local_messages) |
+| `colorMode`              | `CrispColorMode?`         | No       | `null`       | Overrides the dashboard color mode: `light`, `dark` or `auto` (iOS, Web, desktop; ignored on Android). See [Color Mode](#color-mode) |
 
 ::: info Web and desktop
 `websiteID`, `tokenId`, `sessionSegment`, `user`, and `localMessages` apply on all platforms. See [Supported Platforms](/getting_started/supported_platforms) for API differences.
@@ -150,6 +152,32 @@ final config = CrispConfig(
 
 await FlutterCrispChat.openCrispChat(config: config);
 ```
+
+## Color Mode
+
+The `colorMode` parameter overrides the chatbox color mode set in the Crisp dashboard.
+
+| Value                  | Description                                  |
+|------------------------|----------------------------------------------|
+| `CrispColorMode.light` | Always light, regardless of device appearance |
+| `CrispColorMode.dark`  | Always dark, regardless of device appearance  |
+| `CrispColorMode.auto`  | Follows the device appearance                 |
+| `null` (default)       | Keeps the color mode set in the dashboard     |
+
+```dart
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  colorMode: CrispColorMode.dark,
+);
+
+await FlutterCrispChat.openCrispChat(config: config);
+```
+
+::: tip Platform Specific
+- **iOS:** uses `ChatViewConfiguration.colorMode` (Crisp iOS SDK 3.1+). Each `openCrispChat` applies the config's value, so passing `null` restores the dashboard's color mode.
+- **Web / desktop:** uses `$crisp.push(["config", "color:mode", [mode]])`. The mode applies to the current page, so a mode you set stays until you set another one.
+- **Android:** ignored. The Crisp Android SDK 2.x has no color mode setting.
+:::
 
 ## iOS Modal Presentation Styles
 

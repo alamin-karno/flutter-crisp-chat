@@ -26,6 +26,33 @@ void main() {
     expect(script, contains('chat:open'));
   });
 
+  test('applyConfigAndOpenChat sets the color mode when provided', () {
+    final config = CrispConfig(
+      websiteID: 'site-id',
+      colorMode: CrispColorMode.dark,
+    );
+    final script = CrispJsBridge.applyConfigAndOpenChat(config);
+    expect(
+        script, contains(r'$crisp.push(["config", "color:mode", ["dark"]]);'));
+  });
+
+  test('queueBeforeLoad sets the color mode when provided', () {
+    final config = CrispConfig(
+      websiteID: 'site-id',
+      colorMode: CrispColorMode.auto,
+    );
+    final script = CrispJsBridge.queueBeforeLoad(config);
+    expect(
+        script, contains(r'$crisp.push(["config", "color:mode", ["auto"]]);'));
+  });
+
+  test('applyConfigAndOpenChat omits color mode when null', () {
+    final script = CrispJsBridge.applyConfigAndOpenChat(
+      CrispConfig(websiteID: 'site-id'),
+    );
+    expect(script, isNot(contains('color:mode')));
+  });
+
   test('forDesktopEvaluation wraps script to return empty string', () {
     final wrapped =
         CrispJsBridge.forDesktopEvaluation(r'$crisp.push(["do","chat:open"]);');

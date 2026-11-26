@@ -101,6 +101,13 @@ class CrispJsBridge {
       );
     }
 
+    final colorMode = config.colorMode;
+    if (colorMode != null) {
+      commands.add(
+        '\$crisp.push(["config", "color:mode", [${_escapeJs(colorMode.name)}]]);',
+      );
+    }
+
     return commands;
   }
 
