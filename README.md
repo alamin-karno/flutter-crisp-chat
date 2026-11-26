@@ -741,6 +741,22 @@ await FlutterCrispChat.runBotScenario(scenarioId: 'YOUR_SCENARIO_ID');
 
 The scenario ID can be found in the Crisp dashboard under **Settings** → **Chatbot**. Throws `ArgumentError` if `scenarioId` is empty.
 
+### Session Ongoing Check
+
+Find out whether messages have been sent or received in the current session, e.g. to show "Continue conversation" to a returning visitor.
+
+> **Platform support:** iOS, Web, and desktop (WebView). On **Android** it always returns `null`, because the Crisp Android SDK 2.x has no such check.
+
+```dart
+final ongoing = await FlutterCrispChat.isSessionOngoing();
+final label = switch (ongoing) {
+  true => 'Continue conversation',
+  false || null => 'Chat with us',
+};
+```
+
+Returns `null` when it can't tell, including before the session has loaded. Open the chat first, or wait for a `sessionLoaded` event on `FlutterCrispChat.onCrispEvent`.
+
 ### Local Messages
 
 Show a message as an operator in the visitor's chatbox — for example, a welcome message the first time the chat opens. Local messages stay on the device and are never sent to your Crisp inbox.

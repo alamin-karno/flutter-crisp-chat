@@ -166,6 +166,15 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 result(FlutterError(code: "NO_SESSION", message: "No active session found", details: nil))
             }
 
+        case "isSessionOngoing":
+            // `isOngoing` reports `false` until the session has loaded, so
+            // answer `nil` (unknown) until there's a session identifier.
+            if CrispSDK.session.identifier != nil {
+                result(CrispSDK.session.isOngoing)
+            } else {
+                result(nil)
+            }
+
         case "setSessionSegments":
             guard let args = call.arguments as? [String: Any],
                   let segments = args["segments"] as? [String],

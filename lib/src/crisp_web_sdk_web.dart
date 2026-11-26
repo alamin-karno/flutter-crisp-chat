@@ -150,6 +150,18 @@ class CrispWebSdk {
     await _waitForSessionOngoing();
   }
 
+  static Future<bool?> isSessionOngoing() async {
+    if (!_isCrispSdkLoaded) {
+      return null;
+    }
+    final result = _globalEval(CrispJsBridge.isSessionOngoing().toJS);
+    return switch (result?.dartify()?.toString()) {
+      'true' => true,
+      'false' => false,
+      _ => null,
+    };
+  }
+
   static Future<String?> getSessionIdentifier() async {
     if (!_isCrispSdkLoaded) {
       return null;

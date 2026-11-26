@@ -32,6 +32,7 @@ Complete reference for all public methods in the `FlutterCrispChat` class.
 | `runBotScenario`                                            | Yes                 | Yes              | WebView only       |
 | `showMessage`                                               | Yes                 | Yes              | WebView only       |
 | `getSessionIdentifier`                                      | Yes                 | Yes              | WebView only       |
+| `isSessionOngoing`                                          | iOS only (Android: `null`) | Yes       | WebView only       |
 | `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*             | Yes*               |
 | `openHelpdesk`                                              | Native SDK UI       | Web chatbox      | WebView or browser |
 | `openHelpdeskArticle`                                       | Native SDK UI       | Web chatbox      | WebView or browser |
@@ -126,6 +127,18 @@ static Future<String?> getSessionIdentifier()
 ```
 
 **Returns:** The session ID string, or `null` if no session exists. Falls back to a cached value if the native SDK returns `null`.
+
+---
+
+### isSessionOngoing
+
+Returns whether messages have been sent or received in the current session.
+
+```dart
+static Future<bool?> isSessionOngoing()
+```
+
+**Returns:** `true` or `false`, or `null` when it can't be told: on Android (the Crisp Android SDK 2.x has no such check), before the session has loaded, or on desktop with the system browser fallback. Never throws. See [Check if the Session Is Ongoing](/core_feature/session_management#check-if-the-session-is-ongoing).
 
 ---
 

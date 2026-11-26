@@ -54,6 +54,16 @@ class MockFlutterCrispChatPlatform
     return mockSessionId;
   }
 
+  bool? mockIsSessionOngoing;
+  bool isSessionOngoingShouldThrowError = false;
+  @override
+  Future<bool?> isSessionOngoing() async {
+    if (isSessionOngoingShouldThrowError) {
+      throw PlatformException(code: 'ERROR', message: 'Simulated error');
+    }
+    return mockIsSessionOngoing;
+  }
+
   Map<String, dynamic>? setSessionSegmentsArgs;
   @override
   void setSessionSegments({
@@ -258,6 +268,26 @@ void main() {
         expect(sessionId, isNull);
       },
     );
+  });
+
+  group('isSessionOngoing', () {
+    test('returns the platform value', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+
+      for (final value in [true, false, null]) {
+        fakePlatform.mockIsSessionOngoing = value;
+        expect(await FlutterCrispChat.isSessionOngoing(), value);
+      }
+    });
+
+    test('returns null if the platform throws', () async {
+      final fakePlatform = MockFlutterCrispChatPlatform()
+        ..isSessionOngoingShouldThrowError = true;
+      FlutterCrispChatPlatform.instance = fakePlatform;
+
+      expect(await FlutterCrispChat.isSessionOngoing(), isNull);
+    });
   });
 
   group('setSessionSegments', () {

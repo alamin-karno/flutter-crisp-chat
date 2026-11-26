@@ -116,6 +116,18 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     }
   }
 
+  /// [isSessionOngoing] asks the native SDK whether messages have been
+  /// exchanged in the current session. Returns `null` when it can't tell.
+  @override
+  Future<bool?> isSessionOngoing() async {
+    try {
+      return await methodChannel.invokeMethod<bool>('isSessionOngoing');
+    } on PlatformException catch (e) {
+      debugPrint("Failed to check whether the session is ongoing: '${e.message}'.");
+      return null;
+    }
+  }
+
   /// [setSessionSegments] Sets a collection of session segments
   /// and optionally overwrite existing ones (default is false)
   @override

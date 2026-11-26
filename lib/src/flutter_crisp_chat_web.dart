@@ -37,6 +37,9 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
   Future<String?> getSessionIdentifier() => CrispWebSdk.getSessionIdentifier();
 
   @override
+  Future<bool?> isSessionOngoing() => CrispWebSdk.isSessionOngoing();
+
+  @override
   void setSessionSegments({
     required List<String> segments,
     bool overwrite = false,

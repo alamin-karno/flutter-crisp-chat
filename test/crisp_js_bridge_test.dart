@@ -53,6 +53,15 @@ void main() {
     expect(script, isNot(contains('color:mode')));
   });
 
+  test('isSessionOngoing checks session:ongoing only once a session exists',
+      () {
+    final script = CrispJsBridge.isSessionOngoing();
+    expect(script, startsWith('(function(){try{'));
+    expect(script, contains(r'$crisp.is("session:ongoing")'));
+    expect(script, contains(r'$crisp.get("session:identifier")'));
+    expect(script, contains('return "";'));
+  });
+
   test('forDesktopEvaluation wraps script to return empty string', () {
     final wrapped =
         CrispJsBridge.forDesktopEvaluation(r'$crisp.push(["do","chat:open"]);');

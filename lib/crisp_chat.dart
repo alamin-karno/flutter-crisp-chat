@@ -245,6 +245,32 @@ class FlutterCrispChat {
     return _sessionIdentifier;
   }
 
+  /// Returns whether the current session is ongoing, meaning messages have
+  /// been sent or received in it.
+  ///
+  /// Useful to tell a visitor who already talked to you from a new one, e.g.
+  /// to label a "Continue conversation" button. Returns `null` when it can't
+  /// be told:
+  /// - on Android, whose Crisp SDK 2.x has no such check;
+  /// - before the session has loaded (open the chat first, or wait for
+  ///   [CrispEventType.sessionLoaded] on [onCrispEvent]);
+  /// - on desktop when the system browser fallback is used.
+  ///
+  /// Wraps `CrispSDK.session.isOngoing` (iOS, Crisp iOS SDK 3.1.1+) and
+  /// `$crisp.is("session:ongoing")` (Web/desktop).
+  ///
+  /// {@category General}
+  static Future<bool?> isSessionOngoing() async {
+    try {
+      return await FlutterCrispChatPlatform.instance.isSessionOngoing();
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error checking whether the session is ongoing: $e");
+      }
+      return null;
+    }
+  }
+
   /// Sets user segments in the current session.
   ///
   /// Segments are used to categorize users (e.g., "premium", "trial").

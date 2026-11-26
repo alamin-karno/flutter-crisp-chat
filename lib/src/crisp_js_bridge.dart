@@ -293,6 +293,15 @@ class CrispJsBridge {
     return id != null && id !== "" ? String(id) : "";
   ''');
 
+  /// Checks whether messages have been exchanged in the session: returns
+  /// `"true"`, `"false"`, or `""` while Crisp or its session isn't loaded
+  /// (`$crisp.is` isn't async-safe, and reports `false` before loading).
+  static String isSessionOngoing() => forDesktopEvaluation(r'''
+    if (typeof $crisp === "undefined" || !$crisp.is || !$crisp.get) return "";
+    if (!window.__crispSessionId && !$crisp.get("session:identifier")) return "";
+    return $crisp.is("session:ongoing") ? "true" : "false";
+  ''');
+
   /// WKWebView / WebView2 cannot return `null` from evaluateJavaScript.
   static String forDesktopEvaluation(String javaScript) {
     final body = javaScript.trim();
