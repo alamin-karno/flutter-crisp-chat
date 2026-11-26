@@ -1,8 +1,18 @@
 # [Unreleased]
 
+Changed
+---
+* Upgraded Crisp iOS SDK from `3.0.1` to `3.1.1` (no code changes needed; still iOS 14+ / Xcode 16.3+). `CrispSDK.session.identifier` is now available once the session loads (including inside `sessionLoaded`), the chat opens directly into the user's conversation after login, the previous conversation no longer comes back after a logout, and a registered device token moves to the new session after a reset. See the [`3.1.0`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.1.0) and [`3.1.1`](https://github.com/crisp-im/crisp-sdk-ios/releases/tag/3.1.1) release notes.
+* Aligned the CocoaPods constraint with SPM: the podspec's `~> 3.0.1` capped CocoaPods users below `3.1` while SPM (`from: "3.0.1"`) already resolved newer versions; both now require `3.1.1`.
+
 Security
 ---
+* Upgraded Crisp Android SDK from `2.0.24` to `2.0.25`, which bumps OkHttp to `4.12.1` to mitigate the [compromised eMudhra subordinate CA certificates](https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/0R3XLJL6FuE/m/0XofdebrAAAJ), and fixes a resource-shrinking issue ([crisp-sdk-android#244](https://github.com/crisp-im/crisp-sdk-android/issues/244)). See the [`2.0.25`](https://github.com/crisp-im/crisp-sdk-android/releases/tag/v2.0.25) release notes.
 * Bumped the docsrc `vite` override from `^6.4.3` to `^6.4.4` (resolves to `6.4.5`), fixing five Dependabot alerts: three `launch-editor` advisories (GHSA-698v-4r3x-3vcv, GHSA-r825-w8mm-5pxw, GHSA-587h-7wmj-h5pm) plus GHSA-9jrq-w75r-8gcw and GHSA-rq7h-c2jc-7f22. Dev-server only; the published docs site and the plugin are unaffected.
+
+Documentation
+---
+* Updated the native SDK versions (Android `2.0.25`, iOS `~> 3.1.1`) in the README and docs site, and corrected the CocoaPods note: Crisp has deprecated CocoaPods but still published `3.1.x` there, so it no longer claims publishing stopped in September 2026.
 
 # 3.0.0
 

@@ -40,8 +40,8 @@ next:
 
 | Platform | SDK                                     | Version / source                                                                              |
 |----------|-----------------------------------------|-----------------------------------------------------------------------------------------------|
-| Android  | Crisp Android SDK                       | `2.0.24`                                                                                      |
-| iOS      | Crisp iOS SDK (`Crisp`, calls included) | `~> 3.0.1` — SPM recommended; see [Platform Setup — iOS](/getting_started/platform_setup#ios) |
+| Android  | Crisp Android SDK                       | `2.0.25`                                                                                      |
+| iOS      | Crisp iOS SDK (`Crisp`, calls included) | `~> 3.1.1` — SPM recommended; see [Platform Setup — iOS](/getting_started/platform_setup#ios) |
 | Web      | Crisp Web Chat SDK (`$crisp`)           | Loaded from `https://client.crisp.chat/l.js`                                                  |
 | Desktop  | Same as Web (embedded WebView)          | `desktop_webview_window` + browser fallback                                                   |
 

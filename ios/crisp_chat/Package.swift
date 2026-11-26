@@ -21,7 +21,7 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
         .package(
             url: "https://github.com/crisp-im/crisp-sdk-ios.git",
-            from: "3.0.1"
+            from: "3.1.1"
         )
     ],
     targets: [
