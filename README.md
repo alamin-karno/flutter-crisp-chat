@@ -135,7 +135,7 @@ Using `crisp_chat` in production? [Open a pull request](https://github.com/alami
 If `crisp_chat` saves you time, you can help keep it maintained:
 
 - ⭐ Star the [GitHub repository](https://github.com/alamin-karno/flutter-crisp-chat) and 👍 like it on [pub.dev](https://pub.dev/packages/crisp_chat)
-- ☕ [Buy me a coffee](https://buymeacoffee.com/alaminkarno) or become a [Patreon supporter](https://patreon.com/alamin_karno)
+- ☕ [Buy me a coffee](https://buymeacoffee.com/alaminkarno) or become a [Patreon supporter](https://www.patreon.com/cw/alamin_karno)
 - 🛠️ Contribute a fix or feature: start with the [contributing guide](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CONTRIBUTING.md)
 
 ## Maintainer and Contributors

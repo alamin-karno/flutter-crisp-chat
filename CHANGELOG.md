@@ -18,6 +18,7 @@ Changed
 Fixed
 ---
 * A session identifier cached in the background by `openCrispChat()` is no longer restored after `resetCrispChatSession()` is called while it's still loading.
+* Pointed the Patreon funding link in `pubspec.yaml`, the README and the docs at `https://www.patreon.com/cw/alamin_karno`. The old URL redirects there, and pub.dev's analysis reported it as unreachable.
 
 Security
 ---
