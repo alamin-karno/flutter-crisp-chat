@@ -142,6 +142,14 @@ void main() {
     await FlutterCrispChat.openCrispChat(config: config);
   });
 
+  test('CrispConfig.toJson serializes colorMode by name', () {
+    for (final mode in CrispColorMode.values) {
+      final config = CrispConfig(websiteID: 'site-id', colorMode: mode);
+      expect(config.toJson()['colorMode'], mode.name);
+    }
+    expect(CrispConfig(websiteID: 'site-id').toJson()['colorMode'], isNull);
+  });
+
   test('User.toJson includes identity verification signature', () {
     final user = User(
       email: 'user@example.com',

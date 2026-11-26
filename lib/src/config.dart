@@ -53,6 +53,16 @@ class CrispConfig {
   /// other time.
   List<CrispMessageContent>? localMessages;
 
+  /// Overrides the chatbox color mode set in the Crisp dashboard.
+  ///
+  /// Use [CrispColorMode.light] or [CrispColorMode.dark] to force a mode, or
+  /// [CrispColorMode.auto] to follow the device appearance. Defaults to `null`,
+  /// which keeps the dashboard's color mode.
+  ///
+  /// Supported on iOS, Web, and desktop. Ignored on Android, whose Crisp SDK
+  /// does not support it yet.
+  CrispColorMode? colorMode;
+
   /// Creates a new [CrispConfig] instance.
   ///
   /// @param websiteID The Crisp website ID.
@@ -62,6 +72,7 @@ class CrispConfig {
   /// @param user (Optional) User information.
   /// @param modalPresentationStyle (Optional) iOS modal presentation style for the chat view controller.
   /// @param localMessages (Optional) Local messages shown when the chat first opens.
+  /// @param colorMode (Optional) Overrides the dashboard color mode (iOS, Web, desktop).
   CrispConfig({
     required this.websiteID,
     this.tokenId,
@@ -70,6 +81,7 @@ class CrispConfig {
     this.user,
     this.modalPresentationStyle,
     this.localMessages,
+    this.colorMode,
   });
 
   /// Converts this [CrispConfig] object to a JSON map.
@@ -85,6 +97,7 @@ class CrispConfig {
       "enableNotifications": enableNotifications,
       "user": user?.toJson(),
       "modalPresentationStyle": modalPresentationStyle?.name,
+      "colorMode": colorMode?.name,
     };
   }
 }
@@ -284,6 +297,19 @@ enum SessionEventColor {
   purple,
   red,
   yellow,
+}
+
+/// The color mode of the Crisp chatbox, used by [CrispConfig.colorMode].
+/// {@category Configuration}
+enum CrispColorMode {
+  /// Always light, regardless of the device appearance.
+  light,
+
+  /// Always dark, regardless of the device appearance.
+  dark,
+
+  /// Follows the device appearance.
+  auto,
 }
 
 /// Represents iOS modal presentation styles for the chat view controller.

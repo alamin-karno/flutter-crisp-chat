@@ -420,10 +420,11 @@ CrispConfig({
   bool enableNotifications = true,
   ModalPresentationStyle? modalPresentationStyle,
   List<CrispMessageContent>? localMessages,
+  CrispColorMode? colorMode,
 })
 ```
 
-See [Configuration](/core_feature/configuration) and [Local Messages](/core_feature/local_messages).
+See [Configuration](/core_feature/configuration), [Color Mode](/core_feature/configuration#color-mode) and [Local Messages](/core_feature/local_messages).
 
 ## User
 
@@ -476,6 +477,18 @@ enum SessionEventColor {
   orange, pink, purple, red, yellow,
 }
 ```
+
+## CrispColorMode
+
+```dart
+enum CrispColorMode {
+  light, // always light
+  dark,  // always dark
+  auto,  // follows the device appearance
+}
+```
+
+Used by `CrispConfig.colorMode`. Supported on iOS, Web, and desktop; ignored on Android.
 
 ## Next Steps
 
