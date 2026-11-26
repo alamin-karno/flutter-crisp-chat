@@ -69,10 +69,10 @@ The channel is **bidirectional**: native code calls `onCrispNotificationTapped` 
 
 ### Native SDKs
 
-- **iOS**: Crisp iOS SDK 3.0.1, min iOS 14.0, Xcode 16.3+. Integrated via SPM (preferred) or CocoaPods — Crisp stopped publishing new versions to CocoaPods after September 2026, so future bumps may be SPM-only.
+- **iOS**: Crisp iOS SDK 3.1.1, min iOS 14.0, Xcode 16.3+. Integrated via SPM (preferred) or CocoaPods — Crisp has deprecated CocoaPods (it planned to stop publishing there after September 2026, but 3.1.x was still published to CocoaPods trunk in November 2026), so check `Crisp` on CocoaPods before each bump; future bumps may be SPM-only.
   - Video/audio calls are built into the single `Crisp` product since 3.0 (no `CrispWebRTC` variant); `isVideoCallsSupported` always returns `true` on iOS.
   - The SDK refuses to start the chat unless `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are in the host app's `Info.plist`.
-- **Android**: Crisp Android SDK 2.0.24, minSdkVersion 23, compileSdkVersion 36.
+- **Android**: Crisp Android SDK 2.0.25, minSdkVersion 23, compileSdkVersion 36.
 
 ### iOS UIWindow Architecture
 

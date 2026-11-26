@@ -756,8 +756,8 @@ Pickers, fields, carousels, files, GIFs, and audio are supported too, as is `Flu
 ## Supported SDK Versions
 This plugin aims to stay compatible with the latest Crisp SDKs. As of the latest update, it has been tested with:
 
-- Crisp Android SDK version: `2.0.24`
-- Crisp iOS SDK version: ~> `3.0.1` (iOS 14+, Xcode 16.3+)
+- Crisp Android SDK version: `2.0.25`
+- Crisp iOS SDK version: ~> `3.1.1` (iOS 14+, Xcode 16.3+)
 - Crisp Web Chat SDK: loaded from `https://client.crisp.chat/l.js` at runtime (Web and desktop)
 
 **Minimum for Web/desktop (v2.5.0+):** Flutter 3.24.0+, Dart 3.5.0+

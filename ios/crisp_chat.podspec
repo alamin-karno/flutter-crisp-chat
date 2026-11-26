@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   # Crisp iOS SDK 3.x ships audio/video calls in the single `Crisp` pod —
   # the 2.x `Crisp/CrispWebRTC` subspec (and `$CrispChatWebRTC`) is gone.
-  s.dependency 'Crisp', '~> 3.0.1'
+  s.dependency 'Crisp', '~> 3.1.1'
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES'
   }

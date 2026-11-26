@@ -102,7 +102,7 @@ Add the following keys to `ios/Runner/Info.plist`. Since Crisp iOS SDK 3.x, **`N
 
 ### 2. Minimum Deployment Target
 
-The Crisp iOS SDK (`~> 3.0.1`) requires **iOS 14.0+** and **Xcode 16.3+** (the SDK is built with Swift tools 6.1). Ensure your `ios/Podfile` has:
+The Crisp iOS SDK (`~> 3.1.1`) requires **iOS 14.0+** and **Xcode 16.3+** (the SDK is built with Swift tools 6.1). Ensure your `ios/Podfile` has:
 
 ```ruby
 platform :ios, '14.0'
@@ -111,7 +111,7 @@ platform :ios, '14.0'
 Also set **Minimum Deployments** to **14.0** (or higher) on the **Runner** target in Xcode. If your app uses Firebase push notifications, use **15.0+** instead — see [Firebase requires iOS 15.0](/troubleshooting/platform_specific#firebase-requires-ios-15).
 
 ::: tip Swift Package Manager recommended
-Crisp has deprecated CocoaPods distribution and stops publishing new versions there at the end of September 2026. Version `3.0.1` is available on CocoaPods, so CocoaPods builds keep working, but **Swift Package Manager** (the default in Flutter 3.44+) is the recommended path going forward. See [CocoaPods vs Swift Package Manager](/troubleshooting/platform_specific#cocoapods-vs-swift-package-manager).
+Crisp has deprecated CocoaPods distribution and may stop publishing new versions there at any time. Version `3.1.1` is available on CocoaPods, so CocoaPods builds keep working, but **Swift Package Manager** (the default in Flutter 3.44+) is the recommended path going forward. See [CocoaPods vs Swift Package Manager](/troubleshooting/platform_specific#cocoapods-vs-swift-package-manager).
 :::
 
 ::: info Why upgrade to 3.x
