@@ -58,7 +58,7 @@ If this plugin has been helpful to you, consider supporting the development:
   <a href="https://www.supportkori.com/alaminkarno" target="_blank" class="support-button" style="background: linear-gradient(135deg, #02569B, #027DFD); color: white;">SupportKori</a>
   <a href="https://www.buymeacoffee.com/alaminkarno" target="_blank" class="support-button" style="background: #FFDD00; color: #000;">Buy Me a Coffee</a>
   <a href="https://github.com/sponsors/alamin-karno" target="_blank" class="support-button" style="background: #ea4aaa; color: white;">GitHub Sponsors</a>
-  <a href="https://patreon.com/alamin_karno" target="_blank" class="support-button" style="background: #FF424D; color: white;">Patreon</a>
+  <a href="https://www.patreon.com/cw/alamin_karno" target="_blank" class="support-button" style="background: #FF424D; color: white;">Patreon</a>
 </div>
 
 Your support helps maintain this plugin, fix bugs, add new features, and keep the documentation up to date.

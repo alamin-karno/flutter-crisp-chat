@@ -63,7 +63,7 @@ This plugin is free, open-source, and maintained by [Md. Al-Amin](https://github
   GitHub Sponsors
 </a>
 
-<a href="https://patreon.com/alamin_karno" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: #FF424D; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
+<a href="https://www.patreon.com/cw/alamin_karno" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: #FF424D; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
   Patreon
 </a>
 
