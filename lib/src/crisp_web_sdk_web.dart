@@ -20,6 +20,9 @@ class CrispWebSdk {
 
   static bool get isAvailable => true;
 
+  /// Whether the Crisp script has loaded and `$crisp` accepts commands.
+  static bool get isLoaded => _isCrispSdkLoaded;
+
   static JSObject get _window => web.window as JSObject;
 
   /// True only after `l.js` has initialized the SDK (`$crisp.is` exists).
@@ -61,7 +64,8 @@ class CrispWebSdk {
     final completer = Completer<void>();
     _loaderCompleter = completer;
 
-    final script = web.document.createElement('script') as web.HTMLScriptElement;
+    final script =
+        web.document.createElement('script') as web.HTMLScriptElement;
     script.src = 'https://client.crisp.chat/l.js';
     script.async = true;
     script.onload = ((web.Event _) {
@@ -80,7 +84,8 @@ class CrispWebSdk {
 
     return completer.future.timeout(
       const Duration(seconds: 30),
-      onTimeout: () => throw StateError('Timed out loading Crisp client script.'),
+      onTimeout: () =>
+          throw StateError('Timed out loading Crisp client script.'),
     );
   }
 

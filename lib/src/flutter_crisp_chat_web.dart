@@ -4,18 +4,68 @@ import 'config.dart';
 import 'crisp_event.dart';
 import 'crisp_js_bridge.dart';
 import 'crisp_message_content.dart';
+import 'crisp_pending_identity.dart';
 import 'crisp_web_sdk.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// Web implementation using the official Crisp Web Chat SDK (`$crisp`).
 class WebFlutterCrispChat extends FlutterCrispChatPlatform {
+  /// Token and user details to apply to the next chat opening.
+  final _pending = CrispPendingIdentity();
+
   @override
   Future<void> openCrispChat({required CrispConfig config}) async {
-    await CrispWebSdk.applyConfigAndOpen(config);
+    await CrispWebSdk.applyConfigAndOpen(_pending.applyTo(config));
+  }
+
+  /// The website ID comes from [openCrispChat]; nothing to do here.
+  @override
+  Future<void> configure({required String websiteId}) async {}
+
+  @override
+  Future<void> setTokenId({required String? tokenId}) async {
+    _pending.setToken(tokenId);
+    if (CrispWebSdk.isLoaded) {
+      await CrispWebSdk.runScript(CrispJsBridge.setTokenId(tokenId));
+    }
+  }
+
+  @override
+  Future<void> setUserEmail({required String email, String? signature}) async {
+    _pending
+      ..email = email
+      ..signature = signature;
+    await _runIfLoaded(
+        CrispJsBridge.setUserEmail(email: email, signature: signature));
+  }
+
+  @override
+  Future<void> setUserNickname({required String nickname}) async {
+    _pending.nickname = nickname;
+    await _runIfLoaded(CrispJsBridge.setUserNickname(nickname: nickname));
+  }
+
+  @override
+  Future<void> setUserPhone({required String phone}) async {
+    _pending.phone = phone;
+    await _runIfLoaded(CrispJsBridge.setUserPhone(phone: phone));
+  }
+
+  @override
+  Future<void> setUserAvatar({required String avatar}) async {
+    _pending.avatar = avatar;
+    await _runIfLoaded(CrispJsBridge.setUserAvatar(avatar: avatar));
+  }
+
+  Future<void> _runIfLoaded(String javaScript) async {
+    if (CrispWebSdk.isLoaded) {
+      await CrispWebSdk.runScript(javaScript);
+    }
   }
 
   @override
   Future<void> resetCrispChatSession() async {
+    _pending.clearUser();
     await CrispWebSdk.runScript(CrispJsBridge.resetSession());
   }
 
@@ -45,7 +95,8 @@ class WebFlutterCrispChat extends FlutterCrispChatPlatform {
     bool overwrite = false,
   }) {
     CrispWebSdk.runScript(
-      CrispJsBridge.setSessionSegments(segments: segments, overwrite: overwrite),
+      CrispJsBridge.setSessionSegments(
+          segments: segments, overwrite: overwrite),
     );
   }
 

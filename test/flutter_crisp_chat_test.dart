@@ -140,6 +140,37 @@ class MockFlutterCrispChatPlatform
     runBotScenarioArgs = {'scenarioId': scenarioId};
   }
 
+  final List<MapEntry<String, Object?>> identityCalls = [];
+  @override
+  Future<void> configure({required String websiteId}) async {
+    identityCalls.add(MapEntry('configure', websiteId));
+  }
+
+  @override
+  Future<void> setTokenId({required String? tokenId}) async {
+    identityCalls.add(MapEntry('setTokenId', tokenId));
+  }
+
+  @override
+  Future<void> setUserEmail({required String email, String? signature}) async {
+    identityCalls.add(MapEntry('setUserEmail', [email, signature]));
+  }
+
+  @override
+  Future<void> setUserNickname({required String nickname}) async {
+    identityCalls.add(MapEntry('setUserNickname', nickname));
+  }
+
+  @override
+  Future<void> setUserPhone({required String phone}) async {
+    identityCalls.add(MapEntry('setUserPhone', phone));
+  }
+
+  @override
+  Future<void> setUserAvatar({required String avatar}) async {
+    identityCalls.add(MapEntry('setUserAvatar', avatar));
+  }
+
   final List<CrispMessageContent> shownMessages = [];
   @override
   Future<void> showMessage({required CrispMessageContent content}) async {
@@ -195,6 +226,73 @@ void main() {
 
     await FlutterCrispChat.resetCrispChatSession();
     expect(fakePlatform.resetCrispChatSessionCalled, isTrue);
+  });
+
+  group('token and user identity', () {
+    late MockFlutterCrispChatPlatform fakePlatform;
+    List<Object?> calls() =>
+        fakePlatform.identityCalls.map((e) => [e.key, e.value]).toList();
+
+    setUp(() {
+      fakePlatform = MockFlutterCrispChatPlatform();
+      FlutterCrispChatPlatform.instance = fakePlatform;
+    });
+
+    test('configure trims the website ID', () async {
+      await FlutterCrispChat.configure(websiteId: '  site-id ');
+      expect(calls(), [
+        ['configure', 'site-id'],
+      ]);
+    });
+
+    test('configure rejects an empty website ID', () {
+      expect(() => FlutterCrispChat.configure(websiteId: '  '),
+          throwsArgumentError);
+      expect(fakePlatform.identityCalls, isEmpty);
+    });
+
+    test('setTokenId forwards the token, and null or blank clears it',
+        () async {
+      await FlutterCrispChat.setTokenId('user-42');
+      await FlutterCrispChat.setTokenId(null);
+      await FlutterCrispChat.setTokenId('  ');
+      expect(calls(), [
+        ['setTokenId', 'user-42'],
+        ['setTokenId', null],
+        ['setTokenId', null],
+      ]);
+    });
+
+    test('user setters forward their values', () async {
+      await FlutterCrispChat.setUserEmail('a@example.com', signature: 'abc');
+      await FlutterCrispChat.setUserEmail('b@example.com', signature: '');
+      await FlutterCrispChat.setUserNickname('Ann');
+      await FlutterCrispChat.setUserPhone('+15550100');
+      await FlutterCrispChat.setUserAvatar('https://example.com/a.png');
+      expect(calls(), [
+        [
+          'setUserEmail',
+          ['a@example.com', 'abc']
+        ],
+        [
+          'setUserEmail',
+          ['b@example.com', null]
+        ],
+        ['setUserNickname', 'Ann'],
+        ['setUserPhone', '+15550100'],
+        ['setUserAvatar', 'https://example.com/a.png'],
+      ]);
+    });
+
+    test('user setters reject invalid values', () {
+      expect(() => FlutterCrispChat.setUserEmail('not-an-email'),
+          throwsArgumentError);
+      expect(() => FlutterCrispChat.setUserNickname(' '), throwsArgumentError);
+      expect(() => FlutterCrispChat.setUserPhone(''), throwsArgumentError);
+      expect(() => FlutterCrispChat.setUserAvatar('not a url'),
+          throwsArgumentError);
+      expect(fakePlatform.identityCalls, isEmpty);
+    });
   });
 
   group('setSessionString', () {
@@ -512,7 +610,8 @@ void main() {
       FlutterCrispChatPlatform.instance = fakePlatform;
       await FlutterCrispChat.openHelpdesk(websiteId: 'test-website-id');
       expect(fakePlatform.openHelpdeskCalled, isTrue);
-      expect(fakePlatform.openHelpdeskArgs, equals({'websiteId': 'test-website-id'}));
+      expect(fakePlatform.openHelpdeskArgs,
+          equals({'websiteId': 'test-website-id'}));
     });
 
     test('throws ArgumentError for empty websiteId', () {
@@ -565,7 +664,11 @@ void main() {
       expect(fakePlatform.openHelpdeskArticleCalled, isTrue);
       expect(
         fakePlatform.openHelpdeskArticleArgs,
-        equals({'websiteId': 'test-website-id', 'locale': 'en', 'slug': 'my-article'}),
+        equals({
+          'websiteId': 'test-website-id',
+          'locale': 'en',
+          'slug': 'my-article'
+        }),
       );
     });
 

@@ -4,6 +4,8 @@ import 'config.dart';
 class CrispWebSdk {
   static bool get isAvailable => false;
 
+  static bool get isLoaded => false;
+
   static Future<void> ensureLoaded({
     required String websiteId,
     String? tokenId,

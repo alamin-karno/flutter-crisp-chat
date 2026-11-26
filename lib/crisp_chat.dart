@@ -24,6 +24,7 @@ class FlutterCrispChat {
     registerCrispChatPlatform();
     return true;
   }();
+
   /// The cached session identifier.
   static String? _sessionIdentifier;
 
@@ -164,6 +165,123 @@ class FlutterCrispChat {
     if (sessionId != null && generation == _sessionGeneration) {
       _sessionIdentifier = sessionId;
     }
+  }
+
+  /// Configures the Crisp SDK with your [websiteId] without opening the chat.
+  ///
+  /// Call it before [setTokenId] and the user setters when the user logs in,
+  /// so they work before the chat is first opened:
+  ///
+  /// ```dart
+  /// // Login
+  /// await FlutterCrispChat.configure(websiteId: websiteId);
+  /// await FlutterCrispChat.setTokenId(user.id);
+  /// await FlutterCrispChat.resetCrispChatSession();
+  ///
+  /// // Logout
+  /// await FlutterCrispChat.setTokenId(null);
+  /// await FlutterCrispChat.resetCrispChatSession();
+  /// ```
+  ///
+  /// Wraps `Crisp.configure` (Android) and `CrispSDK.configure` (iOS). Does
+  /// nothing on Web and desktop, which take the website ID from
+  /// [openCrispChat].
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [websiteId] is empty.
+  static Future<void> configure({required String websiteId}) async {
+    final id = websiteId.trim();
+    if (id.isEmpty) {
+      throw ArgumentError.value(
+          websiteId, 'websiteId', 'Website ID must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.configure(websiteId: id);
+  }
+
+  /// Sets the session continuity token, which ties the chat session to your
+  /// user so their conversation comes back on other devices and after a
+  /// logout. Pass `null` (or an empty string) to clear it when the user
+  /// logs out.
+  ///
+  /// A new or cleared token only takes effect after
+  /// [resetCrispChatSession], so call that right after this method. See
+  /// [configure] for the login and logout sequence Crisp recommends.
+  ///
+  /// The token set here is kept until it is changed; a
+  /// [CrispConfig.tokenId] passed to [openCrispChat] still takes precedence.
+  ///
+  /// Call it while the chat is closed: the Android SDK ignores a new token
+  /// while the chat is connected.
+  ///
+  /// Wraps `Crisp.setTokenID` (Android), `CrispSDK.setTokenID` (iOS) and
+  /// `CRISP_TOKEN_ID` (Web/desktop).
+  ///
+  /// {@category General}
+  static Future<void> setTokenId(String? tokenId) async {
+    final token = (tokenId == null || tokenId.trim().isEmpty) ? null : tokenId;
+    await FlutterCrispChatPlatform.instance.setTokenId(tokenId: token);
+  }
+
+  /// Sets the user's [email] without opening the chat, with an optional
+  /// identity verification [signature] (HMAC-SHA256 of the email).
+  ///
+  /// Call it after [resetCrispChatSession], which clears the user on iOS.
+  /// On Web and desktop the value is applied now if the chat is loaded,
+  /// otherwise the next time [openCrispChat] runs; a [CrispConfig.user]
+  /// email passed to it takes precedence.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [email] is not a valid email address.
+  static Future<void> setUserEmail(String email, {String? signature}) async {
+    if (!email.isEmail) {
+      throw ArgumentError.value(
+          email, 'email', 'Invalid email format provided.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserEmail(
+      email: email,
+      signature: (signature == null || signature.isEmpty) ? null : signature,
+    );
+  }
+
+  /// Sets the user's [nickname] without opening the chat.
+  ///
+  /// See [setUserEmail] for when the value is applied.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [nickname] is empty.
+  static Future<void> setUserNickname(String nickname) async {
+    if (nickname.trim().isEmpty) {
+      throw ArgumentError.value(
+          nickname, 'nickname', 'Nickname must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserNickname(nickname: nickname);
+  }
+
+  /// Sets the user's [phone] number without opening the chat.
+  ///
+  /// See [setUserEmail] for when the value is applied.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [phone] is empty.
+  static Future<void> setUserPhone(String phone) async {
+    if (phone.trim().isEmpty) {
+      throw ArgumentError.value(phone, 'phone', 'Phone must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserPhone(phone: phone);
+  }
+
+  /// Sets the URL of the user's [avatar] image without opening the chat.
+  ///
+  /// See [setUserEmail] for when the value is applied.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [avatar] is not a valid URL.
+  static Future<void> setUserAvatar(String avatar) async {
+    if (!avatar.isUrl) {
+      throw ArgumentError.value(
+          avatar, 'avatar', 'Invalid avatar URL format provided.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserAvatar(avatar: avatar);
   }
 
   /// Resets the current Crisp chat session.

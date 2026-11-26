@@ -76,19 +76,22 @@ final config = CrispConfig(
 await FlutterCrispChat.openCrispChat(config: config);
 ```
 
-When the user logs out, reset the session so the next user doesn't see their conversation:
+When the user logs out, clear their token and reset the session so the next user doesn't see their conversation:
 
 ```dart
+await FlutterCrispChat.setTokenId(null);
 await FlutterCrispChat.resetCrispChatSession();
 ```
+
+If you use a token ID, set it on login the same way, without opening the chat: `configure(websiteId: ...)`, then `setTokenId(user.id)`, then `resetCrispChatSession()`. See [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management.html#login-and-logout).
 
 Each feature has its own guide:
 
 | Feature                 | API                                                                                                      | Guide                                                                                                        |
 |-------------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | Configuration           | `CrispConfig` (token ID, segment, color mode, iOS presentation style)                                    | [Configuration](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html)           |
-| Users and companies     | `User`, `Company`, identity verification                                                                 | [User & Company](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/user_and_company.html)       |
-| Sessions                | `setSessionString`, `setSessionSegments`, `pushSessionEvent`, `getSessionIdentifier`, `isSessionOngoing` | [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management.html) |
+| Users and companies     | `User`, `Company`, `setUserEmail` and other user setters, identity verification                          | [User & Company](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/user_and_company.html)       |
+| Sessions                | `configure`, `setTokenId`, `setSessionString`, `setSessionSegments`, `pushSessionEvent`, `getSessionIdentifier`, `isSessionOngoing` | [Session Management](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/session_management.html) |
 | Helpdesk                | `openHelpdesk`, `openHelpdeskArticle`                                                                    | [Helpdesk](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/helpdesk.html)                     |
 | Bots and local messages | `runBotScenario`, `showMessage`, `CrispConfig.localMessages`                                             | [Local Messages](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/local_messages.html)         |
 | Chat events             | `onCrispEvent` stream                                                                                    | [Chat Events](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/chat_events.html)               |

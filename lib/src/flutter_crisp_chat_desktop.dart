@@ -11,6 +11,7 @@ import 'config.dart';
 import 'crisp_event.dart';
 import 'crisp_js_bridge.dart';
 import 'crisp_message_content.dart';
+import 'crisp_pending_identity.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// Desktop implementation (macOS, Windows, Linux) via embedded WebView or browser fallback.
@@ -20,11 +21,14 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   bool _crispReadyInWebview = false;
   Directory? _embedDirectory;
 
+  /// Token and user details to apply to the next chat opening.
+  final _pending = CrispPendingIdentity();
+
   @override
   Future<void> openCrispChat({required CrispConfig config}) async {
     _crispReadyInWebview = false;
     _cachedSessionId = null;
-    final html = CrispJsBridge.embedHtml(config);
+    final html = CrispJsBridge.embedHtml(_pending.applyTo(config));
 
     if (await WebviewWindow.isWebviewAvailable()) {
       try {
@@ -184,8 +188,54 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
     await _evaluateInWebview(javaScript);
   }
 
+  /// The website ID comes from [openCrispChat]; nothing to do here.
+  @override
+  Future<void> configure({required String websiteId}) async {}
+
+  @override
+  Future<void> setTokenId({required String? tokenId}) async {
+    _pending.setToken(tokenId);
+    await _runIfWebviewOpen(CrispJsBridge.setTokenId(tokenId));
+  }
+
+  @override
+  Future<void> setUserEmail({required String email, String? signature}) async {
+    _pending
+      ..email = email
+      ..signature = signature;
+    await _runIfWebviewOpen(
+        CrispJsBridge.setUserEmail(email: email, signature: signature));
+  }
+
+  @override
+  Future<void> setUserNickname({required String nickname}) async {
+    _pending.nickname = nickname;
+    await _runIfWebviewOpen(CrispJsBridge.setUserNickname(nickname: nickname));
+  }
+
+  @override
+  Future<void> setUserPhone({required String phone}) async {
+    _pending.phone = phone;
+    await _runIfWebviewOpen(CrispJsBridge.setUserPhone(phone: phone));
+  }
+
+  @override
+  Future<void> setUserAvatar({required String avatar}) async {
+    _pending.avatar = avatar;
+    await _runIfWebviewOpen(CrispJsBridge.setUserAvatar(avatar: avatar));
+  }
+
+  /// Runs [javaScript] in the chat window if it is open; otherwise the
+  /// pending identity applies it when the chat next opens.
+  Future<void> _runIfWebviewOpen(String javaScript) async {
+    if (_webview != null) {
+      await _runInWebview(javaScript);
+    }
+  }
+
   @override
   Future<void> resetCrispChatSession() async {
+    _pending.clearUser();
     await _runInWebview(CrispJsBridge.resetSession());
     _cachedSessionId = null;
   }

@@ -55,6 +55,23 @@ If you provide an `email`, it must be a valid email format. `openCrispChat` will
 When Crisp Identity Verification is enabled, set `signature` with the HMAC-SHA256 signature for the provided `email`.
 :::
 
+## Set User Details Without Opening the Chat
+
+You can also set the user's details on their own, for example right after login:
+
+```dart
+await FlutterCrispChat.setUserEmail('jane@example.com', signature: 'USER_EMAIL_HMAC_SHA256_SIGNATURE');
+await FlutterCrispChat.setUserNickname('Jane Smith');
+await FlutterCrispChat.setUserPhone('+1234567890');
+await FlutterCrispChat.setUserAvatar('https://example.com/jane-avatar.png');
+```
+
+Each setter throws an `ArgumentError` for an invalid email or avatar URL, or an empty nickname or phone.
+
+- Call them **after** `resetCrispChatSession`, which clears the user on iOS.
+- A `user` passed in `CrispConfig` to `openCrispChat` takes precedence over these values.
+- On Web and desktop they are applied right away if the chat is loaded, otherwise when it next opens.
+
 ## Company
 
 The `Company` class provides information about the user's organization.

@@ -13,7 +13,8 @@ void main() {
   CrispConfig config = CrispConfig(websiteID: "YOUR_WEBSITE_KEY");
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
         return null; // Changed to return null for a void method
@@ -22,12 +23,69 @@ void main() {
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   test('openCrispChat', () async {
     await platform.openCrispChat(config: config);
     // Basic check to ensure no MissingPluginException is thrown
+  });
+
+  test('token and user methods send their names and arguments', () async {
+    final captured = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall call) async {
+      captured.add(call);
+      return null;
+    });
+
+    await platform.configure(websiteId: 'site-id');
+    await platform.setTokenId(tokenId: 'user-42');
+    await platform.setTokenId(tokenId: null);
+    await platform.setUserEmail(email: 'a@example.com', signature: 'sig');
+    await platform.setUserEmail(email: 'b@example.com');
+    await platform.setUserNickname(nickname: 'Ann');
+    await platform.setUserPhone(phone: '+15550100');
+    await platform.setUserAvatar(avatar: 'https://example.com/a.png');
+
+    expect(
+      captured.map((c) => [c.method, c.arguments]).toList(),
+      [
+        [
+          'configure',
+          {'websiteId': 'site-id'}
+        ],
+        [
+          'setTokenId',
+          {'tokenId': 'user-42'}
+        ],
+        [
+          'setTokenId',
+          {'tokenId': null}
+        ],
+        [
+          'setUserEmail',
+          {'email': 'a@example.com', 'signature': 'sig'}
+        ],
+        [
+          'setUserEmail',
+          {'email': 'b@example.com'}
+        ],
+        [
+          'setUserNickname',
+          {'nickname': 'Ann'}
+        ],
+        [
+          'setUserPhone',
+          {'phone': '+15550100'}
+        ],
+        [
+          'setUserAvatar',
+          {'avatar': 'https://example.com/a.png'}
+        ],
+      ],
+    );
   });
 
   test('isVideoCallsSupported', () async {
@@ -136,7 +194,8 @@ void main() {
     expect(captured!.arguments, containsPair('websiteId', 'test-website-id'));
   });
 
-  test('openHelpdeskArticle sends correct method name and all arguments', () async {
+  test('openHelpdeskArticle sends correct method name and all arguments',
+      () async {
     MethodCall? captured;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
@@ -162,7 +221,8 @@ void main() {
     expect(captured!.arguments, containsPair('category', 'General'));
   });
 
-  test('openHelpdeskArticle without optional args sends only required fields', () async {
+  test('openHelpdeskArticle without optional args sends only required fields',
+      () async {
     MethodCall? captured;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
@@ -186,7 +246,9 @@ void main() {
   });
 
   group('onCrispEvent', () {
-    test('registers on listen, unregisters on cancel, and forwards native events', () async {
+    test(
+        'registers on listen, unregisters on cancel, and forwards native events',
+        () async {
       final invokedMethods = <String>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(

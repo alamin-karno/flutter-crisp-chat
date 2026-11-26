@@ -2,6 +2,7 @@
 
 Added
 ---
+* `FlutterCrispChat.configure()`, `FlutterCrispChat.setTokenId()` and the user setters `setUserEmail()`, `setUserNickname()`, `setUserPhone()` and `setUserAvatar()`, which work without opening the chat ([#200](https://github.com/alamin-karno/flutter-crisp-chat/issues/200)). Apps can now follow the login and logout sequence Crisp recommends: `setTokenId(userId)` then `resetCrispChatSession()` on login, and `setTokenId(null)` then `resetCrispChatSession()` on logout. Passing `null` clears the token, which was impossible before, so after a logout the next user's messages no longer go to the previous user's conversation. On Web and desktop the token and user details are applied now if the chat is loaded, or when it next opens; values passed in `CrispConfig` still take precedence. Platform implementations that `implements FlutterCrispChatPlatform` must add the six methods; those that `extends` it inherit defaults.
 * `FlutterCrispChat.isSessionOngoing()` — returns whether messages have been sent or received in the current session, or `null` when it can't tell. Wraps `CrispSDK.session.isOngoing` (iOS, Crisp iOS SDK 3.1.1+) and `$crisp.is("session:ongoing")` (Web/desktop). Always `null` on Android, whose Crisp SDK 2.x has no such check, and before the session has loaded. Platform implementations that `implements FlutterCrispChatPlatform` must add `isSessionOngoing()`; those that `extends` it inherit a default.
 * `CrispConfig.colorMode` and the `CrispColorMode` enum (`light`, `dark`, `auto`) — override the chatbox color mode set in the Crisp dashboard. Wraps `ChatViewConfiguration.colorMode` (iOS, Crisp iOS SDK 3.1+) and `$crisp.push(["config", "color:mode", [mode]])` (Web/desktop). Ignored on Android, whose Crisp SDK 2.x has no color mode setting. `null` (default) keeps the dashboard's color mode.
 * `CrispConfig.locale` — overrides the chatbox language on Web and desktop with a Crisp locale code such as `"fr"` or `"pt-br"`, via `CRISP_RUNTIME_CONFIG.locale` ([#60](https://github.com/alamin-karno/flutter-crisp-chat/issues/60)). On Web it applies when the chat first loads on the page. Ignored on Android and iOS, whose Crisp SDKs dropped their language setting; the docs explain how to change the chat language there with the per-app language settings.
@@ -18,6 +19,7 @@ Changed
 
 Fixed
 ---
+* iOS: `openCrispChat()` without a `CrispConfig.user` no longer clears the user's email, nickname, phone, avatar and company, so details set with the new user setters are kept.
 * A session identifier cached in the background by `openCrispChat()` is no longer restored after `resetCrispChatSession()` is called while it's still loading.
 * Pointed the Patreon funding link in `pubspec.yaml`, the README and the docs at `https://www.patreon.com/cw/alamin_karno`. The old URL redirects there, and pub.dev's analysis reported it as unreachable.
 
