@@ -4,6 +4,7 @@ Added
 ---
 * `FlutterCrispChat.isSessionOngoing()` — returns whether messages have been sent or received in the current session, or `null` when it can't tell. Wraps `CrispSDK.session.isOngoing` (iOS, Crisp iOS SDK 3.1.1+) and `$crisp.is("session:ongoing")` (Web/desktop). Always `null` on Android, whose Crisp SDK 2.x has no such check, and before the session has loaded. Platform implementations that `implements FlutterCrispChatPlatform` must add `isSessionOngoing()`; those that `extends` it inherit a default.
 * `CrispConfig.colorMode` and the `CrispColorMode` enum (`light`, `dark`, `auto`) — override the chatbox color mode set in the Crisp dashboard. Wraps `ChatViewConfiguration.colorMode` (iOS, Crisp iOS SDK 3.1+) and `$crisp.push(["config", "color:mode", [mode]])` (Web/desktop). Ignored on Android, whose Crisp SDK 2.x has no color mode setting. `null` (default) keeps the dashboard's color mode.
+* `CrispConfig.locale` — overrides the chatbox language on Web and desktop with a Crisp locale code such as `"fr"` or `"pt-br"`, via `CRISP_RUNTIME_CONFIG.locale` ([#60](https://github.com/alamin-karno/flutter-crisp-chat/issues/60)). On Web it applies when the chat first loads on the page. Ignored on Android and iOS, whose Crisp SDKs dropped their language setting; the docs explain how to change the chat language there with the per-app language settings.
 
 Changed
 ---

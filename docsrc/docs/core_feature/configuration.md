@@ -33,6 +33,7 @@ CrispConfig config = CrispConfig(
   modalPresentationStyle: ModalPresentationStyle.fullScreen, // [optional] iOS modal style (default: fullScreen)
   localMessages: const [CrispTextContent('Hi! 👋')], // [optional] Local messages shown on first open
   colorMode: CrispColorMode.dark,      // [optional] Override the dashboard color mode (iOS, Web, desktop)
+  locale: 'fr',                        // [optional] Override the chatbox language (Web, desktop)
 );
 ```
 
@@ -48,6 +49,7 @@ CrispConfig config = CrispConfig(
 | `modalPresentationStyle` | `ModalPresentationStyle?` | No       | `fullScreen` | iOS modal presentation style (ignored on Android, Web, desktop)          |
 | `localMessages`          | `List<CrispMessageContent>?` | No    | `null`       | Operator messages shown locally when the chat first opens. See [Local Messages](/core_feature/local_messages) |
 | `colorMode`              | `CrispColorMode?`         | No       | `null`       | Overrides the dashboard color mode: `light`, `dark` or `auto` (iOS, Web, desktop; ignored on Android). See [Color Mode](#color-mode) |
+| `locale`                 | `String?`                 | No       | `null`       | Overrides the chatbox language with a Crisp locale code such as `"fr"` or `"pt-br"` (Web, desktop; ignored on Android and iOS). See [Chat Language](#chat-language) |
 
 ::: info Web and desktop
 `websiteID`, `tokenId`, `sessionSegment`, `user`, and `localMessages` apply on all platforms. See [Supported Platforms](/getting_started/supported_platforms) for API differences.
@@ -178,6 +180,32 @@ await FlutterCrispChat.openCrispChat(config: config);
 - **Web / desktop:** uses `$crisp.push(["config", "color:mode", [mode]])`. The mode applies to the current page, so a mode you set stays until you set another one.
 - **Android:** ignored. The Crisp Android SDK 2.x has no color mode setting.
 :::
+
+## Chat Language
+
+The `locale` parameter sets the chatbox language on Web and desktop, using a Crisp locale code such as `"fr"`, `"de"` or `"pt-br"`. Pass your app's current language to keep the chat in step with an in-app language picker.
+
+```dart
+final config = CrispConfig(
+  websiteID: 'YOUR_WEBSITE_ID',
+  locale: Localizations.localeOf(context).languageCode,
+);
+
+await FlutterCrispChat.openCrispChat(config: config);
+```
+
+::: tip Platform Specific
+- **Desktop:** sets `CRISP_RUNTIME_CONFIG.locale` on the chat page. Every `openCrispChat` builds a new page, so the chat always uses the latest value.
+- **Web:** sets `CRISP_RUNTIME_CONFIG.locale` before the Crisp script loads. The script reads it once per page, so a change after the first `openCrispChat` applies only after the page reloads.
+- **Android and iOS:** ignored. Crisp removed the language setting from its mobile SDKs ([crisp-sdk-android#62](https://github.com/crisp-im/crisp-sdk-android/issues/62), [crisp-sdk-ios#92](https://github.com/crisp-im/crisp-sdk-ios/issues/92)). The chat follows the app's language instead, as described below.
+:::
+
+### Changing the language on Android and iOS
+
+The native Crisp SDKs use the app's language, which is the device language unless the user or the app picks another one for your app:
+
+- **Android:** switch the app language with the [per-app language API](https://developer.android.com/guide/topics/resources/app-languages), `AppCompatDelegate.setApplicationLocales(...)`. The Crisp chat screen picks it up. Changing only Flutter's `MaterialApp.locale` doesn't change the Android app language, so the chat stays in the device language.
+- **iOS:** users pick a language for your app in **Settings › your app › Language**. iOS shows that option when the app declares its languages in `CFBundleLocalizations` in `Info.plist`. iOS has no public API for the app to change it at runtime.
 
 ## iOS Modal Presentation Styles
 

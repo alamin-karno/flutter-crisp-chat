@@ -434,10 +434,11 @@ CrispConfig({
   ModalPresentationStyle? modalPresentationStyle,
   List<CrispMessageContent>? localMessages,
   CrispColorMode? colorMode,
+  String? locale,
 })
 ```
 
-See [Configuration](/core_feature/configuration), [Color Mode](/core_feature/configuration#color-mode) and [Local Messages](/core_feature/local_messages).
+See [Configuration](/core_feature/configuration), [Color Mode](/core_feature/configuration#color-mode), [Chat Language](/core_feature/configuration#chat-language) and [Local Messages](/core_feature/local_messages).
 
 ## User
 

@@ -34,11 +34,13 @@ On mobile, the plugin wraps the official native Crisp SDKs. On Web and desktop, 
 | Live chat, user and session data, helpdesk, bot scenarios, local messages |   ✅    | ✅  | ✅  |    ✅    |
 | Session identifier and unread count (REST)                                |   ✅    | ✅  | ✅² |   ✅²    |
 | `isSessionOngoing()` and `CrispConfig.colorMode`                          |    —    | ✅  | ✅  |    ✅    |
+| `CrispConfig.locale` (chat language)³                                     |    —    |  —  | ✅  |    ✅    |
 | Chat events (`onCrispEvent`) and push notifications                       |   ✅    | ✅  |  —  |    —     |
 | Video and audio calls                                                     |    —    | ✅  | ✅  |    ✅    |
 
 ¹ macOS, Windows, and Linux, in an embedded WebView. Without WebView support, the chat opens in the system browser and most other APIs do nothing.
 ² On Web, keep your Crisp REST credentials on a backend proxy, not in the app.
+³ On Android and iOS the chat follows the app's language; see [Chat language](https://alamin-karno.github.io/flutter-crisp-chat/core_feature/configuration.html#chat-language).
 
 The [full API matrix](https://alamin-karno.github.io/flutter-crisp-chat/getting_started/supported_platforms.html) lists every method.
 
