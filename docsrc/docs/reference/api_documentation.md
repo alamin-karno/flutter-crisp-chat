@@ -67,7 +67,7 @@ static Future<void> openCrispChat({required CrispConfig config})
 - `ArgumentError` if `config.user.email` is provided but invalid
 - `ArgumentError` if `config.user.company.url` is provided but invalid
 
-**Behavior:** After opening the chat, the method waits 3 seconds and then caches the session identifier internally.
+**Behavior:** The returned `Future` completes once the chat is open; it doesn't wait for the session to load. In the background, the session identifier is cached from the `sessionLoaded` event on Android/iOS, or queried from the platform if no event arrives within 10 seconds. Web and desktop emit no events, so it's queried 3 seconds after opening. `getSessionIdentifier()` falls back to this cached value.
 
 ---
 
