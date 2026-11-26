@@ -27,6 +27,8 @@ Complete reference for all public methods in the `FlutterCrispChat` class.
 |-------------------------------------------------------------|---------------------|------------------|--------------------|
 | `openCrispChat`                                             | Native SDK UI       | Web chatbox      | WebView or browser |
 | `resetCrispChatSession`                                     | Yes                 | Yes              | WebView only       |
+| `configure`                                                 | Yes                 | No-op            | No-op              |
+| `setTokenId` / `setUserEmail` / `setUserNickname` / `setUserPhone` / `setUserAvatar` | Yes | Yes (now or on next open) | Yes (now or on next open) |
 | `setSessionString` / `setSessionInt` / `setSessionSegments` | Yes                 | Yes              | WebView only       |
 | `pushSessionEvent`                                          | Yes                 | Yes              | WebView only       |
 | `runBotScenario`                                            | Yes                 | Yes              | WebView only       |
@@ -72,6 +74,49 @@ static Future<void> openCrispChat({required CrispConfig config})
 
 ---
 
+### configure
+
+Configures the Crisp SDK without opening the chat, so `setTokenId` and the user setters work before the chat is first opened.
+
+```dart
+static Future<void> configure({required String websiteId})
+```
+
+**Throws:** `ArgumentError` if `websiteId` is empty.
+
+Does nothing on Web and desktop, which take the website ID from `openCrispChat`.
+
+---
+
+### setTokenId
+
+Sets the session continuity token. `null` or an empty string clears it.
+
+```dart
+static Future<void> setTokenId(String? tokenId)
+```
+
+The change only takes effect after `resetCrispChatSession`, so call that right after. A `CrispConfig.tokenId` passed to `openCrispChat` takes precedence. Call it while the chat is closed: the Android SDK ignores it while the chat is connected. See [Login and Logout](/core_feature/session_management#login-and-logout).
+
+---
+
+### setUserEmail / setUserNickname / setUserPhone / setUserAvatar
+
+Set the user's details without opening the chat.
+
+```dart
+static Future<void> setUserEmail(String email, {String? signature})
+static Future<void> setUserNickname(String nickname)
+static Future<void> setUserPhone(String phone)
+static Future<void> setUserAvatar(String avatar)
+```
+
+**Throws:** `ArgumentError` for an invalid email or avatar URL, or an empty nickname or phone.
+
+Call them after `resetCrispChatSession`, which clears the user on iOS. A `CrispConfig.user` passed to `openCrispChat` takes precedence. On Web and desktop they apply right away if the chat is loaded, otherwise when it next opens.
+
+---
+
 ### resetCrispChatSession
 
 Resets the current chat session and clears cached data.
@@ -80,7 +125,7 @@ Resets the current chat session and clears cached data.
 static Future<void> resetCrispChatSession()
 ```
 
-Call this when your app user logs out to clear their chat history from the device.
+Call this when your app user logs out to clear their chat history from the device. If you use a token ID, call `setTokenId(null)` first.
 
 ---
 

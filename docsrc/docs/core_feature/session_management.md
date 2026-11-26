@@ -161,6 +161,37 @@ await FlutterCrispChat.resetCrispChatSession();
 Always reset the session when a user logs out of your app. Failing to do so means the next user could see the previous user's chat history and personal data.
 :::
 
+## Login and Logout
+
+If you use a [token ID](/core_feature/configuration#token-id), set and clear it with `setTokenId` so the session follows your app's user. A new or cleared token only takes effect after `resetCrispChatSession`, so always call the two together, in this order. None of these calls opens the chat.
+
+```dart
+// On login
+await FlutterCrispChat.configure(websiteId: 'YOUR_WEBSITE_ID');
+await FlutterCrispChat.setTokenId(user.id);
+await FlutterCrispChat.resetCrispChatSession();
+// Then set user details and segments: a reset clears them
+await FlutterCrispChat.setUserEmail(user.email);
+FlutterCrispChat.setSessionSegments(segments: ['premium'], overwrite: true);
+
+// On logout
+await FlutterCrispChat.setTokenId(null); // null clears the token
+await FlutterCrispChat.resetCrispChatSession();
+```
+
+| Method | Description |
+|--------|-------------|
+| `configure({required String websiteId})` | Configures the SDK without opening the chat. Call it before the other methods when the chat hasn't been opened yet. Does nothing on Web and desktop, which take the website ID from `openCrispChat`. |
+| `setTokenId(String? tokenId)` | Sets the token; `null` or an empty string clears it. A `CrispConfig.tokenId` passed to `openCrispChat` still takes precedence. |
+
+::: warning Call these while the chat is closed
+The Android SDK ignores a new token while the chat is connected. Close the chat before logging the user in or out.
+:::
+
+::: info Web and desktop
+The token is applied right away if the chat is loaded, otherwise when it next opens. The same goes for `resetCrispChatSession`: if the chat isn't loaded, it returns at once and the reset runs when the chat next opens, before your config is applied.
+:::
+
 ## Typical Flow
 
 ```dart
@@ -181,7 +212,8 @@ await FlutterCrispChat.pushSessionEvent(
 // 4. Get session ID for logging
 String? sessionId = await FlutterCrispChat.getSessionIdentifier();
 
-// 5. Reset on logout
+// 5. Clear the token and reset on logout
+await FlutterCrispChat.setTokenId(null);
 await FlutterCrispChat.resetCrispChatSession();
 ```
 

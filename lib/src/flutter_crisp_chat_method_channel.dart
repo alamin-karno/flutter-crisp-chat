@@ -75,6 +75,55 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
         'openCrispChat', config.toJson());
   }
 
+  /// [configure] sets the Crisp website ID without opening the chat.
+  @override
+  Future<void> configure({required String websiteId}) async {
+    await methodChannel.invokeMethod('configure', <String, String>{
+      'websiteId': websiteId,
+    });
+  }
+
+  /// [setTokenId] sets the session continuity token. `null` clears it.
+  @override
+  Future<void> setTokenId({required String? tokenId}) async {
+    await methodChannel.invokeMethod('setTokenId', <String, String?>{
+      'tokenId': tokenId,
+    });
+  }
+
+  /// [setUserEmail] sets the user's email and optional signature.
+  @override
+  Future<void> setUserEmail({required String email, String? signature}) async {
+    await methodChannel.invokeMethod('setUserEmail', <String, String>{
+      'email': email,
+      if (signature != null) 'signature': signature,
+    });
+  }
+
+  /// [setUserNickname] sets the user's nickname.
+  @override
+  Future<void> setUserNickname({required String nickname}) async {
+    await methodChannel.invokeMethod('setUserNickname', <String, String>{
+      'nickname': nickname,
+    });
+  }
+
+  /// [setUserPhone] sets the user's phone number.
+  @override
+  Future<void> setUserPhone({required String phone}) async {
+    await methodChannel.invokeMethod('setUserPhone', <String, String>{
+      'phone': phone,
+    });
+  }
+
+  /// [setUserAvatar] sets the URL of the user's avatar.
+  @override
+  Future<void> setUserAvatar({required String avatar}) async {
+    await methodChannel.invokeMethod('setUserAvatar', <String, String>{
+      'avatar': avatar,
+    });
+  }
+
   /// [resetCrispChatSession] is use to invoke the Method Channel and call native
   /// code with no arguments and this will reset the crisp chat session.
   @override
@@ -123,7 +172,8 @@ class MethodChannelFlutterCrispChat extends FlutterCrispChatPlatform {
     try {
       return await methodChannel.invokeMethod<bool>('isSessionOngoing');
     } on PlatformException catch (e) {
-      debugPrint("Failed to check whether the session is ongoing: '${e.message}'.");
+      debugPrint(
+          "Failed to check whether the session is ongoing: '${e.message}'.");
       return null;
     }
   }

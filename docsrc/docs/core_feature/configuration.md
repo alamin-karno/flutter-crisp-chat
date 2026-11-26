@@ -101,6 +101,8 @@ CrispConfig config = CrispConfig(
 Use a stable, unique identifier for `tokenId` — such as your app's user ID or a UUID. Don't use email addresses, as they may change.
 :::
 
+To set the token when the user logs in, or clear it when they log out, without opening the chat, use `FlutterCrispChat.setTokenId` followed by `resetCrispChatSession`. See [Login and Logout](/core_feature/session_management#login-and-logout).
+
 ## Session Segment
 
 Segments help you categorize users in the Crisp dashboard:

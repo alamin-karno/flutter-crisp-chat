@@ -202,6 +202,62 @@ public class FlutterCrispChatPlugin implements FlutterPlugin, MethodCallHandler,
             } else {
                 result.notImplemented();
             }
+        } else if (call.method.equals("configure")) {
+            String websiteId = call.argument("websiteId");
+            if (websiteId == null || websiteId.trim().isEmpty()) {
+                result.error("INVALID_ARGUMENTS", "Missing 'websiteId' argument", null);
+                return;
+            }
+            Crisp.configure(context, websiteId.trim());
+            result.success(null);
+        } else if (call.method.equals("setTokenId")) {
+            // A null token clears the one the SDK stored on disk. The SDK
+            // ignores this call while the chat's socket is connected.
+            String tokenId = call.argument("tokenId");
+            Crisp.setTokenID(context, tokenId);
+            result.success(null);
+        } else if (call.method.equals("setUserEmail")) {
+            String email = call.argument("email");
+            String signature = call.argument("signature");
+            if (email == null) {
+                result.error("INVALID_ARGUMENTS", "Missing 'email' argument", null);
+                return;
+            }
+            boolean set = signature != null
+                    ? Crisp.setUserEmail(email, signature)
+                    : Crisp.setUserEmail(email);
+            if (!set) {
+                Log.d("CRISP_CHAT", "Email not set");
+            }
+            result.success(null);
+        } else if (call.method.equals("setUserNickname")) {
+            String nickname = call.argument("nickname");
+            if (nickname == null) {
+                result.error("INVALID_ARGUMENTS", "Missing 'nickname' argument", null);
+                return;
+            }
+            Crisp.setUserNickname(nickname);
+            result.success(null);
+        } else if (call.method.equals("setUserPhone")) {
+            String phone = call.argument("phone");
+            if (phone == null) {
+                result.error("INVALID_ARGUMENTS", "Missing 'phone' argument", null);
+                return;
+            }
+            if (!Crisp.setUserPhone(phone)) {
+                Log.d("CRISP_CHAT", "Phone not set");
+            }
+            result.success(null);
+        } else if (call.method.equals("setUserAvatar")) {
+            String avatar = call.argument("avatar");
+            if (avatar == null) {
+                result.error("INVALID_ARGUMENTS", "Missing 'avatar' argument", null);
+                return;
+            }
+            if (!Crisp.setUserAvatar(avatar)) {
+                Log.d("CRISP_CHAT", "Avatar not set");
+            }
+            result.success(null);
         } else if (call.method.equals("resetCrispChatSession")) {
             Crisp.resetChatSession(context);
             result.success(null);

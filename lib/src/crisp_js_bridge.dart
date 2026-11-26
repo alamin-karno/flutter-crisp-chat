@@ -62,9 +62,7 @@ class CrispJsBridge {
   /// See https://docs.crisp.chat/guides/chatbox-sdks/web-sdk/dollar-crisp/#use-crisp-before-it-is-ready
   static String queueBeforeLoad(CrispConfig config) {
     final lines = <String>[
-      r'$crisp.push(["safe", true]);',
-      r'$crisp.push(["config", "container:index", [999999]]);',
-      r'$crisp.push(["on", "session:loaded", function(session_id) { window.__crispSessionId = session_id; }]);',
+      queueSetupBeforeLoad(),
       ..._userAndSessionCommands(config),
       r'$crisp.push(["do", "chat:show"]);',
       r'$crisp.push(["do", "chat:open"]);',
@@ -72,36 +70,31 @@ class CrispJsBridge {
     return lines.join('\n');
   }
 
+  /// Queues only the setup commands before `l.js` loads: safe mode, the
+  /// container index and the `session:loaded` hook. Used when the session
+  /// must be reset before the user and session details are applied.
+  static String queueSetupBeforeLoad() => [
+        r'$crisp.push(["safe", true]);',
+        r'$crisp.push(["config", "container:index", [999999]]);',
+        r'$crisp.push(["on", "session:loaded", function(session_id) { window.__crispSessionId = session_id; }]);',
+      ].join('\n');
+
   static List<String> _userAndSessionCommands(CrispConfig config) {
     final commands = <String>[];
     final user = config.user;
     if (user != null) {
       if (user.email != null && user.email!.isNotEmpty) {
-        final signature = user.signature;
-        if (_isValidIdentitySignature(signature)) {
-          commands.add(
-            '\$crisp.push(["set", "user:email", [${_escapeJs(user.email!)}, ${_escapeJs(signature!)}]]);',
-          );
-        } else {
-          commands.add(
-            '\$crisp.push(["set", "user:email", [${_escapeJs(user.email!)}]]);',
-          );
-        }
+        commands
+            .add(setUserEmail(email: user.email!, signature: user.signature));
       }
       if (user.nickName != null && user.nickName!.isNotEmpty) {
-        commands.add(
-          '\$crisp.push(["set", "user:nickname", [${_escapeJs(user.nickName!)}]]);',
-        );
+        commands.add(setUserNickname(nickname: user.nickName!));
       }
       if (user.phone != null && user.phone!.isNotEmpty) {
-        commands.add(
-          '\$crisp.push(["set", "user:phone", [${_escapeJs(user.phone!)}]]);',
-        );
+        commands.add(setUserPhone(phone: user.phone!));
       }
       if (user.avatar != null && user.avatar!.isNotEmpty) {
-        commands.add(
-          '\$crisp.push(["set", "user:avatar", [${_escapeJs(user.avatar!)}]]);',
-        );
+        commands.add(setUserAvatar(avatar: user.avatar!));
       }
       final company = user.company;
       if (company != null && company.name != null && company.name!.isNotEmpty) {
@@ -153,6 +146,31 @@ class CrispJsBridge {
     return '\$crisp.push(${jsonEncode(["set", "user:company", payload])});';
   }
 
+  /// Sets the user's email, with the identity verification [signature] when
+  /// it is a valid HMAC-SHA256 hex digest.
+  static String setUserEmail({required String email, String? signature}) {
+    if (_isValidIdentitySignature(signature)) {
+      return '\$crisp.push(["set", "user:email", [${_escapeJs(email)}, ${_escapeJs(signature!)}]]);';
+    }
+    return '\$crisp.push(["set", "user:email", [${_escapeJs(email)}]]);';
+  }
+
+  static String setUserNickname({required String nickname}) =>
+      '\$crisp.push(["set", "user:nickname", [${_escapeJs(nickname)}]]);';
+
+  static String setUserPhone({required String phone}) =>
+      '\$crisp.push(["set", "user:phone", [${_escapeJs(phone)}]]);';
+
+  static String setUserAvatar({required String avatar}) =>
+      '\$crisp.push(["set", "user:avatar", [${_escapeJs(avatar)}]]);';
+
+  /// Sets `CRISP_TOKEN_ID`, or clears it when [tokenId] is `null`. Crisp
+  /// reads it on the next `session:reset`.
+  static String setTokenId(String? tokenId) =>
+      tokenId == null || tokenId.isEmpty
+          ? 'window.CRISP_TOKEN_ID=null;'
+          : 'window.CRISP_TOKEN_ID=${_escapeJs(tokenId)};';
+
   static String resetSession() => r'$crisp.push(["do", "session:reset"]);';
 
   /// Opens the Crisp Helpdesk search UI via the web SDK.
@@ -176,31 +194,35 @@ class CrispJsBridge {
     if (category != null) {
       args.add(category);
     }
-    return '\$crisp.push(${jsonEncode(["do", "helpdesk:article:open", args])});';
+    return '\$crisp.push(${jsonEncode([
+          "do",
+          "helpdesk:article:open",
+          args
+        ])});';
   }
 
   static String setSessionString({required String key, required String value}) {
     return '\$crisp.push(${jsonEncode([
-      "set",
-      "session:data",
-      [
-        [
-          [key, value]
-        ]
-      ],
-    ])});';
+          "set",
+          "session:data",
+          [
+            [
+              [key, value]
+            ]
+          ],
+        ])});';
   }
 
   static String setSessionInt({required String key, required int value}) {
     return '\$crisp.push(${jsonEncode([
-      "set",
-      "session:data",
-      [
-        [
-          [key, value]
-        ]
-      ],
-    ])});';
+          "set",
+          "session:data",
+          [
+            [
+              [key, value]
+            ]
+          ],
+        ])});';
   }
 
   static String setSessionSegments({
@@ -220,19 +242,23 @@ class CrispJsBridge {
   }) {
     // Crisp expects [[[text, optionalData, optionalColor]]] — omit data when unused.
     return '\$crisp.push(${jsonEncode([
-      "set",
-      "session:event",
-      [
-        [
-          [name, color.name]
-        ]
-      ],
-    ])});';
+          "set",
+          "session:event",
+          [
+            [
+              [name, color.name]
+            ]
+          ],
+        ])});';
   }
 
   /// Runs a Bot scenario by [scenarioId] via the web SDK.
   static String runBotScenario({required String scenarioId}) {
-    return '\$crisp.push(${jsonEncode(["do", "bot:scenario:run", [scenarioId]])});';
+    return '\$crisp.push(${jsonEncode([
+          "do",
+          "bot:scenario:run",
+          [scenarioId]
+        ])});';
   }
 
   /// Shows [content] as an operator message in the local chatbox.
@@ -240,10 +266,10 @@ class CrispJsBridge {
   /// Format: `$crisp.push(["do", "message:show", [type, content]])`
   static String showMessage(CrispMessageContent content) {
     return '\$crisp.push(${jsonEncode([
-      "do",
-      "message:show",
-      [content.type, _messageShowPayload(content)],
-    ])});';
+          "do",
+          "message:show",
+          [content.type, _messageShowPayload(content)],
+        ])});';
   }
 
   static Object _messageShowPayload(CrispMessageContent content) {
@@ -337,13 +363,20 @@ class CrispJsBridge {
   ''';
 
   /// Full HTML page for desktop WebView embedding.
-  static String embedHtml(CrispConfig config) {
+  ///
+  /// With [resetSessionFirst], the page resets the Crisp session once the
+  /// script loads, before applying [config].
+  static String embedHtml(CrispConfig config,
+      {bool resetSessionFirst = false}) {
     final bootstrap = bootstrapScript(
       websiteId: config.websiteID,
       tokenId: config.tokenId,
       locale: config.locale,
     );
-    final afterLoad = applyConfigAndOpenChat(config);
+    final afterLoad = [
+      if (resetSessionFirst) resetSession(),
+      applyConfigAndOpenChat(config),
+    ].join('\n');
     return '''
 <!DOCTYPE html>
 <html lang="en">

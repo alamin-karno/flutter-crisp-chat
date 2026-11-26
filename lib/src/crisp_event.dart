@@ -188,13 +188,13 @@ class CrispChatEvent {
     );
 
     final rawMessage = map['message'] as Map<dynamic, dynamic>?;
-    final rawNotificationData = map['notificationData'] as Map<dynamic, dynamic>?;
+    final notificationData = map['notificationData'] as Map<dynamic, dynamic>?;
 
     return CrispChatEvent._(
       type: type,
       sessionId: map['sessionId'] as String?,
       message: rawMessage != null ? CrispMessage.fromMap(rawMessage) : null,
-      notificationData: rawNotificationData?.map(
+      notificationData: notificationData?.map(
         (key, value) => MapEntry(key as String, value as String),
       ),
     );
