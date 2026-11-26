@@ -96,11 +96,11 @@ print('Permission: ${settings.authorizationStatus}');
 1. Go to your Firebase **Project Settings** > **Cloud Messaging** tab
 2. In the **Firebase Cloud Messaging API (V1)** section, copy your **Sender ID**
 
-![Copy Sender ID](https://github.com/user-attachments/assets/778fcfdd-a9ad-465b-b425-a0b45bf5f0eb)
+<img src="/graphics/docs/firebase-sender-id.webp" alt="Copy Sender ID" width="1300" height="924" loading="lazy" decoding="async">
 
 3. Go to **Service accounts** tab > click **Generate new private key** and save the file
 
-![Generate Private Key](https://github.com/user-attachments/assets/99d7faf3-c1db-41b4-afc9-4bbd64bec1f7)
+<img src="/graphics/docs/firebase-private-key.webp" alt="Generate Private Key" width="1297" height="847" loading="lazy" decoding="async">
 
 4. Go to your [Crisp Dashboard](https://app.crisp.chat/) > **Settings** > **ChatBox Settings** > **Push Notifications**
 5. Under **Firebase Cloud Messaging**:
@@ -109,15 +109,15 @@ print('Permission: ${settings.authorizationStatus}');
    - Upload your **Firebase Admin private key** file
    - Click **Verify Credentials**
 
-![Enable Push Notifications](https://github.com/user-attachments/assets/1fe0225e-4a1b-49bd-8814-c4d662fbf703)
+<img src="/graphics/docs/crisp-push-settings.webp" alt="Enable Push Notifications" width="1281" height="872" loading="lazy" decoding="async">
 
 6. Wait for Crisp to verify your credentials:
 
-![Checking Credentials](https://github.com/user-attachments/assets/66623e73-3b92-4c79-b6ed-9db696ff1bd9)
+<img src="/graphics/docs/crisp-push-checking.webp" alt="Checking Credentials" width="545" height="44" loading="lazy" decoding="async">
 
 7. Once verified, the status will show **live**:
 
-![Credentials Verified](https://github.com/user-attachments/assets/9e6f902a-f37b-4d79-a5d6-8fe25e6a8e7f)
+<img src="/graphics/docs/crisp-push-live.webp" alt="Credentials Verified" width="138" height="17" loading="lazy" decoding="async">
 
 ## Next Steps
 

@@ -48,7 +48,7 @@ In Xcode:
 3. Go to **Signing & Capabilities** tab
 4. Click **+ Capability** and add **Push Notifications**
 
-![Push Notifications Capability](https://github.com/user-attachments/assets/8581c872-f836-45f6-9a8c-7a5c5a998cea)
+<img src="/graphics/docs/xcode-push-capability.webp" alt="Push Notifications Capability" width="1280" height="506" loading="lazy" decoding="async">
 
 ## 4. Register for Remote Notifications
 
