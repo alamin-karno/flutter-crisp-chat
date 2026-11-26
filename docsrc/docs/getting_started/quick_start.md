@@ -31,7 +31,7 @@ Open your first Crisp chat in under 5 minutes.
 
 Go to your [Crisp Dashboard](https://app.crisp.chat/), navigate to **Settings** > **Website Settings**, and copy your **Website ID**:
 
-![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
+<img src="/graphics/docs/crisp-website-id.webp" alt="Crisp Dashboard" width="1103" height="509" loading="lazy" decoding="async">
 
 ::: warning Android and iOS
 Before testing on Android or iOS, disable **Lock the chatbox to website domain (and subdomains)** in the Crisp dashboard (**Settings** → **Website Settings** → **Chatbox & Email Settings** → **Chatbox Security**). With domain lock enabled, chat fails with **"Error starting chat"** even when the Website ID is valid. See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashboard-chatbox-security).

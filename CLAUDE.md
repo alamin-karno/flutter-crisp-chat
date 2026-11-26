@@ -140,9 +140,10 @@ npm run preview  # preview the production build
 Deploy: GitHub Actions (`.github/workflows/deploy-docs.yml`) builds and publishes to GitHub Pages on push to `main`.
 
 ### Docsrc conventions
-- Static assets (images, logos) go in `docsrc/docs/public/graphics/`. Reference them as `/flutter-crisp-chat/graphics/<file>` in source, not as external URLs.
-- All "Powered By" logos (`flutter-logo.png`, `crisp-logo.png`, `firebase-logo.png`) are locally hosted — do not replace with hotlinks from third-party CDNs (Bing, Webflow, etc.).
-- Always add `width` and `height` attributes to `<img>` tags to prevent CLS.
+- Static assets (images, logos) go in `docsrc/docs/public/graphics/` (doc screenshots in `graphics/docs/`). Reference them as `/graphics/<file>` in markdown and Vue `src` attributes (VitePress adds the `/flutter-crisp-chat/` base), and as `/flutter-crisp-chat/graphics/<file>` only in raw `head` tags such as the hero preload. Never use external URLs or GitHub `user-attachments` links.
+- Save images as WebP (quality ~85, or lossless when smaller). Keep `logo.png` as PNG: it is the favicon and the `og:image`, and some social platforms don't preview WebP.
+- All "Powered By" logos (`flutter-logo.webp`, `crisp-logo.webp`, `firebase-logo.webp`) are locally hosted — do not replace with hotlinks from third-party CDNs (Bing, Webflow, etc.).
+- Always add `width` and `height` attributes to `<img>` tags to prevent CLS. Markdown `![]()` images can't carry them, so use an `<img>` tag with `loading="lazy"` for images below the fold.
 - Google Fonts are loaded via `<link rel="stylesheet">` in `config.mjs` head — never via CSS `@import` (render-blocking).
 - `transformPageData` in `config.mjs` injects `og:*`, `twitter:*`, canonical, and JSON-LD on every page — update it when adding new meta tag types.
 

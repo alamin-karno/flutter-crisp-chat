@@ -37,6 +37,7 @@ Documentation
 * Documented `isSessionOngoing()` in the README and on the Session Management, Supported Platforms, and API Documentation pages.
 * Documented `CrispConfig.colorMode` in the README and on the Configuration, Supported Platforms, and API Documentation pages.
 * Updated the native SDK versions (Android `2.0.25`, iOS `~> 3.1.1`) in the README and docs site, and corrected the CocoaPods note: Crisp has deprecated CocoaPods but still published `3.1.x` there, so it no longer claims publishing stopped in September 2026.
+* Docs site images are now WebP, about 86% smaller overall (2.4 MB to 0.33 MB). The eight screenshots that were hot-linked from GitHub `user-attachments` (Crisp dashboard, Xcode, Firebase console, and the Crisp chat demo) are now hosted with the site, and the 1.8 MB, 3899×2553 demo screenshot is resized to 1600 px wide (136 KB). The hero image, the Flutter, Crisp and Firebase logos, the sponsor logo, and the Buy Me a Coffee banner were also converted. Every image now has `width` and `height` to prevent layout shift, and images below the fold load lazily. `logo.png` stays PNG because it is the favicon and the social preview image.
 
 # 3.0.0
 

@@ -286,7 +286,7 @@ flutter run --dart-define-from-file=config.json
 
 ## Screenshot
 
-![Crisp Chat SDK Demo](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
+<img src="/graphics/docs/crisp-chat-demo.webp" alt="Crisp Chat SDK Demo" width="1600" height="1048" loading="lazy" decoding="async">
 
 ## Next Steps
 

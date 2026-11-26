@@ -59,7 +59,7 @@ CrispConfig config = CrispConfig(
 
 Your Website ID is found in the [Crisp Dashboard](https://app.crisp.chat/) under **Settings** > **Website Settings**.
 
-![Crisp Dashboard](https://github.com/user-attachments/assets/ef6b9932-8141-4108-8f11-f5f3b40cbe15)
+<img src="/graphics/docs/crisp-website-id.webp" alt="Crisp Dashboard" width="1103" height="509" loading="lazy" decoding="async">
 
 ## Crisp dashboard: Chatbox Security
 

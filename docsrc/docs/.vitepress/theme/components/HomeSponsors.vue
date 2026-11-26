@@ -45,13 +45,13 @@ const sponsors = [...sponsorsJson.platinum, ...sponsorsJson.average];
         <h3>Powered By</h3>
         <div class="logos">
             <a href="https://flutter.dev" target="_blank" title="Flutter">
-                <img :src="withBase('/graphics/flutter-logo.png')" alt="Flutter" width="32" height="32" style="height: 32px; width: auto;" loading="lazy" />
+                <img :src="withBase('/graphics/flutter-logo.webp')" alt="Flutter" width="32" height="32" style="height: 32px; width: auto;" loading="lazy" />
             </a>
             <a href="https://crisp.chat" target="_blank" title="Crisp">
-                <img :src="withBase('/graphics/crisp-logo.png')" alt="Crisp" width="32" height="32" style="height: 32px; width: auto;" loading="lazy" />
+                <img :src="withBase('/graphics/crisp-logo.webp')" alt="Crisp" width="32" height="32" style="height: 32px; width: auto;" loading="lazy" />
             </a>
             <a href="https://firebase.google.com" target="_blank" title="Firebase">
-                <img :src="withBase('/graphics/firebase-logo.png')" alt="Firebase" width="32" height="32" style="height: 32px; width: auto;" loading="lazy" />
+                <img :src="withBase('/graphics/firebase-logo.webp')" alt="Firebase" width="32" height="32" style="height: 32px; width: auto;" loading="lazy" />
             </a>
         </div>
     </div>
