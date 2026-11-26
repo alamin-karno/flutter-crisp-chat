@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -25,6 +26,11 @@ class FlutterCrispChat {
   }();
   /// The cached session identifier.
   static String? _sessionIdentifier;
+
+  /// Incremented by [resetCrispChatSession], so a session identifier cached
+  /// in the background by [openCrispChat] is dropped if a reset happened
+  /// meanwhile.
+  static int _sessionGeneration = 0;
 
   /// Whether [CrispConfig.localMessages] were already shown since app start
   /// or the last [resetCrispChatSession].
@@ -67,8 +73,17 @@ class FlutterCrispChat {
     final localMessages = config.localMessages ?? const [];
     localMessages.forEach(_validateMessageContent);
 
+    // Start listening before opening, so the session's `sessionLoaded` event
+    // can't be missed.
+    final sessionLoaded = _nextSessionLoadedId();
+
     // Call the platform-specific method to open Crisp chat
-    await FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+    try {
+      await FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+    } catch (_) {
+      sessionLoaded.cancel();
+      rethrow;
+    }
 
     // Show the configured local messages once, so they don't pile up in the
     // chatbox every time it is reopened.
@@ -85,18 +100,69 @@ class FlutterCrispChat {
       }
     }
 
-    // After opening, get and cache the session identifier.
-    await Future.delayed(const Duration(seconds: 3));
+    // Cache the session identifier in the background, so callers don't wait
+    // for the session to load.
+    unawaited(_cacheSessionIdentifier(sessionLoaded, _sessionGeneration));
+  }
+
+  /// How long [openCrispChat] waits for a `sessionLoaded` event before
+  /// querying the session identifier instead.
+  static const Duration _sessionLoadedTimeout = Duration(seconds: 10);
+
+  /// How long [openCrispChat] waits before querying the session identifier
+  /// on platforms that emit no [onCrispEvent] events (Web, desktop).
+  static const Duration _noEventsQueryDelay = Duration(seconds: 3);
+
+  /// Listens for the next `sessionLoaded` event and completes with its
+  /// session identifier, or with `null` once [_sessionLoadedTimeout] passes.
+  ///
+  /// On platforms without events (Web, desktop) it completes with `null`
+  /// after [_noEventsQueryDelay], so the identifier is queried once the
+  /// widget had time to load, as before.
+  static _PendingSessionId _nextSessionLoadedId() {
+    final pending = _PendingSessionId();
+    Stream<CrispChatEvent> events;
     try {
-      final newSessionId =
-          await FlutterCrispChatPlatform.instance.getSessionIdentifier();
-      if (newSessionId != null && newSessionId != _sessionIdentifier) {
-        _sessionIdentifier = newSessionId;
+      events = FlutterCrispChatPlatform.instance.onCrispEvent;
+    } catch (_) {
+      pending.completeAfter(_noEventsQueryDelay);
+      return pending;
+    }
+    pending.subscription = events.listen(
+      (event) {
+        final sessionId = event.sessionId;
+        if (event.type == CrispEventType.sessionLoaded && sessionId != null) {
+          pending.complete(sessionId);
+        }
+      },
+      onError: (_) {},
+      // A stream that ends without an event (Web, desktop) has no events.
+      onDone: () => pending.completeAfter(_noEventsQueryDelay),
+    );
+    pending.completeAfter(_sessionLoadedTimeout);
+    return pending;
+  }
+
+  /// Caches the identifier from [sessionLoaded], or queries it from the
+  /// platform when no `sessionLoaded` event arrived in time.
+  static Future<void> _cacheSessionIdentifier(
+    _PendingSessionId sessionLoaded,
+    int generation,
+  ) async {
+    var sessionId = await sessionLoaded.future;
+    if (sessionId == null) {
+      try {
+        sessionId =
+            await FlutterCrispChatPlatform.instance.getSessionIdentifier();
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error caching session identifier: $e");
+        }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error caching session identifier: $e");
-      }
+    }
+    // Drop it if the session was reset while waiting.
+    if (sessionId != null && generation == _sessionGeneration) {
+      _sessionIdentifier = sessionId;
     }
   }
 
@@ -109,6 +175,7 @@ class FlutterCrispChat {
   /// @return A [Future] that completes when the session has been reset.
   static Future<void> resetCrispChatSession() async {
     await FlutterCrispChatPlatform.instance.resetCrispChatSession();
+    _sessionGeneration++;
     _sessionIdentifier = null;
     _localMessagesShown = false;
   }
@@ -554,4 +621,34 @@ class CrispChatDesktopPlugin {
   static void registerWith() {
     registerCrispChatPlatform();
   }
+}
+
+/// A session identifier [FlutterCrispChat.openCrispChat] is waiting for.
+///
+/// Completes once, with the identifier or `null`, and then cancels its event
+/// subscription and timer, so the native event listener doesn't stay
+/// registered.
+class _PendingSessionId {
+  final Completer<String?> _completer = Completer<String?>();
+  StreamSubscription<CrispChatEvent>? subscription;
+  Timer? _timer;
+
+  Future<String?> get future => _completer.future;
+
+  void complete(String? sessionId) {
+    if (_completer.isCompleted) return;
+    _timer?.cancel();
+    subscription?.cancel();
+    _completer.complete(sessionId);
+  }
+
+  /// Completes with `null` after [delay], replacing any earlier deadline.
+  void completeAfter(Duration delay) {
+    if (_completer.isCompleted) return;
+    _timer?.cancel();
+    _timer = Timer(delay, () => complete(null));
+  }
+
+  /// Gives up without querying, e.g. when opening the chat failed.
+  void cancel() => complete(null);
 }

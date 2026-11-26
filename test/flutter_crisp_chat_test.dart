@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:crisp_chat/crisp_chat.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_method_channel.dart';
 import 'package:crisp_chat/src/flutter_crisp_chat_platform_interface.dart';
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter/services.dart'; // Added for PlatformException
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -11,9 +12,18 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockFlutterCrispChatPlatform
     with MockPlatformInterfaceMixin
     implements FlutterCrispChatPlatform {
+  int openCrispChatCalls = 0;
+  bool openCrispChatShouldThrowError = false;
   @override
-  Future<String?> openCrispChat({required CrispConfig config}) =>
-      Future.value();
+  Future<String?> openCrispChat({required CrispConfig config}) async {
+    openCrispChatCalls++;
+    if (openCrispChatShouldThrowError) {
+      throw PlatformException(code: 'ERROR', message: 'Simulated error');
+    }
+    return null;
+  }
+
+  int getSessionIdentifierCalls = 0;
 
   bool resetCrispChatSessionCalled = false;
   @override
@@ -37,6 +47,7 @@ class MockFlutterCrispChatPlatform
   bool getSessionIdentifierShouldThrowError = false;
   @override
   Future<String?> getSessionIdentifier() async {
+    getSessionIdentifierCalls++;
     if (getSessionIdentifierShouldThrowError) {
       throw PlatformException(code: 'ERROR', message: 'Simulated error');
     }
@@ -124,6 +135,12 @@ class MockFlutterCrispChatPlatform
   Future<void> showMessage({required CrispMessageContent content}) async {
     shownMessages.add(content);
   }
+}
+
+/// Like the Web and desktop implementations: emits no [CrispChatEvent]s.
+class NoEventsFlutterCrispChatPlatform extends MockFlutterCrispChatPlatform {
+  @override
+  Stream<CrispChatEvent> get onCrispEvent => const Stream.empty();
 }
 
 void main() {
@@ -399,7 +416,7 @@ void main() {
       await FlutterCrispChat.resetCrispChatSession();
       await FlutterCrispChat.openCrispChat(config: localConfig);
       expect(fakePlatform.shownMessages, equals([welcome, welcome]));
-    }, timeout: const Timeout(Duration(seconds: 30)));
+    });
   });
 
   group('CrispMessageContent.toJson', () {
@@ -553,6 +570,127 @@ void main() {
         ),
         throwsA(isA<ArgumentError>()),
       );
+    });
+  });
+
+  group('openCrispChat session identifier caching', () {
+    test('returns without waiting for the session to load', () {
+      fakeAsync((async) {
+        final fakePlatform = MockFlutterCrispChatPlatform();
+        FlutterCrispChatPlatform.instance = fakePlatform;
+
+        var returned = false;
+        FlutterCrispChat.openCrispChat(config: config)
+            .then((_) => returned = true);
+        async.flushMicrotasks();
+
+        expect(returned, isTrue);
+        async.elapse(const Duration(seconds: 10));
+      });
+    });
+
+    test('caches the identifier from the sessionLoaded event', () {
+      fakeAsync((async) {
+        final fakePlatform = MockFlutterCrispChatPlatform();
+        FlutterCrispChatPlatform.instance = fakePlatform;
+        FlutterCrispChat.resetCrispChatSession();
+
+        FlutterCrispChat.openCrispChat(config: config);
+        async.flushMicrotasks();
+        expect(fakePlatform.eventStreamController.hasListener, isTrue);
+
+        fakePlatform.eventStreamController.add(CrispChatEvent.fromMap(
+          {'type': 'sessionLoaded', 'sessionId': 'session_from_event'},
+        ));
+        async.flushMicrotasks();
+
+        // The listener is cancelled and the platform was never queried.
+        expect(fakePlatform.eventStreamController.hasListener, isFalse);
+        expect(fakePlatform.getSessionIdentifierCalls, 0);
+
+        String? sessionId;
+        FlutterCrispChat.getSessionIdentifier().then((id) => sessionId = id);
+        async.flushMicrotasks();
+        expect(sessionId, 'session_from_event');
+      });
+    });
+
+    test('queries the platform when no sessionLoaded event arrives', () {
+      fakeAsync((async) {
+        final fakePlatform = MockFlutterCrispChatPlatform();
+        FlutterCrispChatPlatform.instance = fakePlatform;
+        FlutterCrispChat.resetCrispChatSession();
+        fakePlatform.mockSessionId = 'queried_session';
+
+        FlutterCrispChat.openCrispChat(config: config);
+        async.elapse(const Duration(seconds: 9));
+        expect(fakePlatform.getSessionIdentifierCalls, 0);
+
+        async.elapse(const Duration(seconds: 1));
+        expect(fakePlatform.getSessionIdentifierCalls, 1);
+        expect(fakePlatform.eventStreamController.hasListener, isFalse);
+
+        // The cached value is returned when the platform has none.
+        fakePlatform.mockSessionId = null;
+        String? sessionId;
+        FlutterCrispChat.getSessionIdentifier().then((id) => sessionId = id);
+        async.flushMicrotasks();
+        expect(sessionId, 'queried_session');
+      });
+    });
+
+    test('queries after 3 seconds on platforms without events', () {
+      fakeAsync((async) {
+        final fakePlatform = NoEventsFlutterCrispChatPlatform();
+        FlutterCrispChatPlatform.instance = fakePlatform;
+        FlutterCrispChat.resetCrispChatSession();
+
+        FlutterCrispChat.openCrispChat(config: config);
+        async.elapse(const Duration(milliseconds: 2900));
+        expect(fakePlatform.getSessionIdentifierCalls, 0);
+
+        async.elapse(const Duration(milliseconds: 100));
+        expect(fakePlatform.getSessionIdentifierCalls, 1);
+      });
+    });
+
+    test('drops the identifier if the session was reset meanwhile', () {
+      fakeAsync((async) {
+        final fakePlatform = MockFlutterCrispChatPlatform();
+        FlutterCrispChatPlatform.instance = fakePlatform;
+        FlutterCrispChat.resetCrispChatSession();
+        fakePlatform.mockSessionId = 'old_session';
+
+        FlutterCrispChat.openCrispChat(config: config);
+        async.flushMicrotasks();
+        FlutterCrispChat.resetCrispChatSession();
+        async.elapse(const Duration(seconds: 10));
+        expect(fakePlatform.getSessionIdentifierCalls, 1);
+
+        fakePlatform.mockSessionId = null;
+        String? sessionId = 'not set';
+        FlutterCrispChat.getSessionIdentifier().then((id) => sessionId = id);
+        async.flushMicrotasks();
+        expect(sessionId, isNull);
+      });
+    });
+
+    test('stops listening when opening the chat fails', () {
+      fakeAsync((async) {
+        final fakePlatform = MockFlutterCrispChatPlatform()
+          ..openCrispChatShouldThrowError = true;
+        FlutterCrispChatPlatform.instance = fakePlatform;
+
+        Object? error;
+        FlutterCrispChat.openCrispChat(config: config)
+            .catchError((Object e) => error = e);
+        async.flushMicrotasks();
+
+        expect(error, isA<PlatformException>());
+        expect(fakePlatform.eventStreamController.hasListener, isFalse);
+        async.elapse(const Duration(seconds: 10));
+        expect(fakePlatform.getSessionIdentifierCalls, 0);
+      });
     });
   });
 

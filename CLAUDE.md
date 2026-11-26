@@ -65,7 +65,9 @@ The method channel name is `flutter_crisp_chat`. All `FlutterCrispChat` static m
 
 The channel is **bidirectional**: native code calls `onCrispNotificationTapped` on the Dart side when a notification is tapped while the app is running. The handler is registered lazily (only when `setOnNotificationTappedCallback` or `openChatboxFromNotification` is first called) via `_ensureNativeHandlerRegistered()` in `MethodChannelFlutterCrispChat`.
 
-`openCrispChat` caches `_sessionIdentifier` with a deliberate 3-second delay after opening, to give the native SDK time to establish the session before querying it.
+`openCrispChat` returns as soon as the chat is open and caches `_sessionIdentifier` in the background. It subscribes to `onCrispEvent` *before* opening (so `sessionLoaded` can't be missed) and caches that event's `sessionId` (Android/iOS). If no event arrives within 10 seconds, or the platform has no events (Web/desktop, after 3 seconds), it falls back to `getSessionIdentifier()`. The subscription is always cancelled afterwards so the native event listener doesn't stay registered. `resetCrispChatSession` bumps `_sessionGeneration` so a result that arrives after a reset is dropped. Tests drive these timers with `fake_async`.
+
+Both native SDKs fire `sessionLoaded` on **every** chat open, not just the first (verified Nov 2026). Android 2.0.25: the chat fragments register an event-bus listener in `onResume` and remove it in `onPause`; the bus holds the socket only while it has listeners, so closing the chat disconnects and reopening reconnects, and the server's `session:joined` fires `onSessionLoaded`. iOS 3.1.1: each `ChatViewController()` builds a new `ChatBoxModel` whose load ends in `handleSessionLoaded`, and the plugin creates a new controller per open. The 10-second fallback only triggers when offline, or when `openCrispChat` is called while the chat is already showing.
 
 ### Native SDKs
 
