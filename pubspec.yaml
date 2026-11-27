@@ -1,6 +1,6 @@
 name: crisp_chat
 description: Crisp live chat for Flutter on Android, iOS, Web, and desktop. Native SDKs on mobile, plus push notifications, helpdesk, bots, and chat events.
-version: 3.0.0
+version: 3.1.0
 
 readme: README.md
 license: MIT
