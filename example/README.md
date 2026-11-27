@@ -1,44 +1,57 @@
-# Crisp Chat
+# crisp_chat example
 
-A flutter plugin package for using crisp chat natively on Android & iOS.
+A demo app for the [`crisp_chat`](https://pub.dev/packages/crisp_chat) plugin. It runs on Android, iOS, Web, macOS, Windows and Linux, uses Crisp's colors in light and dark mode, and covers every API in the plugin.
 
-The `Crisp Chat` is a package that provides a simple way to open chat window using native channel.
+## Quick start
 
-Note: This plugin is still under development, anyone want to contribute on this project is most welcome. If you have any idea or suggestion, please feel free to contact me.
+The smallest integration opens the chat with your website ID:
 
-## Screenshot (GIF)
+```dart
+import 'package:crisp_chat/crisp_chat.dart';
 
-|                                                            Android  (GIF)                                                             |                                                           iOS    (GIF)                                                            |
-|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.gif?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.gif?raw=true" width = "250"> |
-|                                                           Android  (Image)                                                            |                                                          iOS    (Image)                                                           |
-| <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_android.png?raw=true" width = "250"> | <img src="https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/screenshots/crisp_ios.png?raw=true" width = "250"> |
+await FlutterCrispChat.openCrispChat(
+  config: CrispConfig(
+    websiteID: 'YOUR_WEBSITE_ID',
+    user: User(email: 'jane@example.com', nickName: 'Jane'), // optional
+  ),
+);
+```
 
-## Additional information
+## Run the example
 
-- [Flutter Crisp Chat (pub.dev)](https://pub.dev/packages/crisp_chat)
-- [Flutter Crisp Chat (GitHub)](https://github.com/alamin-karno/flutter-crisp-chat)
+```bash
+cd example
+flutter run --dart-define=websiteId=YOUR_WEBSITE_ID
+```
 
-<h3 align=center> Project Maintainer ❤️ </h3>
-<p align="center">
-<table align="center">
-  <tbody><tr>
-     <td align="center">
-     <a href="https://github.com/alamin-karno">
-     <img alt="Md. Al-Amin" src="https://avatars.githubusercontent.com/alamin-karno" width="125px;"> <br>
-     <sub><b> Md. Al-Amin </b></sub>
-     </a><br></td></tr>
-     </tbody> </table> 
+To also try the unread-messages REST API, put your credentials in `example/config.json` (it is git-ignored) and run with `--dart-define-from-file=config.json`:
 
+```json
+{
+  "websiteId": "YOUR_WEBSITE_ID",
+  "identifier": "YOUR_CRISP_API_IDENTIFIER",
+  "crispApiKey": "YOUR_CRISP_API_KEY"
+}
+```
 
-<h3 align="center"> ✨VALUABLE CONTRIBUTORS✨ </h3>
-<p align="center">
-<a href="https://github.com/alamin-karno/flutter-crisp-chat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=alamin-karno/flutter-crisp-chat"  alt="Contributions"/>
-</a>
-</p>
-<h3 align="center"> Happy Coding 👨‍💻 </h3>
+Push notifications on Android and iOS also need Firebase config files. The [contributing guide](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CONTRIBUTING.md) explains how to add them. Without them, the app still runs and only push notifications are missing.
 
-## License
+## What's inside
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+| Tab          | Shows                                                                                                                       |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------|
+| **Home**     | Open the chat and helpdesk, unread messages, real-world scenarios, and the color mode, locale and iOS presentation options |
+| **Identity** | The recommended login and logout sequence, and setting user details without opening the chat                              |
+| **Session**  | Session ID, session data, segments, events, bot scenarios and reset                                                         |
+| **Messages** | Welcome messages, and one sample of every local message type                                                                |
+| **Activity** | A live log of action results and native Crisp events                                                                        |
+
+| File                                                       | Contents                                             |
+|------------------------------------------------------------|------------------------------------------------------|
+| [`lib/main.dart`](lib/main.dart)                           | Firebase setup and app start-up                      |
+| [`lib/src/demo_controller.dart`](lib/src/demo_controller.dart) | Every `FlutterCrispChat` call, one method per feature |
+| [`lib/src/sample_data.dart`](lib/src/sample_data.dart)     | Demo users and local message samples                 |
+| [`lib/src/pages/`](lib/src/pages/)                         | One file per tab                                     |
+| [`lib/src/theme.dart`](lib/src/theme.dart)                 | Light and dark themes in Crisp's colors              |
+
+See the [documentation](https://alamin-karno.github.io/flutter-crisp-chat/) for setup guides and the full API reference.

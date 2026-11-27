@@ -40,8 +40,8 @@ next:
 
 | Platform | SDK                                     | Version / source                                                                              |
 |----------|-----------------------------------------|-----------------------------------------------------------------------------------------------|
-| Android  | Crisp Android SDK                       | `2.0.24`                                                                                      |
-| iOS      | Crisp iOS SDK (`Crisp`, calls included) | `~> 3.0.1` — SPM recommended; see [Platform Setup — iOS](/getting_started/platform_setup#ios) |
+| Android  | Crisp Android SDK                       | `2.0.25`                                                                                      |
+| iOS      | Crisp iOS SDK (`Crisp`, calls included) | `~> 3.1.1` — SPM recommended; see [Platform Setup — iOS](/getting_started/platform_setup#ios) |
 | Web      | Crisp Web Chat SDK (`$crisp`)           | Loaded from `https://client.crisp.chat/l.js`                                                  |
 | Desktop  | Same as Web (embedded WebView)          | `desktop_webview_window` + browser fallback                                                   |
 
@@ -49,8 +49,8 @@ next:
 
 | Platform          | Minimum Version                                                 |
 |-------------------|-----------------------------------------------------------------|
-| Flutter           | 3.24.0+ (3.0+ for mobile-only usage)                            |
-| Dart              | 3.5.0+ (2.15.0+ for mobile-only usage)                          |
+| Flutter           | 3.44.0+                                                         |
+| Dart              | 3.5.0+                                                          |
 | Android           | API 23 (Android 6.0)                                            |
 | iOS               | 14.0+ (Xcode 16.3+)                                             |
 | compileSdkVersion | 36                                                              |

@@ -125,6 +125,30 @@ if (sessionId != null) {
 The session identifier is cached internally after `openCrispChat` is called. If the native SDK returns `null` (e.g., the chat was closed), the cached value is returned instead.
 :::
 
+## Check if the Session Is Ongoing
+
+Find out whether messages have been sent or received in the current session, e.g. to show "Continue conversation" instead of "Chat with us" to a returning visitor.
+
+```dart
+final ongoing = await FlutterCrispChat.isSessionOngoing();
+final label = switch (ongoing) {
+  true => 'Continue conversation',
+  false || null => 'Chat with us',
+};
+```
+
+`isSessionOngoing()` returns `true` or `false`, or `null` when it can't tell:
+
+| Platform        | Behavior                                                                                         |
+|-----------------|--------------------------------------------------------------------------------------------------|
+| iOS             | `CrispSDK.session.isOngoing` (Crisp iOS SDK 3.1.1+); `null` until the session has loaded          |
+| Web / desktop   | `$crisp.is("session:ongoing")`; `null` until Crisp and its session have loaded (desktop: WebView only) |
+| Android         | Always `null` — the Crisp Android SDK 2.x has no such check                                       |
+
+::: tip
+The session loads when the chat is opened. To check right after opening, wait for a `sessionLoaded` event on [`FlutterCrispChat.onCrispEvent`](/reference/api_documentation#oncrispevent) first.
+:::
+
 ## Reset Session
 
 Reset the current chat session. This clears all session data and starts fresh. **Call this when your app user logs out** to ensure the next user doesn't see the previous user's chat history.
@@ -135,6 +159,37 @@ await FlutterCrispChat.resetCrispChatSession();
 
 ::: danger Important
 Always reset the session when a user logs out of your app. Failing to do so means the next user could see the previous user's chat history and personal data.
+:::
+
+## Login and Logout
+
+If you use a [token ID](/core_feature/configuration#token-id), set and clear it with `setTokenId` so the session follows your app's user. A new or cleared token only takes effect after `resetCrispChatSession`, so always call the two together, in this order. None of these calls opens the chat.
+
+```dart
+// On login
+await FlutterCrispChat.configure(websiteId: 'YOUR_WEBSITE_ID');
+await FlutterCrispChat.setTokenId(user.id);
+await FlutterCrispChat.resetCrispChatSession();
+// Then set user details and segments: a reset clears them
+await FlutterCrispChat.setUserEmail(user.email);
+FlutterCrispChat.setSessionSegments(segments: ['premium'], overwrite: true);
+
+// On logout
+await FlutterCrispChat.setTokenId(null); // null clears the token
+await FlutterCrispChat.resetCrispChatSession();
+```
+
+| Method | Description |
+|--------|-------------|
+| `configure({required String websiteId})` | Configures the SDK without opening the chat. Call it before the other methods when the chat hasn't been opened yet. Does nothing on Web and desktop, which take the website ID from `openCrispChat`. |
+| `setTokenId(String? tokenId)` | Sets the token; `null` or an empty string clears it. A `CrispConfig.tokenId` passed to `openCrispChat` still takes precedence. |
+
+::: warning Call these while the chat is closed
+The Android SDK ignores a new token while the chat is connected. Close the chat before logging the user in or out.
+:::
+
+::: info Web and desktop
+The token is applied right away if the chat is loaded, otherwise when it next opens. The same goes for `resetCrispChatSession`: if the chat isn't loaded, it returns at once and the reset runs when the chat next opens, before your config is applied.
 :::
 
 ## Typical Flow
@@ -157,7 +212,8 @@ await FlutterCrispChat.pushSessionEvent(
 // 4. Get session ID for logging
 String? sessionId = await FlutterCrispChat.getSessionIdentifier();
 
-// 5. Reset on logout
+// 5. Clear the token and reset on logout
+await FlutterCrispChat.setTokenId(null);
 await FlutterCrispChat.resetCrispChatSession();
 ```
 

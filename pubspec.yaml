@@ -1,6 +1,6 @@
 name: crisp_chat
-description: Flutter plugin for Crisp live chat on Android, iOS, Web, and desktop.
-version: 3.0.0
+description: Crisp live chat for Flutter on Android, iOS, Web, and desktop. Native SDKs on mobile, plus push notifications, helpdesk, bots, and chat events.
+version: 3.1.0
 
 readme: README.md
 license: MIT
@@ -14,10 +14,10 @@ documentation: https://pub.dev/documentation/crisp_chat/latest/
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
-  flutter: ">=3.24.0"
+  flutter: ">=3.44.0"
 
 dependencies:
-  desktop_webview_window: ^0.3.0
+  desktop_webview_window: ^0.4.3
   flutter:
     sdk: flutter
   flutter_web_plugins:
@@ -30,6 +30,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  fake_async: ^1.3.0
   flutter_lints: ">=2.0.0 <7.0.0"
 
 flutter:
@@ -55,13 +56,14 @@ flutter:
 
 topics:
   - crisp
-  - crisp-chat
   - chat
+  - live-chat
+  - customer-support
   - communication
 
 funding:
   - https://buymeacoffee.com/alaminkarno
-  - https://www.patreon.com/alamin_karno
+  - https://www.patreon.com/cw/alamin_karno
 
 false_secrets:
   - /example/lib/firebase_options.dart

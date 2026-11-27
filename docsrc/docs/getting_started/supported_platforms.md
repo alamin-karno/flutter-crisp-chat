@@ -41,6 +41,7 @@ next:
 | `pushSessionEvent`                   | Yes                                             | Yes              | Yes (WebView only)       |
 | `showMessage` / `CrispConfig.localMessages` | Yes                                      | Yes              | Yes (WebView only)       |
 | `getSessionIdentifier`               | Yes                                             | Yes              | Yes (WebView only)       |
+| `isSessionOngoing`                   | iOS only (Android: always `null`)               | Yes              | Yes (WebView only)       |
 | `getUnreadMessageCount`              | Yes                                             | Yes*             | Yes*                     |
 | `markMessagesAsRead`                 | Yes                                             | Yes*             | Yes*                     |
 | `openHelpdesk`                       | Yes                                             | Yes              | Yes (WebView only)       |
@@ -48,6 +49,8 @@ next:
 | `openChatboxFromNotification`        | Android (primarily)                             | No-op (`false`)  | No-op (`false`)          |
 | `setOnNotificationTappedCallback`    | Android                                         | No-op            | No-op                    |
 | `CrispConfig.modalPresentationStyle` | iOS only                                        | Ignored          | Ignored                  |
+| `CrispConfig.colorMode`              | iOS only (ignored on Android)                   | Yes              | Yes (WebView only)       |
+| `CrispConfig.locale`                 | Ignored (follows the app language)              | Yes (first load) | Yes (WebView only)       |
 | `CrispConfig.enableNotifications`    | Android/iOS native                              | Ignored          | Ignored                  |
 | `isVideoCallsSupported()`            | iOS: always `true`; Android: `false` (upstream) | Yes (web widget) | Yes (web widget)         |
 
@@ -79,21 +82,9 @@ Add this to `macos/Runner/DebugProfile.entitlements` and `Release.entitlements`.
 
 The plugin loads embed HTML from a temporary `file://` page (not `data:`), because WKWebView blocks external scripts on `data:` URLs.
 
-### Example app (`desktop_webview_window`)
+### No `main()` changes
 
-If you use embedded chat on desktop, add this to your app `main` (see the [example app](https://github.com/alamin-karno/flutter-crisp-chat/tree/main/example)):
-
-```dart
-import 'package:desktop_webview_window/desktop_webview_window.dart';
-
-Future<void> main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (runWebViewTitleBarWidget(args)) {
-    return;
-  }
-  runApp(const MyApp());
-}
-```
+The embedded chat opens in a native window (`desktop_webview_window` 0.4+), so your `main()` needs nothing extra. If you're upgrading from crisp_chat 3.0.x, remove the `runWebViewTitleBarWidget(args)` check, which no longer exists.
 
 ### Linux system packages
 
@@ -138,7 +129,7 @@ Full details: [Configuration — Chatbox Security](/core_feature/configuration#c
 ## Minimum versions
 
 - **Dart SDK**: 3.5.0+
-- **Flutter**: 3.24.0+
+- **Flutter**: 3.44.0+
 - **Android**: API 23+ (unchanged)
 - **iOS**: 14.0+ (Crisp iOS SDK 3.x; requires Xcode 16.3+)
 

@@ -31,7 +31,7 @@ Or manually add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  crisp_chat: ^3.0.0
+  crisp_chat: ^3.1.0
 ```
 
 For **Web and desktop** targets:
@@ -40,7 +40,7 @@ For **Web and desktop** targets:
 - No extra native Crisp SDK install
 - See [Platform Setup](/getting_started/platform_setup#web) and [Supported Platforms](/getting_started/supported_platforms) for WebView2, WebKitGTK, and macOS entitlements
 
-For **iOS** (Crisp iOS SDK `~> 3.0.1`):
+For **iOS** (Crisp iOS SDK `~> 3.1.1`):
 
 - Requires iOS 14.0+ and Xcode 16.3+; Swift Package Manager is recommended (Crisp has deprecated CocoaPods distribution)
 - `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` are **required** in `Info.plist` — see [Platform Setup — iOS](/getting_started/platform_setup#ios-privacy-permissions)

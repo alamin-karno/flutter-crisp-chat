@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -23,8 +24,14 @@ class FlutterCrispChat {
     registerCrispChatPlatform();
     return true;
   }();
+
   /// The cached session identifier.
   static String? _sessionIdentifier;
+
+  /// Incremented by [resetCrispChatSession], so a session identifier cached
+  /// in the background by [openCrispChat] is dropped if a reset happened
+  /// meanwhile.
+  static int _sessionGeneration = 0;
 
   /// Whether [CrispConfig.localMessages] were already shown since app start
   /// or the last [resetCrispChatSession].
@@ -67,8 +74,17 @@ class FlutterCrispChat {
     final localMessages = config.localMessages ?? const [];
     localMessages.forEach(_validateMessageContent);
 
+    // Start listening before opening, so the session's `sessionLoaded` event
+    // can't be missed.
+    final sessionLoaded = _nextSessionLoadedId();
+
     // Call the platform-specific method to open Crisp chat
-    await FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+    try {
+      await FlutterCrispChatPlatform.instance.openCrispChat(config: config);
+    } catch (_) {
+      sessionLoaded.cancel();
+      rethrow;
+    }
 
     // Show the configured local messages once, so they don't pile up in the
     // chatbox every time it is reopened.
@@ -85,19 +101,187 @@ class FlutterCrispChat {
       }
     }
 
-    // After opening, get and cache the session identifier.
-    await Future.delayed(const Duration(seconds: 3));
+    // Cache the session identifier in the background, so callers don't wait
+    // for the session to load.
+    unawaited(_cacheSessionIdentifier(sessionLoaded, _sessionGeneration));
+  }
+
+  /// How long [openCrispChat] waits for a `sessionLoaded` event before
+  /// querying the session identifier instead.
+  static const Duration _sessionLoadedTimeout = Duration(seconds: 10);
+
+  /// How long [openCrispChat] waits before querying the session identifier
+  /// on platforms that emit no [onCrispEvent] events (Web, desktop).
+  static const Duration _noEventsQueryDelay = Duration(seconds: 3);
+
+  /// Listens for the next `sessionLoaded` event and completes with its
+  /// session identifier, or with `null` once [_sessionLoadedTimeout] passes.
+  ///
+  /// On platforms without events (Web, desktop) it completes with `null`
+  /// after [_noEventsQueryDelay], so the identifier is queried once the
+  /// widget had time to load, as before.
+  static _PendingSessionId _nextSessionLoadedId() {
+    final pending = _PendingSessionId();
+    Stream<CrispChatEvent> events;
     try {
-      final newSessionId =
-          await FlutterCrispChatPlatform.instance.getSessionIdentifier();
-      if (newSessionId != null && newSessionId != _sessionIdentifier) {
-        _sessionIdentifier = newSessionId;
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error caching session identifier: $e");
+      events = FlutterCrispChatPlatform.instance.onCrispEvent;
+    } catch (_) {
+      pending.completeAfter(_noEventsQueryDelay);
+      return pending;
+    }
+    pending.subscription = events.listen(
+      (event) {
+        final sessionId = event.sessionId;
+        if (event.type == CrispEventType.sessionLoaded && sessionId != null) {
+          pending.complete(sessionId);
+        }
+      },
+      onError: (_) {},
+      // A stream that ends without an event (Web, desktop) has no events.
+      onDone: () => pending.completeAfter(_noEventsQueryDelay),
+    );
+    pending.completeAfter(_sessionLoadedTimeout);
+    return pending;
+  }
+
+  /// Caches the identifier from [sessionLoaded], or queries it from the
+  /// platform when no `sessionLoaded` event arrived in time.
+  static Future<void> _cacheSessionIdentifier(
+    _PendingSessionId sessionLoaded,
+    int generation,
+  ) async {
+    var sessionId = await sessionLoaded.future;
+    if (sessionId == null) {
+      try {
+        sessionId =
+            await FlutterCrispChatPlatform.instance.getSessionIdentifier();
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error caching session identifier: $e");
+        }
       }
     }
+    // Drop it if the session was reset while waiting.
+    if (sessionId != null && generation == _sessionGeneration) {
+      _sessionIdentifier = sessionId;
+    }
+  }
+
+  /// Configures the Crisp SDK with your [websiteId] without opening the chat.
+  ///
+  /// Call it before [setTokenId] and the user setters when the user logs in,
+  /// so they work before the chat is first opened:
+  ///
+  /// ```dart
+  /// // Login
+  /// await FlutterCrispChat.configure(websiteId: websiteId);
+  /// await FlutterCrispChat.setTokenId(user.id);
+  /// await FlutterCrispChat.resetCrispChatSession();
+  ///
+  /// // Logout
+  /// await FlutterCrispChat.setTokenId(null);
+  /// await FlutterCrispChat.resetCrispChatSession();
+  /// ```
+  ///
+  /// Wraps `Crisp.configure` (Android) and `CrispSDK.configure` (iOS). Does
+  /// nothing on Web and desktop, which take the website ID from
+  /// [openCrispChat].
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [websiteId] is empty.
+  static Future<void> configure({required String websiteId}) async {
+    final id = websiteId.trim();
+    if (id.isEmpty) {
+      throw ArgumentError.value(
+          websiteId, 'websiteId', 'Website ID must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.configure(websiteId: id);
+  }
+
+  /// Sets the session continuity token, which ties the chat session to your
+  /// user so their conversation comes back on other devices and after a
+  /// logout. Pass `null` (or an empty string) to clear it when the user
+  /// logs out.
+  ///
+  /// A new or cleared token only takes effect after
+  /// [resetCrispChatSession], so call that right after this method. See
+  /// [configure] for the login and logout sequence Crisp recommends.
+  ///
+  /// The token set here is kept until it is changed; a
+  /// [CrispConfig.tokenId] passed to [openCrispChat] still takes precedence.
+  ///
+  /// Call it while the chat is closed: the Android SDK ignores a new token
+  /// while the chat is connected.
+  ///
+  /// Wraps `Crisp.setTokenID` (Android), `CrispSDK.setTokenID` (iOS) and
+  /// `CRISP_TOKEN_ID` (Web/desktop).
+  ///
+  /// {@category General}
+  static Future<void> setTokenId(String? tokenId) async {
+    final token = (tokenId == null || tokenId.trim().isEmpty) ? null : tokenId;
+    await FlutterCrispChatPlatform.instance.setTokenId(tokenId: token);
+  }
+
+  /// Sets the user's [email] without opening the chat, with an optional
+  /// identity verification [signature] (HMAC-SHA256 of the email).
+  ///
+  /// Call it after [resetCrispChatSession], which clears the user on iOS.
+  /// On Web and desktop the value is applied now if the chat is loaded,
+  /// otherwise the next time [openCrispChat] runs; a [CrispConfig.user]
+  /// email passed to it takes precedence.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [email] is not a valid email address.
+  static Future<void> setUserEmail(String email, {String? signature}) async {
+    if (!email.isEmail) {
+      throw ArgumentError.value(
+          email, 'email', 'Invalid email format provided.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserEmail(
+      email: email,
+      signature: (signature == null || signature.isEmpty) ? null : signature,
+    );
+  }
+
+  /// Sets the user's [nickname] without opening the chat.
+  ///
+  /// See [setUserEmail] for when the value is applied.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [nickname] is empty.
+  static Future<void> setUserNickname(String nickname) async {
+    if (nickname.trim().isEmpty) {
+      throw ArgumentError.value(
+          nickname, 'nickname', 'Nickname must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserNickname(nickname: nickname);
+  }
+
+  /// Sets the user's [phone] number without opening the chat.
+  ///
+  /// See [setUserEmail] for when the value is applied.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [phone] is empty.
+  static Future<void> setUserPhone(String phone) async {
+    if (phone.trim().isEmpty) {
+      throw ArgumentError.value(phone, 'phone', 'Phone must not be empty.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserPhone(phone: phone);
+  }
+
+  /// Sets the URL of the user's [avatar] image without opening the chat.
+  ///
+  /// See [setUserEmail] for when the value is applied.
+  ///
+  /// {@category General}
+  /// @throws ArgumentError if [avatar] is not a valid URL.
+  static Future<void> setUserAvatar(String avatar) async {
+    if (!avatar.isUrl) {
+      throw ArgumentError.value(
+          avatar, 'avatar', 'Invalid avatar URL format provided.');
+    }
+    await FlutterCrispChatPlatform.instance.setUserAvatar(avatar: avatar);
   }
 
   /// Resets the current Crisp chat session.
@@ -109,6 +293,7 @@ class FlutterCrispChat {
   /// @return A [Future] that completes when the session has been reset.
   static Future<void> resetCrispChatSession() async {
     await FlutterCrispChatPlatform.instance.resetCrispChatSession();
+    _sessionGeneration++;
     _sessionIdentifier = null;
     _localMessagesShown = false;
   }
@@ -176,6 +361,32 @@ class FlutterCrispChat {
       }
     }
     return _sessionIdentifier;
+  }
+
+  /// Returns whether the current session is ongoing, meaning messages have
+  /// been sent or received in it.
+  ///
+  /// Useful to tell a visitor who already talked to you from a new one, e.g.
+  /// to label a "Continue conversation" button. Returns `null` when it can't
+  /// be told:
+  /// - on Android, whose Crisp SDK 2.x has no such check;
+  /// - before the session has loaded (open the chat first, or wait for
+  ///   [CrispEventType.sessionLoaded] on [onCrispEvent]);
+  /// - on desktop when the system browser fallback is used.
+  ///
+  /// Wraps `CrispSDK.session.isOngoing` (iOS, Crisp iOS SDK 3.1.1+) and
+  /// `$crisp.is("session:ongoing")` (Web/desktop).
+  ///
+  /// {@category General}
+  static Future<bool?> isSessionOngoing() async {
+    try {
+      return await FlutterCrispChatPlatform.instance.isSessionOngoing();
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error checking whether the session is ongoing: $e");
+      }
+      return null;
+    }
   }
 
   /// Sets user segments in the current session.
@@ -554,4 +765,34 @@ class CrispChatDesktopPlugin {
   static void registerWith() {
     registerCrispChatPlatform();
   }
+}
+
+/// A session identifier [FlutterCrispChat.openCrispChat] is waiting for.
+///
+/// Completes once, with the identifier or `null`, and then cancels its event
+/// subscription and timer, so the native event listener doesn't stay
+/// registered.
+class _PendingSessionId {
+  final Completer<String?> _completer = Completer<String?>();
+  StreamSubscription<CrispChatEvent>? subscription;
+  Timer? _timer;
+
+  Future<String?> get future => _completer.future;
+
+  void complete(String? sessionId) {
+    if (_completer.isCompleted) return;
+    _timer?.cancel();
+    subscription?.cancel();
+    _completer.complete(sessionId);
+  }
+
+  /// Completes with `null` after [delay], replacing any earlier deadline.
+  void completeAfter(Duration delay) {
+    if (_completer.isCompleted) return;
+    _timer?.cancel();
+    _timer = Timer(delay, () => complete(null));
+  }
+
+  /// Gives up without querying, e.g. when opening the chat failed.
+  void cancel() => complete(null);
 }

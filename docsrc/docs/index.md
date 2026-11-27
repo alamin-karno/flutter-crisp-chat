@@ -19,14 +19,15 @@ head:
   - - link
     - rel: preload
       as: image
-      href: /flutter-crisp-chat/graphics/crisp-hero.jpg
+      type: image/webp
+      href: /flutter-crisp-chat/graphics/crisp-hero.webp
 
 hero:
   name: Flutter Crisp Chat
   text: Crisp Live Chat for Flutter
   tagline: Integrate Crisp customer messaging on Android, iOS, Web, and desktop — native SDKs on mobile, official Web Chat SDK on web and desktop, with push notifications, sessions, and REST helpers.
   image:
-    src: '/graphics/crisp-hero.jpg'
+    src: '/graphics/crisp-hero.webp'
     alt: Flutter Crisp Chat
     width: 640
     height: 360

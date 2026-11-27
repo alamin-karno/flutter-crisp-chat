@@ -4,6 +4,8 @@ import 'config.dart';
 class CrispWebSdk {
   static bool get isAvailable => false;
 
+  static bool get isLoaded => false;
+
   static Future<void> ensureLoaded({
     required String websiteId,
     String? tokenId,
@@ -11,9 +13,13 @@ class CrispWebSdk {
 
   static Future<void> runScript(String javaScript) async {}
 
+  static Future<void> resetSession() async {}
+
   static Future<void> waitForSessionOngoing() async {}
 
   static Future<void> applyConfigAndOpen(CrispConfig config) async {}
 
   static Future<String?> getSessionIdentifier() async => null;
+
+  static Future<bool?> isSessionOngoing() async => null;
 }

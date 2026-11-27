@@ -11,6 +11,7 @@ import 'config.dart';
 import 'crisp_event.dart';
 import 'crisp_js_bridge.dart';
 import 'crisp_message_content.dart';
+import 'crisp_pending_identity.dart';
 import 'flutter_crisp_chat_platform_interface.dart';
 
 /// Desktop implementation (macOS, Windows, Linux) via embedded WebView or browser fallback.
@@ -20,30 +21,56 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
   bool _crispReadyInWebview = false;
   Directory? _embedDirectory;
 
+  /// Token and user details to apply to the next chat opening.
+  final _pending = CrispPendingIdentity();
+
+  /// Set when the session was reset while no chat window was open. The
+  /// WebView keeps Crisp's session cookie, so the next chat page resets it
+  /// before applying its config.
+  bool _resetPending = false;
+
   @override
   Future<void> openCrispChat({required CrispConfig config}) async {
     _crispReadyInWebview = false;
     _cachedSessionId = null;
-    final html = CrispJsBridge.embedHtml(config);
+    final html = CrispJsBridge.embedHtml(
+      _pending.applyTo(config),
+      resetSessionFirst: _resetPending,
+    );
 
     if (await WebviewWindow.isWebviewAvailable()) {
       try {
-        _webview?.close();
+        await _closeWebview();
         await _disposeEmbedDirectory();
 
         final webview = await WebviewWindow.create(
-          configuration: CreateConfiguration(
+          configuration: const CreateConfiguration(
             title: 'Crisp Chat',
-            titleBarTopPadding: 0,
             windowWidth: 420,
             windowHeight: 720,
+            // A chat window, not a browser: keep the native title bar plain.
+            // The host would also show the temporary file:// page below.
+            titleBar: TitleBarOptions(
+              showNavigation: false,
+              showReload: false,
+              showHost: false,
+            ),
           ),
         );
         _webview = webview;
+        // Forget the window once the user closes it, so later calls fall
+        // back to their no-WebView behavior instead of failing.
+        unawaited(webview.onClose.then((_) {
+          if (identical(_webview, webview)) {
+            _webview = null;
+            _crispReadyInWebview = false;
+          }
+        }));
 
         // WKWebView / WebView2 block external scripts on data: URLs — use file://.
         final pageUrl = await _writeEmbedPage(html);
-        webview.launch(pageUrl);
+        await webview.launch(pageUrl);
+        _resetPending = false;
         unawaited(_waitForCrispReady());
         return;
       } catch (e, stackTrace) {
@@ -52,6 +79,22 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
     }
 
     await _openInBrowser(config);
+  }
+
+  /// Closes the current chat window, if any.
+  Future<void> _closeWebview() async {
+    final webview = _webview;
+    _webview = null;
+    if (webview == null) {
+      return;
+    }
+    try {
+      await webview.close();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Crisp WebView close: $e');
+      }
+    }
   }
 
   /// Writes embed HTML to a temp file and returns a `file://` URI string.
@@ -116,7 +159,8 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
     await _waitForCrispReady();
   }
 
-  /// Runs [javaScript] in the WebView; wraps scripts so the native bridge always gets a string.
+  /// Runs [javaScript] in the WebView; scripts are wrapped to always return a
+  /// string, which `evaluateJavaScript` hands back already decoded.
   Future<String?> _evaluateInWebview(String javaScript) async {
     final webview = _webview;
     if (webview == null) {
@@ -126,7 +170,8 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
         ? javaScript
         : CrispJsBridge.forDesktopEvaluation(javaScript);
     try {
-      return await webview.evaluateJavaScript(wrapped);
+      final result = await webview.evaluateJavaScript(wrapped);
+      return result?.toString();
     } on PlatformException catch (e) {
       if (kDebugMode) {
         final msg = e.message ?? '';
@@ -137,6 +182,13 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
         }
       }
       return null;
+    } catch (e) {
+      // 0.4 reports a closed window or an unsupported operation as other
+      // errors (e.g. StateError, UnsupportedError).
+      if (kDebugMode) {
+        debugPrint('Crisp WebView evaluateJavaScript: $e');
+      }
+      return null;
     }
   }
 
@@ -145,10 +197,62 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
     await _evaluateInWebview(javaScript);
   }
 
+  /// The website ID comes from [openCrispChat]; nothing to do here.
+  @override
+  Future<void> configure({required String websiteId}) async {}
+
+  @override
+  Future<void> setTokenId({required String? tokenId}) async {
+    _pending.setToken(tokenId);
+    await _runIfWebviewOpen(CrispJsBridge.setTokenId(tokenId));
+  }
+
+  @override
+  Future<void> setUserEmail({required String email, String? signature}) async {
+    _pending
+      ..email = email
+      ..signature = signature;
+    await _runIfWebviewOpen(
+        CrispJsBridge.setUserEmail(email: email, signature: signature));
+  }
+
+  @override
+  Future<void> setUserNickname({required String nickname}) async {
+    _pending.nickname = nickname;
+    await _runIfWebviewOpen(CrispJsBridge.setUserNickname(nickname: nickname));
+  }
+
+  @override
+  Future<void> setUserPhone({required String phone}) async {
+    _pending.phone = phone;
+    await _runIfWebviewOpen(CrispJsBridge.setUserPhone(phone: phone));
+  }
+
+  @override
+  Future<void> setUserAvatar({required String avatar}) async {
+    _pending.avatar = avatar;
+    await _runIfWebviewOpen(CrispJsBridge.setUserAvatar(avatar: avatar));
+  }
+
+  /// Runs [javaScript] in the chat window if it is open; otherwise the
+  /// pending identity applies it when the chat next opens.
+  Future<void> _runIfWebviewOpen(String javaScript) async {
+    if (_webview != null) {
+      await _runInWebview(javaScript);
+    }
+  }
+
   @override
   Future<void> resetCrispChatSession() async {
-    await _runInWebview(CrispJsBridge.resetSession());
+    _pending.clearUser();
     _cachedSessionId = null;
+    if (_webview == null) {
+      // No chat window to run it in: don't wait for one, reset when the
+      // chat next opens.
+      _resetPending = true;
+      return;
+    }
+    await _runInWebview(CrispJsBridge.resetSession());
   }
 
   @override
@@ -193,6 +297,19 @@ class DesktopFlutterCrispChat extends FlutterCrispChatPlatform {
       return _cachedSessionId;
     }
     return null;
+  }
+
+  @override
+  Future<bool?> isSessionOngoing() async {
+    if (_webview == null) {
+      return null;
+    }
+    await _ensureCrispReady();
+    return switch (await _evaluateInWebview(CrispJsBridge.isSessionOngoing())) {
+      'true' => true,
+      'false' => false,
+      _ => null,
+    };
   }
 
   @override

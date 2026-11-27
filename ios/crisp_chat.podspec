@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'crisp_chat'
-  s.version          = '3.0.0'
+  s.version          = '3.1.0'
   s.summary          = 'Flutter plugin for Crisp Chat'
   s.description      = 'A Flutter plugin for Crisp Chat SDK on iOS.'
   s.homepage         = 'https://github.com/alamin-karno/flutter-crisp-chat'
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   # Crisp iOS SDK 3.x ships audio/video calls in the single `Crisp` pod —
   # the 2.x `Crisp/CrispWebRTC` subspec (and `$CrispChatWebRTC`) is gone.
-  s.dependency 'Crisp', '~> 3.0.1'
+  s.dependency 'Crisp', '~> 3.1.1'
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES'
   }

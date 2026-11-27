@@ -23,9 +23,23 @@ This is the working example app from the plugin's `example/` directory.
 
 | Target            | What the example demonstrates                                                                                                                  |
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Android / iOS** | Firebase, push notification hooks, user config, sessions, unread REST API; built-in iOS video calls (camera + microphone keys in `Info.plist`) |
-| **Web**           | Web Chat SDK, sessions, events (no Firebase)                                                                                                   |
-| **Desktop**       | `runWebViewTitleBarWidget` in `main`, embedded WebView chat (no Firebase)                                                                      |
+| **Android / iOS** | Firebase, push notification hooks, live `onCrispEvent` log, login and logout, sessions, local messages, unread REST API; built-in iOS video calls (camera + microphone keys in `Info.plist`) and modal presentation styles |
+| **Web**           | Web Chat SDK, login and logout, sessions, local messages, color mode and locale (no Firebase)                                                  |
+| **Desktop**       | Embedded WebView chat in a native window, with the same features as Web (no Firebase)                                                         |
+
+### What's in the app
+
+The app uses Crisp's colors, supports light and dark mode, and has five tabs:
+
+| Tab          | Shows                                                                                                                                         |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Home**     | Open the chat and helpdesk, check and clear unread messages, real-world scenarios (order support, bug report, sales, fresh start), and the color mode, locale and iOS presentation options |
+| **Identity** | Sign in as a demo user with `configure()`, `setTokenId()` and `resetCrispChatSession()`, sign out, and set the email, nickname, phone and avatar on their own |
+| **Session**  | Session ID, `isSessionOngoing()`, session data, segments, colored session events, bot scenarios, and reset                                    |
+| **Messages** | Welcome messages through `CrispConfig.localMessages`, and one sample of every `showMessage()` content type                                    |
+| **Activity** | A live log of every action's result and of native Crisp events                                                                                |
+
+When a platform ignores an option, such as `colorMode` on Android, the app says so where the option appears. Every plugin call the app makes is in [`example/lib/src/demo_controller.dart`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/example/lib/src/demo_controller.dart), one method per feature, so you can copy the one you need. The `main.dart` below is a shorter, single-file version.
 
 ### Run without Firebase (Web / desktop)
 
@@ -39,7 +53,7 @@ flutter run -d macos --dart-define=websiteId=YOUR_WEBSITE_ID
 
 Use `--dart-define-from-file=config.json` as shown below. Firebase config files are gitignored.
 
-The snippet below shows the **mobile-oriented** `main()`; the repository example also gates Firebase and desktop `main()` for other platforms — see [Platform Setup](/getting_started/platform_setup).
+The snippet below shows the **mobile-oriented** `main()`; the repository example also skips Firebase on Web and desktop — see [Platform Setup](/getting_started/platform_setup).
 
 ## main.dart
 
@@ -272,7 +286,7 @@ flutter run --dart-define-from-file=config.json
 
 ## Screenshot
 
-![Crisp Chat SDK Demo](https://github.com/user-attachments/assets/436a53d5-f37b-4aa4-982d-e023fe35ab30)
+<img src="/graphics/docs/crisp-chat-demo.webp" alt="Crisp Chat SDK Demo" width="1600" height="1048" loading="lazy" decoding="async">
 
 ## Next Steps
 

@@ -14,6 +14,34 @@ void main() {
     expect(script, contains('user-token'));
   });
 
+  test('bootstrapScript sets CRISP_RUNTIME_CONFIG locale when provided', () {
+    final script = CrispJsBridge.bootstrapScript(
+      websiteId: 'site-id',
+      locale: ' pt-br ',
+    );
+    expect(script, contains('window.CRISP_RUNTIME_CONFIG={locale:"pt-br"};'));
+  });
+
+  test('bootstrapScript omits CRISP_RUNTIME_CONFIG for null or blank locale',
+      () {
+    for (final locale in [null, '', '   ']) {
+      final script = CrispJsBridge.bootstrapScript(
+        websiteId: 'site-id',
+        locale: locale,
+      );
+      expect(script, isNot(contains('CRISP_RUNTIME_CONFIG')));
+    }
+  });
+
+  test('embedHtml sets the locale before loading l.js', () {
+    final html = CrispJsBridge.embedHtml(
+      CrispConfig(websiteID: 'site-id', locale: 'fr'),
+    );
+    final localeIndex = html.indexOf('CRISP_RUNTIME_CONFIG={locale:"fr"}');
+    expect(localeIndex, isNonNegative);
+    expect(localeIndex, lessThan(html.indexOf('client.crisp.chat/l.js')));
+  });
+
   test('applyConfigAndOpenChat includes user email and chat open', () {
     final config = CrispConfig(
       websiteID: 'site-id',
@@ -24,6 +52,42 @@ void main() {
     expect(script, contains('a@b.com'));
     expect(script, contains('chat:show'));
     expect(script, contains('chat:open'));
+  });
+
+  test('applyConfigAndOpenChat sets the color mode when provided', () {
+    final config = CrispConfig(
+      websiteID: 'site-id',
+      colorMode: CrispColorMode.dark,
+    );
+    final script = CrispJsBridge.applyConfigAndOpenChat(config);
+    expect(
+        script, contains(r'$crisp.push(["config", "color:mode", ["dark"]]);'));
+  });
+
+  test('queueBeforeLoad sets the color mode when provided', () {
+    final config = CrispConfig(
+      websiteID: 'site-id',
+      colorMode: CrispColorMode.auto,
+    );
+    final script = CrispJsBridge.queueBeforeLoad(config);
+    expect(
+        script, contains(r'$crisp.push(["config", "color:mode", ["auto"]]);'));
+  });
+
+  test('applyConfigAndOpenChat omits color mode when null', () {
+    final script = CrispJsBridge.applyConfigAndOpenChat(
+      CrispConfig(websiteID: 'site-id'),
+    );
+    expect(script, isNot(contains('color:mode')));
+  });
+
+  test('isSessionOngoing checks session:ongoing only once a session exists',
+      () {
+    final script = CrispJsBridge.isSessionOngoing();
+    expect(script, startsWith('(function(){try{'));
+    expect(script, contains(r'$crisp.is("session:ongoing")'));
+    expect(script, contains(r'$crisp.get("session:identifier")'));
+    expect(script, contains('return "";'));
   });
 
   test('forDesktopEvaluation wraps script to return empty string', () {
@@ -170,7 +234,9 @@ void main() {
           id: 'plan',
           text: 'Pick a plan',
           required: true,
-          choices: [CrispPickerChoice(value: 'pro', label: 'Pro', selected: true)],
+          choices: [
+            CrispPickerChoice(value: 'pro', label: 'Pro', selected: true)
+          ],
         )),
         equals(
           r'$crisp.push(["do","message:show",["picker",{"id":"plan","text":"Pick a plan","choices":[{"value":"pro","label":"Pro","selected":true}],"required":true}]]);',
@@ -197,6 +263,71 @@ void main() {
           r'$crisp.push(["do","message:show",["carousel",{"text":"Our products","targets":[{"title":"Pro","description":"For teams","image":"https://example.com/pro.png","actions":[{"label":"Open","url":"https://example.com"}]}]}]]);',
         ),
       );
+    });
+  });
+
+  group('token and user scripts', () {
+    test('setTokenId sets or clears CRISP_TOKEN_ID', () {
+      expect(CrispJsBridge.setTokenId('user-42'),
+          'window.CRISP_TOKEN_ID="user-42";');
+      expect(CrispJsBridge.setTokenId(null), 'window.CRISP_TOKEN_ID=null;');
+      expect(CrispJsBridge.setTokenId(''), 'window.CRISP_TOKEN_ID=null;');
+    });
+
+    test('setUserEmail adds only a valid signature', () {
+      final signature = 'a' * 64;
+      expect(
+        CrispJsBridge.setUserEmail(
+            email: 'a@example.com', signature: signature),
+        '\$crisp.push(["set", "user:email", ["a@example.com", "$signature"]]);',
+      );
+      expect(
+        CrispJsBridge.setUserEmail(email: 'a@example.com', signature: 'bad'),
+        r'$crisp.push(["set", "user:email", ["a@example.com"]]);',
+      );
+    });
+
+    test('nickname, phone and avatar scripts escape their values', () {
+      expect(CrispJsBridge.setUserNickname(nickname: 'A "B"'),
+          r'$crisp.push(["set", "user:nickname", ["A \"B\""]]);');
+      expect(CrispJsBridge.setUserPhone(phone: '+15550100'),
+          r'$crisp.push(["set", "user:phone", ["+15550100"]]);');
+      expect(CrispJsBridge.setUserAvatar(avatar: 'https://example.com/a.png'),
+          r'$crisp.push(["set", "user:avatar", ["https://example.com/a.png"]]);');
+    });
+  });
+
+  group('reset before load', () {
+    test('queueSetupBeforeLoad has no user or open commands', () {
+      final script = CrispJsBridge.queueSetupBeforeLoad();
+      expect(script, contains('session:loaded'));
+      expect(script, isNot(contains('user:')));
+      expect(script, isNot(contains('chat:open')));
+    });
+
+    test('queueBeforeLoad still starts with the setup commands', () {
+      final script = CrispJsBridge.queueBeforeLoad(
+        CrispConfig(websiteID: 'site-id'),
+      );
+      expect(script, startsWith(CrispJsBridge.queueSetupBeforeLoad()));
+      expect(script, contains('chat:open'));
+    });
+
+    test('embedHtml resets the session before applying the config', () {
+      final config = CrispConfig(
+        websiteID: 'site-id',
+        user: User(nickName: 'Ann'),
+      );
+      final html = CrispJsBridge.embedHtml(config, resetSessionFirst: true);
+      final reset = html.indexOf('session:reset');
+      expect(reset, isNonNegative);
+      expect(reset, lessThan(html.indexOf('user:nickname')));
+      expect(reset, lessThan(html.indexOf('chat:open')));
+    });
+
+    test('embedHtml does not reset by default', () {
+      final html = CrispJsBridge.embedHtml(CrispConfig(websiteID: 'site-id'));
+      expect(html, isNot(contains('session:reset')));
     });
   });
 }

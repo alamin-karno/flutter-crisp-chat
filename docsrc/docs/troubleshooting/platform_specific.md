@@ -78,10 +78,10 @@ If the keyboard pushes the chat view up unexpectedly, ensure you're using Crisp 
 The package product 'Crisp' requires minimum platform version 14.0 for the iOS platform, but this target supports 13.0
 
 # CocoaPods
-Specs satisfying the `Crisp (~> 3.0.1)` dependency were found, but they required a higher minimum deployment target.
+Specs satisfying the `Crisp (~> 3.1.1)` dependency were found, but they required a higher minimum deployment target.
 ```
 
-The Crisp iOS SDK `~> 3.0.1` requires **iOS 14.0+** and **Xcode 16.3+** (Swift tools 6.1).
+The Crisp iOS SDK `~> 3.1.1` requires **iOS 14.0+** and **Xcode 16.3+** (Swift tools 6.1).
 
 **Fix:** Update your `ios/Podfile`:
 
@@ -147,7 +147,7 @@ Compare with Android using the same REST GET steps — if Android clears `unread
 The plugin supports both CocoaPods and Swift Package Manager (SPM) for iOS dependency management.
 
 ::: warning CocoaPods deprecated upstream
-Crisp has deprecated CocoaPods distribution and stops publishing new versions there at the end of September 2026. Crisp iOS SDK `3.0.1` is on CocoaPods, so CocoaPods builds still work, but **SPM is the recommended path**.
+Crisp has deprecated CocoaPods distribution and may stop publishing new versions there at any time. Crisp iOS SDK `3.1.1` is on CocoaPods, so CocoaPods builds still work, but **SPM is the recommended path**.
 :::
 
 - **CocoaPods:** Uses [`ios/crisp_chat.podspec`](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/ios/crisp_chat.podspec). Still used when SPM is off, or when Flutter falls back for plugins without SPM support.
@@ -241,9 +241,9 @@ See [Configuration — Chatbox Security](/core_feature/configuration#crisp-dashb
 
 `resetCrispChatSession`, `setSessionString`, and `getSessionIdentifier` require an active desktop WebView. They are no-ops (or return `null`) when chat was opened in an external browser.
 
-### `runWebViewTitleBarWidget` in `main`
+### `runWebViewTitleBarWidget` isn't defined
 
-When using `desktop_webview_window`, add the title-bar helper to your app `main` — see [Supported platforms](/getting_started/supported_platforms).
+`desktop_webview_window` 0.4, which crisp_chat uses since 3.1.0, removed this function. The chat window no longer runs Flutter, so delete the `runWebViewTitleBarWidget(args)` check from your `main()`; nothing replaces it.
 
 ## Need More Help?
 

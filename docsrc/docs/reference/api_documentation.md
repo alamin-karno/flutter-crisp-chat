@@ -27,11 +27,14 @@ Complete reference for all public methods in the `FlutterCrispChat` class.
 |-------------------------------------------------------------|---------------------|------------------|--------------------|
 | `openCrispChat`                                             | Native SDK UI       | Web chatbox      | WebView or browser |
 | `resetCrispChatSession`                                     | Yes                 | Yes              | WebView only       |
+| `configure`                                                 | Yes                 | No-op            | No-op              |
+| `setTokenId` / `setUserEmail` / `setUserNickname` / `setUserPhone` / `setUserAvatar` | Yes | Yes (now or on next open) | Yes (now or on next open) |
 | `setSessionString` / `setSessionInt` / `setSessionSegments` | Yes                 | Yes              | WebView only       |
 | `pushSessionEvent`                                          | Yes                 | Yes              | WebView only       |
 | `runBotScenario`                                            | Yes                 | Yes              | WebView only       |
 | `showMessage`                                               | Yes                 | Yes              | WebView only       |
 | `getSessionIdentifier`                                      | Yes                 | Yes              | WebView only       |
+| `isSessionOngoing`                                          | iOS only (Android: `null`) | Yes       | WebView only       |
 | `getUnreadMessageCount` / `markMessagesAsRead`              | Yes                 | Yes*             | Yes*               |
 | `openHelpdesk`                                              | Native SDK UI       | Web chatbox      | WebView or browser |
 | `openHelpdeskArticle`                                       | Native SDK UI       | Web chatbox      | WebView or browser |
@@ -67,7 +70,50 @@ static Future<void> openCrispChat({required CrispConfig config})
 - `ArgumentError` if `config.user.email` is provided but invalid
 - `ArgumentError` if `config.user.company.url` is provided but invalid
 
-**Behavior:** After opening the chat, the method waits 3 seconds and then caches the session identifier internally.
+**Behavior:** The returned `Future` completes once the chat is open; it doesn't wait for the session to load. In the background, the session identifier is cached from the `sessionLoaded` event on Android/iOS, or queried from the platform if no event arrives within 10 seconds. Web and desktop emit no events, so it's queried 3 seconds after opening. `getSessionIdentifier()` falls back to this cached value.
+
+---
+
+### configure
+
+Configures the Crisp SDK without opening the chat, so `setTokenId` and the user setters work before the chat is first opened.
+
+```dart
+static Future<void> configure({required String websiteId})
+```
+
+**Throws:** `ArgumentError` if `websiteId` is empty.
+
+Does nothing on Web and desktop, which take the website ID from `openCrispChat`.
+
+---
+
+### setTokenId
+
+Sets the session continuity token. `null` or an empty string clears it.
+
+```dart
+static Future<void> setTokenId(String? tokenId)
+```
+
+The change only takes effect after `resetCrispChatSession`, so call that right after. A `CrispConfig.tokenId` passed to `openCrispChat` takes precedence. Call it while the chat is closed: the Android SDK ignores it while the chat is connected. See [Login and Logout](/core_feature/session_management#login-and-logout).
+
+---
+
+### setUserEmail / setUserNickname / setUserPhone / setUserAvatar
+
+Set the user's details without opening the chat.
+
+```dart
+static Future<void> setUserEmail(String email, {String? signature})
+static Future<void> setUserNickname(String nickname)
+static Future<void> setUserPhone(String phone)
+static Future<void> setUserAvatar(String avatar)
+```
+
+**Throws:** `ArgumentError` for an invalid email or avatar URL, or an empty nickname or phone.
+
+Call them after `resetCrispChatSession`, which clears the user on iOS. A `CrispConfig.user` passed to `openCrispChat` takes precedence. On Web and desktop they apply right away if the chat is loaded, otherwise when it next opens.
 
 ---
 
@@ -79,7 +125,7 @@ Resets the current chat session and clears cached data.
 static Future<void> resetCrispChatSession()
 ```
 
-Call this when your app user logs out to clear their chat history from the device.
+Call this when your app user logs out to clear their chat history from the device. If you use a token ID, call `setTokenId(null)` first.
 
 ---
 
@@ -126,6 +172,18 @@ static Future<String?> getSessionIdentifier()
 ```
 
 **Returns:** The session ID string, or `null` if no session exists. Falls back to a cached value if the native SDK returns `null`.
+
+---
+
+### isSessionOngoing
+
+Returns whether messages have been sent or received in the current session.
+
+```dart
+static Future<bool?> isSessionOngoing()
+```
+
+**Returns:** `true` or `false`, or `null` when it can't be told: on Android (the Crisp Android SDK 2.x has no such check), before the session has loaded, or on desktop with the system browser fallback. Never throws. See [Check if the Session Is Ongoing](/core_feature/session_management#check-if-the-session-is-ongoing).
 
 ---
 
@@ -420,10 +478,12 @@ CrispConfig({
   bool enableNotifications = true,
   ModalPresentationStyle? modalPresentationStyle,
   List<CrispMessageContent>? localMessages,
+  CrispColorMode? colorMode,
+  String? locale,
 })
 ```
 
-See [Configuration](/core_feature/configuration) and [Local Messages](/core_feature/local_messages).
+See [Configuration](/core_feature/configuration), [Color Mode](/core_feature/configuration#color-mode), [Chat Language](/core_feature/configuration#chat-language) and [Local Messages](/core_feature/local_messages).
 
 ## User
 
@@ -476,6 +536,18 @@ enum SessionEventColor {
   orange, pink, purple, red, yellow,
 }
 ```
+
+## CrispColorMode
+
+```dart
+enum CrispColorMode {
+  light, // always light
+  dark,  // always dark
+  auto,  // follows the device appearance
+}
+```
+
+Used by `CrispConfig.colorMode`. Supported on iOS, Web, and desktop; ignored on Android.
 
 ## Next Steps
 

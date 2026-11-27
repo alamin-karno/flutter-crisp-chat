@@ -32,7 +32,8 @@ void main() {
       });
 
       expect(event.type, CrispEventType.notificationReceived);
-      expect(event.notificationData, equals({'title': 'Hello', 'body': 'World'}));
+      expect(
+          event.notificationData, equals({'title': 'Hello', 'body': 'World'}));
     });
 
     test('parses messageReceived with a text message', () {
@@ -55,7 +56,8 @@ void main() {
       expect(message!.isMe, isFalse);
       expect(message.from, CrispMessageSender.operatorUser);
       expect(message.origin, 'chat');
-      expect(message.timestamp, DateTime.fromMillisecondsSinceEpoch(1700000000000));
+      expect(message.timestamp,
+          DateTime.fromMillisecondsSinceEpoch(1700000000000));
       expect(message.fingerprint, 42);
       expect(message.contentType, CrispMessageContentType.text);
       expect(message.text, 'Hello there');

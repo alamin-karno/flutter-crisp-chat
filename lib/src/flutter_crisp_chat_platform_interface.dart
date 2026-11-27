@@ -34,6 +34,37 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  /// [configure] sets the Crisp website ID without opening the chat.
+  Future<void> configure({required String websiteId}) {
+    throw UnimplementedError('configure() has not been implemented.');
+  }
+
+  /// [setTokenId] sets the session continuity token. `null` clears it.
+  Future<void> setTokenId({required String? tokenId}) {
+    throw UnimplementedError('setTokenId() has not been implemented.');
+  }
+
+  /// [setUserEmail] sets the user's email, with an optional identity
+  /// verification [signature].
+  Future<void> setUserEmail({required String email, String? signature}) {
+    throw UnimplementedError('setUserEmail() has not been implemented.');
+  }
+
+  /// [setUserNickname] sets the user's nickname.
+  Future<void> setUserNickname({required String nickname}) {
+    throw UnimplementedError('setUserNickname() has not been implemented.');
+  }
+
+  /// [setUserPhone] sets the user's phone number.
+  Future<void> setUserPhone({required String phone}) {
+    throw UnimplementedError('setUserPhone() has not been implemented.');
+  }
+
+  /// [setUserAvatar] sets the URL of the user's avatar.
+  Future<void> setUserAvatar({required String avatar}) {
+    throw UnimplementedError('setUserAvatar() has not been implemented.');
+  }
+
   /// [resetCrispChatSession] is to call native platform and if no implementation
   /// found through error.
   Future<void> resetCrispChatSession() {
@@ -56,6 +87,12 @@ abstract class FlutterCrispChatPlatform extends PlatformInterface {
   Future<String?> getSessionIdentifier() {
     throw UnimplementedError(
         'getSessionIdentifier() has not been implemented.');
+  }
+
+  /// [isSessionOngoing] returns whether messages have been exchanged in the
+  /// current session, or `null` if the platform can't tell.
+  Future<bool?> isSessionOngoing() {
+    throw UnimplementedError('isSessionOngoing() has not been implemented.');
   }
 
   /// [setSessionSegments] Sets a collection of session segments

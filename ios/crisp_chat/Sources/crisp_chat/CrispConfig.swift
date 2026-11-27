@@ -122,14 +122,17 @@ struct CrispConfig {
     let user: User?
     let enableNotifications: Bool
     let modalPresentationStyle: UIModalPresentationStyle
+    /// Overrides the dashboard color mode; `nil` keeps the dashboard's.
+    let colorMode: ColorMode?
     
-    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?, enableNotifications: Bool, modalPresentationStyle: UIModalPresentationStyle) {
+    init(websiteID: String, tokenId: String?,sessionSegment: String?, user: User?, enableNotifications: Bool, modalPresentationStyle: UIModalPresentationStyle, colorMode: ColorMode?) {
         self.websiteID = websiteID
         self.tokenId = tokenId
         self.sessionSegment = sessionSegment
         self.user = user
         self.enableNotifications = enableNotifications
         self.modalPresentationStyle = modalPresentationStyle
+        self.colorMode = colorMode
     }
     
     static func fromJson(_ json: [String: Any]) -> CrispConfig? {
@@ -153,6 +156,18 @@ struct CrispConfig {
             modalPresentationStyle = .fullScreen
         }
 
+        let colorMode: ColorMode?
+        switch json["colorMode"] as? String {
+        case "light":
+            colorMode = .light
+        case "dark":
+            colorMode = .dark
+        case "auto":
+            colorMode = .auto
+        default:
+            colorMode = nil
+        }
+
         guard let websiteID = json["websiteId"] as? String else {
             return nil
         }
@@ -163,7 +178,8 @@ struct CrispConfig {
             sessionSegment: json["sessionSegment"] as? String,
             user: (json["user"] as? [String: Any]).map(User.fromJson),
             enableNotifications: json["enableNotifications"] as? Bool ?? true,
-            modalPresentationStyle: modalPresentationStyle
+            modalPresentationStyle: modalPresentationStyle,
+            colorMode: colorMode
         )
     }
 }

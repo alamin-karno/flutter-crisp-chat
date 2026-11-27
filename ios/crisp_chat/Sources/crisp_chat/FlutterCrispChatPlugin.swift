@@ -105,17 +105,26 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 CrispSDK.session.setSegments([segment])
             }
 
-            CrispSDK.user.email = crispConfig.user?.email
-            CrispSDK.user.signature = crispConfig.user?.signature
-            CrispSDK.user.nickname = crispConfig.user?.nickName
-            CrispSDK.user.phone = crispConfig.user?.phone
-            if let avatarURLString = crispConfig.user?.avatar, let avatarURL = URL(string: avatarURLString) {
-                CrispSDK.user.avatar = avatarURL
-            } else {
-                CrispSDK.user.avatar = nil
+            // Without a `user` in the config, keep what the standalone user
+            // setters (or a previous open) set.
+            if let user = crispConfig.user {
+                CrispSDK.user.email = user.email
+                CrispSDK.user.signature = user.signature
+                CrispSDK.user.nickname = user.nickName
+                CrispSDK.user.phone = user.phone
+                if let avatarURLString = user.avatar, let avatarURL = URL(string: avatarURLString) {
+                    CrispSDK.user.avatar = avatarURL
+                } else {
+                    CrispSDK.user.avatar = nil
+                }
+                CrispSDK.user.company = user.company?.toCrispCompany()
             }
 
-            CrispSDK.user.company = crispConfig.user?.company?.toCrispCompany()
+            // The SDK reads `ChatViewConfiguration.default` (it has no public
+            // initializer). Set it on every openCrispChat so a `nil` colorMode
+            // restores the dashboard's; helpdesk and notification opens keep
+            // the last value.
+            ChatViewConfiguration.default.colorMode = crispConfig.colorMode
 
             if openChat(modalPresentationStyle: crispConfig.modalPresentationStyle) {
                 result(nil)
@@ -128,6 +137,59 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                     )
                 )
             }
+
+        case "configure":
+            let websiteId = ((call.arguments as? [String: Any])?["websiteId"] as? String)?
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            guard !websiteId.isEmpty else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing 'websiteId' argument.", details: nil))
+                return
+            }
+            CrispSDK.configure(websiteID: websiteId)
+            result(nil)
+
+        case "setTokenId":
+            // `nil` clears the token. It takes effect after `session.reset()`.
+            let tokenId = (call.arguments as? [String: Any])?["tokenId"] as? String
+            CrispSDK.setTokenID(tokenID: tokenId)
+            result(nil)
+
+        case "setUserEmail":
+            guard let args = call.arguments as? [String: Any], let email = args["email"] as? String else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing 'email' argument.", details: nil))
+                return
+            }
+            // The email setter sends the current signature, so set it first.
+            if let signature = args["signature"] as? String {
+                CrispSDK.user.signature = signature
+            }
+            CrispSDK.user.email = email
+            result(nil)
+
+        case "setUserNickname":
+            guard let nickname = (call.arguments as? [String: Any])?["nickname"] as? String else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing 'nickname' argument.", details: nil))
+                return
+            }
+            CrispSDK.user.nickname = nickname
+            result(nil)
+
+        case "setUserPhone":
+            guard let phone = (call.arguments as? [String: Any])?["phone"] as? String else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing 'phone' argument.", details: nil))
+                return
+            }
+            CrispSDK.user.phone = phone
+            result(nil)
+
+        case "setUserAvatar":
+            guard let avatar = (call.arguments as? [String: Any])?["avatar"] as? String,
+                  let avatarURL = URL(string: avatar) else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid 'avatar' argument.", details: nil))
+                return
+            }
+            CrispSDK.user.avatar = avatarURL
+            result(nil)
 
         case "resetCrispChatSession":
             CrispSDK.session.reset()
@@ -158,6 +220,15 @@ public class FlutterCrispChatPlugin: NSObject, FlutterPlugin, UIApplicationDeleg
                 result(sessionId)
             } else {
                 result(FlutterError(code: "NO_SESSION", message: "No active session found", details: nil))
+            }
+
+        case "isSessionOngoing":
+            // `isOngoing` reports `false` until the session has loaded, so
+            // answer `nil` (unknown) until there's a session identifier.
+            if CrispSDK.session.identifier != nil {
+                result(CrispSDK.session.isOngoing)
+            } else {
+                result(nil)
             }
 
         case "setSessionSegments":
