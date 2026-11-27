@@ -19,6 +19,31 @@ next: false
 
 All notable changes to the `crisp_chat` package are documented here. For the full changelog, see [CHANGELOG.md on GitHub](https://github.com/alamin-karno/flutter-crisp-chat/blob/main/CHANGELOG.md).
 
+## 3.1.0
+
+### Added
+* `FlutterCrispChat.configure()`, `setTokenId()` and the user setters `setUserEmail()`, `setUserNickname()`, `setUserPhone()` and `setUserAvatar()`, which work without opening the chat. On login call `setTokenId(userId)` then `resetCrispChatSession()`; on logout call `setTokenId(null)` then `resetCrispChatSession()`, so the next user's messages no longer go to the previous user's conversation.
+* `FlutterCrispChat.isSessionOngoing()` — whether messages have been sent or received in the current session (iOS, Web, desktop; always `null` on Android). See [Session Management](/core_feature/session_management).
+* `CrispConfig.colorMode` and the `CrispColorMode` enum (`light`, `dark`, `auto`) to override the dashboard color mode on iOS, Web and desktop.
+* `CrispConfig.locale` to set the chatbox language on Web and desktop (for example `"fr"` or `"pt-br"`).
+
+### Changed
+* **Breaking (desktop):** Upgraded `desktop_webview_window` to `^0.4.3`, so the package now requires **Flutter 3.44.0+**. The chat opens in a native window with a plain title bar. Migration: delete the `runWebViewTitleBarWidget(args)` check from your app's `main()`.
+* `openCrispChat()` no longer blocks for 3 seconds after the chat opens; the session identifier is cached in the background.
+* Upgraded Crisp iOS SDK to `3.1.1` (CocoaPods and SPM both require `3.1.1`).
+* Redesigned the example app in Crisp's style, with every public API demonstrated across five tabs.
+
+### Fixed
+* Web and desktop: `resetCrispChatSession()` no longer waits for (or throws on) a chat that isn't loaded yet, for example on logout.
+* iOS: `openCrispChat()` without a `CrispConfig.user` no longer clears user details set with the user setters.
+* A session identifier cached in the background is no longer restored after `resetCrispChatSession()`.
+
+### Security
+* Upgraded Crisp Android SDK to `2.0.25` (OkHttp `4.12.1`, mitigating the compromised eMudhra subordinate CA certificates).
+
+### Documentation
+* Rewrote the README to be compact, and documented the new APIs and options across the docs site. Docs images are now self-hosted WebP, about 86% smaller.
+
 ## 3.0.0
 
 ### Added

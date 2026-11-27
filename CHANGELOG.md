@@ -1,5 +1,7 @@
 # [Unreleased]
 
+# 3.1.0
+
 Added
 ---
 * `FlutterCrispChat.configure()`, `FlutterCrispChat.setTokenId()` and the user setters `setUserEmail()`, `setUserNickname()`, `setUserPhone()` and `setUserAvatar()`, which work without opening the chat ([#200](https://github.com/alamin-karno/flutter-crisp-chat/issues/200)). Apps can now follow the login and logout sequence Crisp recommends: `setTokenId(userId)` then `resetCrispChatSession()` on login, and `setTokenId(null)` then `resetCrispChatSession()` on logout. Passing `null` clears the token, which was impossible before, so after a logout the next user's messages no longer go to the previous user's conversation. On Web and desktop the token and user details are applied now if the chat is loaded, or when it next opens; values passed in `CrispConfig` still take precedence. Platform implementations that `implements FlutterCrispChatPlatform` must add the six methods; those that `extends` it inherit defaults.
